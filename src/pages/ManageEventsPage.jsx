@@ -164,9 +164,7 @@ const styles = {
     color: '#0A306E',
     fontSize: '16px',
     cursor: 'pointer',
-    margin: '0 10px',
-    color: '#0B2853',
-    
+    margin: '0 10px',    
   },  
   filterContainer: {
     display: 'flex',
