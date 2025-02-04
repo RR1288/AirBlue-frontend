@@ -14,7 +14,7 @@ function App() {
                 <Route path="/manage-events" element={<ManageEventsPage />} />
                 <Route path="/manage-attendees" element={<ManageAttendeesPage />} />
                 <Route path="/event-details" element={<EventDetailPage/>} />
-                <Route path="/under-construction" element={<UnderConstruction/>} />
+                <Route path="/" element={<UnderConstruction/>} />
             </Routes>
         </Router>
     );
