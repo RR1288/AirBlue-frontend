@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import ManageEventsPage from './pages/ManageEventsPage';
 import ManageAttendeesPage from './pages/ManageAttendeesPage'; // Correct file path
 import EventDetailPage from './pages/EventDetailPage';
+import LoginPage from './pages/LoginPage';
 import UnderConstruction from './pages/UnderConstruction';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
                 <Route path="/manage-events" element={<ManageEventsPage />} />
                 <Route path="/manage-attendees" element={<ManageAttendeesPage />} />
                 <Route path="/event-details" element={<EventDetailPage/>} />
+                <Route path="/login" element={<LoginPage/>} />
                 <Route path="/" element={<UnderConstruction/>} />
             </Routes>
         </Router>
