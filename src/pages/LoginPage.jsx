@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import { sendError } from '../utils/response';
 
@@ -121,34 +122,52 @@ const LoginPage = () => {
         }
 
         try {
-            const response = await fetch(`https://airblue-backend-staging-eac124cc32ab.herokuapp.com    /auth/login`, {
+            const response = await fetch(`https://airblue-backend-staging-eac124cc32ab.herokuapp.com/auth/login`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                   'Accept': 'application/json'
                 },
                 body: JSON.stringify({ username, password })
-        });
-    
+            });
+
             const data = await response.json();
-    
+            
             if (response.ok) {
-            //     const { token, user } = data.data.token; 
-            //     localStorage.setItem('token', token);
-            //     localStorage.setItem('user', JSON.stringify(user)); // Store the whole user object
-    
-            //     setSuccessMessage(data.message);
-            //     setErrorMessage(''); // Clear any previous error messages
+                console.log(data);  
+
+                /*
+                This is the structure of "data"
+                    data = {
+                        success: true,
+                        message: message,
+                        data: data,
+                    }
+                OR-----------------------------
+                    data = {
+                        success: false,
+                        message: message,
+                    }
+                */
                 
-            //     console.log('Navigating to /home');
-            //     navigate('/home', { state: { user }}); 
-            //   } else {
-            //     // Handle server errors
-            //     setErrorMessage(data.error || 'Login failed. Please try again.');
-            //   }
+                // If data.success => go to home or open 2fa modal
+                // Else => display error
 
-            console.log(data); }
+                const { token } = data.data;
+                console.log(data.message);
+                
+                console.log("TOKEN: ", token);
+                localStorage.setItem('token', token);
 
+                // if 2FA is required then open PIN modal you won't get a token
+                // you'll get a message saying "2FA required"
+                // Open the PIN modal and send a request here: https://airblue-backend-staging-eac124cc32ab.herokuapp.com/auth/2fa_verify
+                // NOW, that will return a token
+
+              } else {
+                // Handle server errors
+                sendError(data.error || 'Login failed. Please try again.');
+              }
         } catch (error) {
             // setErrorMessage('Network error. Please check your connection and try again.');
             console.error('Login error:', error);
