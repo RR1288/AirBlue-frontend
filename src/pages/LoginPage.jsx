@@ -1,5 +1,4 @@
-
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Header from '../components/Header';
 import { sendError } from '../utils/response';
 
@@ -30,6 +29,7 @@ const PinModal = ({ isOpen, onSubmit, onClose }) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+
         onSubmit(pin.join(''));
     };
 
@@ -65,7 +65,7 @@ const LoginPage = () => {
     const [showPinModal, setShowPinModal] = useState(false);
     const [notification, setNotification] = useState('');
 
-    const handleLoginSubmit = async (event) => {
+    const handleLoginSubmit = async  (event) => {
         event.preventDefault();
 
         try {
@@ -120,7 +120,39 @@ const LoginPage = () => {
             
         }
 
-        setShowPinModal(true);
+        try {
+            const response = await fetch(`https://airblue-backend-staging-eac124cc32ab.herokuapp.com    /auth/login`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+        });
+    
+            const data = await response.json();
+    
+            if (response.ok) {
+            //     const { token, user } = data.data.token; 
+            //     localStorage.setItem('token', token);
+            //     localStorage.setItem('user', JSON.stringify(user)); // Store the whole user object
+    
+            //     setSuccessMessage(data.message);
+            //     setErrorMessage(''); // Clear any previous error messages
+                
+            //     console.log('Navigating to /home');
+            //     navigate('/home', { state: { user }}); 
+            //   } else {
+            //     // Handle server errors
+            //     setErrorMessage(data.error || 'Login failed. Please try again.');
+            //   }
+
+            console.log(data); }
+
+        } catch (error) {
+            // setErrorMessage('Network error. Please check your connection and try again.');
+            console.error('Login error:', error);
+        }        setShowPinModal(true);
     };
 
     const handlePinSubmit = (pin) => {
@@ -137,9 +169,9 @@ const LoginPage = () => {
 
     return (
         <div style={styles.page}>
-            <Header title="" style={styles.header} />
+            <Header title="AirBlue System" style={styles.header} />
             <div style={styles.mainContent}>
-                <h2 style={styles.welcomeText}>AirBlue System</h2>
+            <h1 style={styles.h1}>Login Page</h1>
                 <div style={styles.loginContainer}>
                     <form onSubmit={handleLoginSubmit} style={styles.form}>
                         <div style={styles.formGroup}>
@@ -185,6 +217,13 @@ const styles = {
         width: '100%',
         textAlign: 'center',
     },
+    h1: {
+        textAlign: 'center',
+        color: '#0B2853',
+        fontSize: '24px',
+        fontWeight: '600',
+        margin: '20px 0',
+    },
     mainContent: {
         flex: 1,
         display: 'flex',
@@ -222,10 +261,12 @@ const styles = {
     },
     input: {
         width: '100%',
-        padding: '10px',
-        fontSize: '16px',
-        border: '1px solid #ccc',
-        borderRadius: '4px',
+    padding: '10px',
+    fontSize: '16px',
+    border: '1px solid #0B2853',
+    borderRadius: '4px',
+    backgroundColor: '#ffffff', 
+    color: '#000000' 
     },
     button: {
         padding: '10px 20px',
