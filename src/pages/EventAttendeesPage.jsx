@@ -4,18 +4,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faFilter } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
-const ManageAttendees = () => {
+const EventAttendeesPage = () => {
   // State for first and last name filters
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
 
   // Sample list of attendees
   const [attendees, setAttendees] = useState([
-    'Smith, John',
-    'Smith, Jane',
-    'Smith, Jazmin',
-    'Smith, Joseph',
-    'Smith, Louise'
+    'Adams, John',
+    'Adams, Jane',
+    'Alexander, Jazmin',
+    'Alexander, Joseph',
+    'Allen, Louise',
+    'Allen, Greg',
+    'Allen, John'
   ]);
 
   // State for selected attendees to remove
@@ -54,7 +56,7 @@ const ManageAttendees = () => {
             <Link to="/manage-events" style={styles.backButton}>
               <FontAwesomeIcon icon={faArrowLeft} />
             </Link>
-            <h2 style={styles.title1}>IEEE Board Meeting 2024</h2>
+            <h2 style={styles.title1}>All Events</h2>
           </div>
           <h3 style={styles.title2}>Attendees</h3>
 
@@ -94,20 +96,18 @@ const ManageAttendees = () => {
             ))}
           </div>
 
-          {/* Remove selected attendees button */}
-          <button onClick={removeAttendees} style={styles.removeButton}>
-            Remove Attendee(s)
-          </button>
-
-          {/* Remove selected attendees button */}
-          <button onClick={removeAttendees} style={styles.removeButton}>
-            Add Attendee(s)
-          </button>
-
-          {/* Remove selected attendees button */}
-          <button onClick={removeAttendees} style={styles.removeButton}>
-            Add from file
-          </button>
+          {/* Action Buttons */}
+          <div style={styles.buttonRow}>
+            <button onClick={removeAttendees} style={styles.actionButton}>
+              Remove Attendee(s)
+            </button>
+            <button style={styles.actionButton}>
+              Add Attendee(s)
+            </button>
+            <button style={styles.actionButton}>
+              Add from file
+            </button>
+          </div>
         </section>
       </main>
     </div>
@@ -140,19 +140,20 @@ const styles = {
   },
   backButton: {
     display: 'flex',
-    alignItems: 'left',
-    marginTop: '60px',
+    alignItems: 'center',
+    textDecoration: 'none',
     color: '#0B2853',
     fontSize: '16px',
     fontWeight: '600',
-    marginRight: '425px',
-    marginLeft:'-443px' // Adjusts spacing between back button and title
+    marginTop: '85px',
+    marginRight: '389px',
+    marginLeft: '-400px' // Adjusts spacing between back button and title
   },
   title1: {
     fontSize: '24px',
     color: '#0B2853',
     fontWeight: '600',
-    marginTop: '60px',
+    marginTop: '85px',
     marginBottom: '10px',
   },
   title2: {
@@ -214,15 +215,23 @@ const styles = {
   checkbox: {
     marginRight: '10px',
   },
-  removeButton: {
-    padding: '5px 10px',
+  buttonRow: {
+    display: 'flex',
+    gap: '10px',
+    justifyContent: 'center',
+    width: '100%',
+    maxWidth: '800px',
+  },
+  actionButton: {
+    padding: '8px 12px',
     color: 'white',
     backgroundColor: '#0A306E',
     border: 'none',
     borderRadius: '4px',
     cursor: 'pointer',
-    marginRight: '10px',
+    flex: 1,
+    textAlign: 'center',
   },
 };
 
-export default ManageAttendees;
+export default EventAttendeesPage;

@@ -101,7 +101,7 @@ const styles = {
     display: 'flex',
     alignItems: 'left',
     textDecoration: 'none',
-    marginTop: '170px',
+    marginTop: '160px',
     color: '#0B2853',
     fontSize: '16px',
     fontWeight: '600',
@@ -110,7 +110,7 @@ const styles = {
   },
   title: {
     fontSize: '24px',
-    marginTop: '170px',
+    marginTop: '160px',
     marginBottom:'5px',
     color: '#0B2853',
     fontWeight: '600',
