@@ -2,6 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGlobe, faUser, faList, faPlane } from '@fortawesome/free-solid-svg-icons';
 import Header from '../components/Header';
+import { Link } from 'react-router-dom';
 
 
 // Main HomePage component
@@ -18,24 +19,36 @@ const HomePage = () => {
 
                 {/* Cards container */}
                 <div style={styles.grid}>
-                   
+                
+                <Link to="/manage-events" style={{ textDecoration: 'none', color: 'inherit' }}>
                 <div style={styles.card}>
                  <FontAwesomeIcon icon={faGlobe} style={styles.icon} />
                  <p style={styles.cardTitle}>Events</p>
                 </div>
+                </Link>
+               
+                <Link to="/manage-attendees" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <div style={styles.card}>
+                <FontAwesomeIcon icon={faUser}  style={styles.icon}/>
+                <p style={styles.cardTitle}>Attendees</p>
+                </div>
+                </Link>
 
-                    <div style={styles.card}>
-                    <FontAwesomeIcon icon={faUser}  style={styles.icon}/>
-                    <p style={styles.cardTitle}>Attendees</p>
-                    </div>
-                    <div style={styles.card}>
-                        <FontAwesomeIcon icon={faList} style={styles.icon}/>
-                        <p style={styles.cardTitle}>Event Types</p>
-                    </div>
-                    <div style={styles.card}>
-                    <FontAwesomeIcon icon={faPlane} style={styles.icon}/>
-                        <p style={styles.cardTitle}>Flights</p>
-                    </div>
+                <Link to="/event-details" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <div style={styles.card}>
+                <FontAwesomeIcon icon={faList} style={styles.icon}/>
+                 <p style={styles.cardTitle}>Event Types</p>
+                </div>
+                </Link>
+
+                <Link to="/event-attendees" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <div style={styles.card}>
+                <FontAwesomeIcon icon={faPlane} style={styles.icon}/>
+                <p style={styles.cardTitle}>Flights</p>
+                </div>
+                </Link>
+
+
                 </div>
             </div>
         </div>

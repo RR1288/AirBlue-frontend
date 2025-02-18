@@ -129,8 +129,9 @@ const styles = {
     backButton: {
         textDecoration: 'none',
         color: '#0B2853',
-        marginRight: '590px',
-        marginLeft: '-610px',
+        marginRight: '480px',
+        marginLeft: '-510px',
+        margintop: '60px',
     },
     icon: {
         fontSize: '20px',
@@ -139,6 +140,7 @@ const styles = {
         fontSize: '24px',
         fontWeight: 'bold',
         color: '#0B2853',
+        margintop: '60px',
     },
     form: {
         display: 'flex',
