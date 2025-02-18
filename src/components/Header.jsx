@@ -24,7 +24,7 @@ function Header({ title }) {
             <h1 style={styles.title}>{title}</h1>
             
             {/* Sign out link with an icon */}
-            <Link to="/signout" style={styles.signOut}>
+            <Link to="/login" style={styles.signOut}>
                 <FontAwesomeIcon icon={faSignOutAlt} style={styles.signOutIcon} /> {/* Sign Out Icon */}
                 Sign Out
             </Link>
