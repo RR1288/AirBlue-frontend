@@ -1,7 +1,7 @@
-
 import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import { sendError } from '../utils/response';
+
 
 const Notification = ({ message, onClose }) => {
     useEffect(() => {
@@ -71,6 +71,7 @@ const LoginPage = () => {
 
         try {
             const response = await fetch(`https://airblue-backend-staging-eac124cc32ab.herokuapp.com/auth/login`, {
+
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -121,57 +122,7 @@ const LoginPage = () => {
             
         }
 
-        try {
-            const response = await fetch(`https://airblue-backend-staging-eac124cc32ab.herokuapp.com/auth/login`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Accept': 'application/json'
-                },
-                body: JSON.stringify({ username, password })
-            });
-
-            const data = await response.json();
-            
-            if (response.ok) {
-                console.log(data);  
-
-                /*
-                This is the structure of "data"
-                    data = {
-                        success: true,
-                        message: message,
-                        data: data,
-                    }
-                OR-----------------------------
-                    data = {
-                        success: false,
-                        message: message,
-                    }
-                */
-                
-                // If data.success => go to home or open 2fa modal
-                // Else => display error
-
-                const { token } = data.data;
-                console.log(data.message);
-                
-                console.log("TOKEN: ", token);
-                localStorage.setItem('token', token);
-
-                // if 2FA is required then open PIN modal you won't get a token
-                // you'll get a message saying "2FA required"
-                // Open the PIN modal and send a request here: https://airblue-backend-staging-eac124cc32ab.herokuapp.com/auth/2fa_verify
-                // NOW, that will return a token
-
-              } else {
-                // Handle server errors
-                sendError(data.error || 'Login failed. Please try again.');
-              }
-        } catch (error) {
-            // setErrorMessage('Network error. Please check your connection and try again.');
-            console.error('Login error:', error);
-        }        setShowPinModal(true);
+       setShowPinModal(true);
     };
 
     const handlePinSubmit = (pin) => {
