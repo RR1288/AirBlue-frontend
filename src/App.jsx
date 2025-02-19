@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 import UnderConstruction from './pages/UnderConstruction';
 import EventEditPage from './pages/EventEditPage';
 import EventAttendeesPage from './pages/EventAttendeesPage'; 
+import FinancePermission from './pages/FinancePermission';
 
 function App() {
     return (
@@ -21,6 +22,8 @@ function App() {
                 <Route path="/event-edit" element={<EventEditPage/>} />
                 <Route path="/event-attendees" element={<EventAttendeesPage/>} />                
                 <Route path="/" element={<UnderConstruction/>} />
+                <Route path="/finance-permission" element={<FinancePermission/>} />
+
             </Routes>
         </Router>
     );
