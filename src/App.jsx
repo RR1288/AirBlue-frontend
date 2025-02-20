@@ -9,6 +9,7 @@ import UnderConstruction from './pages/UnderConstruction';
 import EventEditPage from './pages/EventEditPage';
 import EventAttendeesPage from './pages/EventAttendeesPage'; 
 import FinancePermission from './pages/FinancePermission';
+import EventCreationPage from './pages/EventCreationPage';
 
 function App() {
     return (
@@ -23,6 +24,7 @@ function App() {
                 <Route path="/event-attendees" element={<EventAttendeesPage/>} />                
                 <Route path="/" element={<UnderConstruction/>} />
                 <Route path="/finance-permission" element={<FinancePermission/>} />
+                <Route path="/event-creation" element={<EventCreationPage/>} />
 
             </Routes>
         </Router>

@@ -19,7 +19,7 @@ const EventsPage = () => {
             </Link>
             <h2 style={styles.title}>Events</h2>
           </div>
-
+          
           {/* Filter Section */}
           <div style={styles.filterContainer}>
             <input
@@ -34,10 +34,14 @@ const EventsPage = () => {
               style={styles.filterInput}
               value="Board Meeting"
             />
-            <FontAwesomeIcon icon={faFilter} style={styles.icon} />
+            <FontAwesomeIcon icon={faFilter} style={styles.icon}/>
             <button style={styles.clearButton}>Clear Filters</button>
-            <button style={styles.searchButton}>Search</button>
-            <FontAwesomeIcon icon={faCog} style={styles.icon} />
+  
+            <button style={styles.searchButton}>Search</button> 
+        
+            <Link to="/event-creation">
+            <button style={styles.searchButton}> Create Event </button>
+            </Link>
           </div>
 
           <h3 style={styles.month}>October</h3>
@@ -67,6 +71,8 @@ const EventsPage = () => {
 <h3 style={styles.eventTitle}>IEEE Board Meeting 2024</h3>
 <div style={styles.eventItem}></div>
 <h3 style={styles.eventTitle}>IEEE Conference: ML Research 2024</h3>
+
+
         </section>
       </main>
     </div>
@@ -204,6 +210,7 @@ const styles = {
     borderRadius: '5px',
     padding: '5px 10px',
     cursor: 'pointer',
+    marginRight: '10px',
   },
   
 };
