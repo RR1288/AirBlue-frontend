@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Header from '../components/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faFilter } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import axios from 'axios';
+import { AuthContext } from "../context/AuthContext";
 
 const EventAttendeesPage = () => {
   // State for first and last name filters
@@ -10,15 +12,30 @@ const EventAttendeesPage = () => {
   const [lastName, setLastName] = useState('');
 
   // Sample list of attendees
-  const [attendees, setAttendees] = useState([
-    'Adams, John',
-    'Adams, Jane',
-    'Alexander, Jazmin',
-    'Alexander, Joseph',
-    'Allen, Louise',
-    'Allen, Greg',
-    'Allen, John'
-  ]);
+  // const [attendees, setAttendees] = useState([
+  //   'Adams, John',
+  //   'Adams, Jane',
+  //   'Alexander, Jazmin',
+  //   'Alexander, Joseph',
+  //   'Allen, Louise',
+  //   'Allen, Greg',
+  //   'Allen, John'
+  // ]);
+  const [attendees, setAttendees] = useState([]);
+  const { user } = useContext(AuthContext); // Get logged-in user info
+  const { eventId } = useParams(); // Get event ID from the URL
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!user) return; // Ensure user is logged in
+
+    axios.get(`/api/attendees/${eventId}`, { headers: { Authorization: `Bearer ${user.token}` } })
+      .then(response => setAttendees(response.data))
+      .catch(err => {
+        setError(err.response?.data?.message || "Error fetching attendees.");
+      });
+  }, [eventId, user]);
+
 
   // State for selected attendees to remove
   const [selectedAttendees, setSelectedAttendees] = useState([]);
