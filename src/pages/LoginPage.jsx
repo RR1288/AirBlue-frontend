@@ -17,20 +17,43 @@ const Notification = ({ message, onClose }) => {
 };
 
 const PinModal = ({ isOpen, onSubmit, onClose }) => {
-    const [pin, setPin] = useState(new Array(4).fill(''));
+    const [pin, setPin] = useState(new Array(6).fill(''));
 
     const handleChange = (index, value) => {
         const newPin = [...pin];
         newPin[index] = value.replace(/[^0-9]/g, '');
         setPin(newPin);
-        if (value && index < 3) {
+        if (value && index < 5) {
             document.getElementById(`pin-${index + 1}`).focus();
         }
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
+        //call verify endpoint
+        const response = await fetch('heroku/auth/2fa/verify', {
+            method: "POST",
+            body: JSON.stringify({pin})
+        });
+        const data = await response.json();
+        //await fetch -> response
+        //if response.ok -> data = await response.json()
+        if(response.ok){
+            data = await response.json();
+            console.log(data);
+            if(data.sucess){
+                console.log(data.message);
+                console.log(data.data);
+            }
+            else{
+                sendError(data.error || 'Login failed. Please try again.');
+            }
+        } else {
+                // Handle server errors
+                sendError(data.error || 'Login failed. Please try again.');
+              }
+        //check data.sucess, data.message, data.data (could be null)
         onSubmit(pin.join(''));
     };
 
@@ -84,6 +107,20 @@ const LoginPage = () => {
             
             if (response.ok) {
                 console.log(data);  
+
+                    if(data.sucess){
+                        //tell user credentials right
+                        if(data.data.two_fa_required){
+                            //show a modal
+                            //user needs to enter password
+                        }
+                        if(data.data.token){
+                            //save in localstore
+                        }
+                        else{
+                            //display error message
+                        }
+                    }
 
                 /*
                 This is the structure of "data"
