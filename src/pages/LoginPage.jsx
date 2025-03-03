@@ -36,22 +36,29 @@ const PinModal = ({ isOpen, onSubmit, onClose }) => {
             method: "POST",
             body: JSON.stringify({pin})
         });
-        const data = await response.json();
         //await fetch -> response
         //if response.ok -> data = await response.json()
         if(response.ok){
-            data = await response.json();
-            console.log(data);
+            const data = await response.json();
+            //dataParsed = JSON.parse(data);
+            const { token } = data.data;
+            localStorage.setItem('token', token);
+
+            console.log("TOKEN: ", token);
+            console.log(data.message);
+            console.log(data.data);
             if(data.sucess){
-                console.log(data.message);
-                console.log(data.data);
+                //sanitize
+
             }
             else{
-                sendError(data.error || 'Login failed. Please try again.');
+                sendError(data.error || 'Verification failed. Please try again.');
+                alert("Verification failed. Please try again")
             }
         } else {
                 // Handle server errors
-                sendError(data.error || 'Login failed. Please try again.');
+                sendError(data.error || 'Verification failed. Please try again.');
+                alert("Verification failed. Please try again")
               }
         //check data.sucess, data.message, data.data (could be null)
         onSubmit(pin.join(''));
@@ -107,7 +114,6 @@ const LoginPage = () => {
             
             if (response.ok) {
                 console.log(data);  
-
                     if(data.sucess){
                         //tell user credentials right
                         if(data.data.two_fa_required){
