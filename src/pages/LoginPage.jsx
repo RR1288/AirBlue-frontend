@@ -41,15 +41,19 @@ const PinModal = ({ isOpen, onSubmit, onClose }) => {
         if(response.ok){
             const data = await response.json();
             //dataParsed = JSON.parse(data);
-            const { token } = data.data;
-            localStorage.setItem('token', token);
 
             console.log("TOKEN: ", token);
             console.log(data.message);
             console.log(data.data);
             if(data.sucess){
-                //sanitize
 
+                alert("Verification Successful");
+                const { token } = data.data;
+                localStorage.setItem('token', token);
+
+                if(localStorage.token){
+                    Header = {'Authorization': localStorage.token}
+                }
             }
             else{
                 sendError(data.error || 'Verification failed. Please try again.');
