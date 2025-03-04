@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import { sendError } from '../utils/response';
 
+const headers = new Headers();
+headers.append('Authorization', `Bearer ${token}`);
+
 
 const Notification = ({ message, onClose }) => {
     useEffect(() => {
@@ -34,6 +37,7 @@ const PinModal = ({ isOpen, onSubmit, onClose }) => {
         //call verify endpoint
         const response = await fetch('heroku/auth/2fa/verify', {
             method: "POST",
+            headers: headers,
             body: JSON.stringify({pin})
         });
         //await fetch -> response
@@ -52,7 +56,7 @@ const PinModal = ({ isOpen, onSubmit, onClose }) => {
                 localStorage.setItem('token', token);
 
                 if(localStorage.token){
-                    Header = {'Authorization': localStorage.token}
+                    headers = {'Authorization': localStorage.token}
                 }
             }
             else{
