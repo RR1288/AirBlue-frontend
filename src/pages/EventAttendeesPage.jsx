@@ -136,7 +136,7 @@ const styles = {
     alignItems: 'center',
     width: '100%',
     maxWidth: '800px',
-    marginBottom: '20px',
+
   },
   backButton: {
     display: 'flex',
@@ -145,7 +145,7 @@ const styles = {
     color: '#0B2853',
     fontSize: '16px',
     fontWeight: '600',
-    marginTop: '85px',
+    marginTop: '5px',
     marginRight: '389px',
     marginLeft: '-400px' // Adjusts spacing between back button and title
   },
@@ -153,14 +153,14 @@ const styles = {
     fontSize: '24px',
     color: '#0B2853',
     fontWeight: '600',
-    marginTop: '85px',
+    marginTop: '-90px',
     marginBottom: '10px',
   },
   title2: {
     fontSize: '24px',
     color: '#0B2853',
     fontWeight: '600',
-    marginTop: '25px',
+    marginTop: '5px',
   },
   filterContainer: {
     display: 'flex',

@@ -9,6 +9,12 @@ import UnderConstruction from './pages/UnderConstruction';
 import EventEditPage from './pages/EventEditPage';
 import EventAttendeesPage from './pages/EventAttendeesPage'; 
 import FinancePermission from './pages/FinancePermission';
+import EventCreationPage from './pages/EventCreationPage';
+import FlightSearchPage from './pages/FlightSearchPage';
+import ApprovalPage from './pages/ApprovalPage';
+import AdminPage from './pages/AdminPage';
+import FinanceEventDetails from './pages/FinanceEventDetails';
+
 
 function App() {
     return (
@@ -23,7 +29,12 @@ function App() {
                 <Route path="/event-attendees" element={<EventAttendeesPage/>} />                
                 <Route path="/" element={<UnderConstruction/>} />
                 <Route path="/finance-permission" element={<FinancePermission/>} />
-
+                <Route path="/event-creation" element={<EventCreationPage/>} />
+                <Route path="/flight-search" element={<FlightSearchPage/>} />
+                <Route path="/approval" element={<ApprovalPage/>} />
+                <Route path="/admin" element={<AdminPage/>} />
+                <Route path="/finance-details" element={<FinanceEventDetails/>} />
+            
             </Routes>
         </Router>
     );
