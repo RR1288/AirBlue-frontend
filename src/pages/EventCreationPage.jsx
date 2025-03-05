@@ -15,7 +15,8 @@ const EventCreationPage = () => {
                 <div style={styles.headerRow}>
                     <Link to="/manage-events" style={styles.backButton}>
                         <FontAwesomeIcon icon={faArrowLeft} style={styles.icon} />
-                    </Link  >
+
+                    </Link>
                     <h1 style={styles.eventTitle}>Create New Event</h1>
                 </div>
 
@@ -84,7 +85,7 @@ const styles = {
         flex: 1, 
         maxWidth: '800px', 
         margin: '0 auto', 
-        marginTop: '180px',
+        marginTop: '20px',
         padding: '20px' 
     },
     headerRow: { 
