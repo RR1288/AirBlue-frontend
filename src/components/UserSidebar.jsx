@@ -8,21 +8,21 @@ const UserSidebar = ({ isOpen, setIsOpen }) => {
         <>
             {/* Sidebar */}
             <div
-                style={{
-                    position: "fixed",
-                    top: 0,
-                    left: isOpen ? "0" : "-250px",
-                    width: "250px",
-                    height: "100%",
-                    backgroundColor: "#0B2853",
-                    color: "white",
-                    transition: "left 0.3s ease-in-out",
-                    boxShadow: isOpen ? "2px 0 5px rgba(0, 0, 0, 0.3)" : "none",
-                    paddingTop: "60px",
-                    display: "flex",
-                    flexDirection: "column",
-                }}
-            >
+    style={{
+        position: "fixed",
+        top: 0,
+        left: isOpen ? "0" : "-250px",
+        width: "250px",
+        height: "100%",
+        backgroundColor: "#0B2853",
+        color: "white",
+        transition: "left 0.3s ease-in-out",
+        boxShadow: isOpen ? "2px 0 5px rgba(0, 0, 0, 0.3)" : "none",
+        paddingTop: "60px",
+        zIndex: 9999, // Ensures it's always above other elements
+    }}
+>
+
                 {/* Close Button */}
                 <button
                     onClick={() => setIsOpen(false)}

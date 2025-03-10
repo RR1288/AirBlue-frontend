@@ -1,25 +1,27 @@
 import React, { useState } from 'react';
 import Header from '../components/Header';
+import UserSidebar from '../components/UserSidebar'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSave, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
-
 const styles = {
   page: {
     display: 'flex',
-    flexDirection: 'column',
     minHeight: '100vh',
     backgroundColor: '#ffffff',
+    overflowX: 'hidden', // Prevents content from shifting
   },
-  content: {
+  contentWrapper: {
     flex: 1, 
-    maxWidth: '800px', 
-    margin: '0 auto', 
-    marginTop: '-1150px',
-    padding: '1180px' 
-},
-
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '1080px',
+    transition: 'margin-left 0.3s ease-in-out',
+    marginTop: '-900px',
+  },
   headerRow: {
     display: 'flex',
     alignItems: 'center',
@@ -39,6 +41,8 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '15px',
+    width: '100%',
+    maxWidth: '800px',
   },
   formGroup: {
     display: 'flex',
@@ -71,6 +75,7 @@ const styles = {
 };
 
 const UserInfoPage = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userInfo, setUserInfo] = useState({
     firstName: '',
     lastName: '',
@@ -85,78 +90,84 @@ const UserInfoPage = () => {
 
   return (
     <div style={styles.page}>
-      <Header title="AirBlue System" />
-      <div style={styles.content}>
-        {/* Back Button */}
-        <div style={styles.headerRow}>
-          <Link to="/register" style={styles.backButton}>
-            <FontAwesomeIcon icon={faArrowLeft} />
-          </Link>
-          <h2 style={styles.title}>User Info</h2>
+      {/* Sidebar */}
+      <UserSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
+
+      {/* Main Content */}
+      <div style={{ flex: 1 }}>
+        <Header title="AirBlue System" setSidebarOpen={setSidebarOpen} />
+        <div style={styles.contentWrapper}>
+          {/* Back Button */}
+          <div style={styles.headerRow}>
+            <Link to="/register" style={styles.backButton}>
+              <FontAwesomeIcon icon={faArrowLeft} />
+            </Link>
+            <h2 style={styles.title}>User Info</h2>
+          </div>
+
+          {/* User Info Form */}
+          <form style={styles.form}>
+            <div style={styles.formGroup}>
+              <label style={styles.label}>First Name:</label>
+              <input
+                type="text"
+                name="firstName"
+                value={userInfo.firstName}
+                onChange={handleChange}
+                style={styles.input}
+              />
+            </div>
+
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Last Name:</label>
+              <input
+                type="text"
+                name="lastName"
+                value={userInfo.lastName}
+                onChange={handleChange}
+                style={styles.input}
+              />
+            </div>
+
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Phone Number:</label>
+              <input
+                type="tel"
+                name="phone"
+                value={userInfo.phone}
+                onChange={handleChange}
+                style={styles.input}
+              />
+            </div>
+
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Email:</label>
+              <input
+                type="email"
+                name="email"
+                value={userInfo.email}
+                onChange={handleChange}
+                style={styles.input}
+              />
+            </div>
+
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Address:</label>
+              <input
+                type="text"
+                name="address"
+                value={userInfo.address}
+                onChange={handleChange}
+                style={styles.input}
+              />
+            </div>
+
+            {/* Save Button */}
+            <button type="submit" style={styles.saveButton}>
+              <FontAwesomeIcon icon={faSave} /> Save Info
+            </button>
+          </form>
         </div>
-
-        {/* User Info Form */}
-        <form style={styles.form}>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>First Name:</label>
-            <input
-              type="text"
-              name="firstName"
-              value={userInfo.firstName}
-              onChange={handleChange}
-              style={styles.input}
-            />
-          </div>
-
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Last Name:</label>
-            <input
-              type="text"
-              name="lastName"
-              value={userInfo.lastName}
-              onChange={handleChange}
-              style={styles.input}
-            />
-          </div>
-
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Phone Number:</label>
-            <input
-              type="tel"
-              name="phone"
-              value={userInfo.phone}
-              onChange={handleChange}
-              style={styles.input}
-            />
-          </div>
-
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Email:</label>
-            <input
-              type="email"
-              name="email"
-              value={userInfo.email}
-              onChange={handleChange}
-              style={styles.input}
-            />
-          </div>
-
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Address:</label>
-            <input
-              type="text"
-              name="address"
-              value={userInfo.address}
-              onChange={handleChange}
-              style={styles.input}
-            />
-          </div>
-
-          {/* Save Button */}
-          <button type="submit" style={styles.saveButton}>
-            <FontAwesomeIcon icon={faSave} /> Save Info
-          </button>
-        </form>
       </div>
     </div>
   );
