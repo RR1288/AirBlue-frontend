@@ -14,6 +14,7 @@ import FlightSearchPage from './pages/FlightSearchPage';
 import ApprovalPage from './pages/ApprovalPage';
 import AdminPage from './pages/AdminPage';
 import FinanceEventDetails from './pages/FinanceEventDetails';
+import UserInfoPage from './pages/UserInfoPage';
 
 
 function App() {
@@ -34,6 +35,8 @@ function App() {
                 <Route path="/approval" element={<ApprovalPage/>} />
                 <Route path="/admin" element={<AdminPage/>} />
                 <Route path="/finance-details" element={<FinanceEventDetails/>} />
+                <Route path="/user-info" element={<UserInfoPage/>} />
+
             
             </Routes>
         </Router>
