@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import { sendError } from '../utils/response';
 
-const headers = new Headers();
-headers.append('Authorization', `Bearer ${token}`);
+// Login page shouldn't have a token check, but other pages should
+// const headers = new Headers();
+// headers.append('Authorization', `Bearer ${token}`);
 
 
 const Notification = ({ message, onClose }) => {
