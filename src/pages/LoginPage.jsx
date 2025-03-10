@@ -127,10 +127,13 @@ const LoginPage = () => {
                         //tell user credentials right
                         if(data.data.two_fa_required){
                             //show a modal
+                            
                             //user needs to enter password
                         }
                         if(data.data.token){
                             //save in localstore
+                            const { token } = data.data.token;
+                            localStorage.setItem('token', token);
                         }
                         else{
                             //display error message
