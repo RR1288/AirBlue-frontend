@@ -127,8 +127,22 @@ const LoginPage = () => {
                         //tell user credentials right
                         if(data.data.two_fa_required){
                             //show a modal
-                            
+                            handleOpenModal;
                             //user needs to enter password
+                        }
+                        else{
+                            // Login without 2fa
+                            // User is given a token
+                            const { token } = data.data.token;
+                            localStorage.setItem('token', token);
+                            // user Sets up 2FA (get qrcode) within the app
+                            // logout
+                            localStorage.removeItem("token");
+                            // Login (endpoint won't return a token now)
+                            // Enter 2FA code now
+
+                            // Redirect to home
+                            window.location.href = "https://airblue-frontend-staging-e0760dff2ded.herokuapp.com/home";
                         }
                         if(data.data.token){
                             //save in localstore
@@ -137,7 +151,11 @@ const LoginPage = () => {
                         }
                         else{
                             //display error message
+                            alert("Unable to save token to local storage");
                         }
+                    }
+                    else{
+                        alert("Error: Data was unsucessful")
                     }
 
                 /*
@@ -190,6 +208,10 @@ const LoginPage = () => {
         
     const handleCloseModal = () => {
         setShowPinModal(false);
+    };
+
+    const handleOpenModal = () => {
+        setShowPinModal(true);
     };
 
     return (
