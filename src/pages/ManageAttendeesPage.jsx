@@ -51,7 +51,7 @@ const ManageAttendees = () => {
         <section style={styles.attendees}>
           {/* Container for back button and title */}
           <div style={styles.headerRow}>
-            <Link to="/manage-events" style={styles.backButton}>
+            <Link to="/home" style={styles.backButton}>
               <FontAwesomeIcon icon={faArrowLeft} />
             </Link>
             <h2 style={styles.title1}>IEEE Board Meeting 2024</h2>

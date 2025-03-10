@@ -22,7 +22,7 @@ const EventDetailPage = () => {
             <div style={styles.mainContent}>
                 {/* Back Button and Title */}
                 <div style={styles.headerRow}>
-                    <Link to="/manage-events" style={styles.backButton}>
+                    <Link to="/home" style={styles.backButton}>
                         <FontAwesomeIcon icon={faArrowLeft} style={styles.icon} />
                     </Link>
                     <h1 style={styles.eventTitle}>IEEE Board Meeting 2024</h1>
