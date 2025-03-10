@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import { sendError } from '../utils/response';
 
+const headers = new Headers();
+headers.append('Authorization', `Bearer ${token}`);
+
 
 const Notification = ({ message, onClose }) => {
     useEffect(() => {
@@ -17,20 +20,55 @@ const Notification = ({ message, onClose }) => {
 };
 
 const PinModal = ({ isOpen, onSubmit, onClose }) => {
-    const [pin, setPin] = useState(new Array(4).fill(''));
+    const [pin, setPin] = useState(new Array(6).fill(''));
 
     const handleChange = (index, value) => {
         const newPin = [...pin];
         newPin[index] = value.replace(/[^0-9]/g, '');
         setPin(newPin);
-        if (value && index < 3) {
+        if (value && index < 5) {
             document.getElementById(`pin-${index + 1}`).focus();
         }
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
+        //call verify endpoint
+        const response = await fetch('heroku/auth/2fa/verify', {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify({pin})
+        });
+        //await fetch -> response
+        //if response.ok -> data = await response.json()
+        if(response.ok){
+            const data = await response.json();
+            //dataParsed = JSON.parse(data);
+
+            console.log("TOKEN: ", token);
+            console.log(data.message);
+            console.log(data.data);
+            if(data.sucess){
+
+                alert("Verification Successful");
+                const { token } = data.data;
+                localStorage.setItem('token', token);
+
+                if(localStorage.token){
+                    headers = {'Authorization': localStorage.token}
+                }
+            }
+            else{
+                sendError(data.error || 'Verification failed. Please try again.');
+                alert("Verification failed. Please try again")
+            }
+        } else {
+                // Handle server errors
+                sendError(data.error || 'Verification failed. Please try again.');
+                alert("Verification failed. Please try again")
+              }
+        //check data.sucess, data.message, data.data (could be null)
         onSubmit(pin.join(''));
     };
 
@@ -84,6 +122,19 @@ const LoginPage = () => {
             
             if (response.ok) {
                 console.log(data);  
+                    if(data.sucess){
+                        //tell user credentials right
+                        if(data.data.two_fa_required){
+                            //show a modal
+                            //user needs to enter password
+                        }
+                        if(data.data.token){
+                            //save in localstore
+                        }
+                        else{
+                            //display error message
+                        }
+                    }
 
                 /*
                 This is the structure of "data"
