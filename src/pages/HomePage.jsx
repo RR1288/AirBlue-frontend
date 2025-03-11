@@ -2,8 +2,8 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGlobe, faUser, faList, faPlane } from '@fortawesome/free-solid-svg-icons';
 import Header from '../components/Header';
+import NavBar from '../components/NavBar';
 import { Link } from 'react-router-dom';
-
 
 // Main HomePage component
 const HomePage = () => {
