@@ -41,7 +41,8 @@ const styles = {
         backgroundColor: '#0A306E', // Header background color
         color: 'white',
         padding: '10px 20px',
-        marginBottom: '-160px',
+        position: 'relative',
+        zIndex: 1000,
     },
     menuButton: {
         backgroundColor: 'transparent',
