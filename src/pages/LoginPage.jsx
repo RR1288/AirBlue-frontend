@@ -7,7 +7,7 @@ const Notification = ({ message, onClose }) => {
     useEffect(() => {
         const timer = setTimeout(() => {
             onClose();
-        }, 200);
+        }, 5000);
         return () => clearTimeout(timer);
     }, [onClose]);
 
@@ -17,13 +17,13 @@ const Notification = ({ message, onClose }) => {
 };
 
 const PinModal = ({ isOpen, onSubmit, onClose }) => {
-    const [pin, setPin] = useState(new Array(4).fill(''));
+    const [pin, setPin] = useState(new Array(6).fill(''));
 
     const handleChange = (index, value) => {
         const newPin = [...pin];
         newPin[index] = value.replace(/[^0-9]/g, '');
         setPin(newPin);
-        if (value && index < 3) {
+        if (value && index < 5) {
             document.getElementById(`pin-${index + 1}`).focus();
         }
     };
@@ -66,12 +66,11 @@ const LoginPage = () => {
     const [showPinModal, setShowPinModal] = useState(false);
     const [notification, setNotification] = useState('');
 
-    const handleLoginSubmit = async  (event) => {
+    const handleLoginSubmit = async (event) => {
         event.preventDefault();
-
+    
         try {
             const response = await fetch(`https://airblue-backend-staging-eac124cc32ab.herokuapp.com/auth/login`, {
-
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -79,60 +78,101 @@ const LoginPage = () => {
                 },
                 body: JSON.stringify({ username, password })
             });
-
+    
             const data = await response.json();
             
             if (response.ok) {
-                console.log(data);  
-
-                /*
-                This is the structure of "data"
-                    data = {
-                        success: true,
-                        message: message,
-                        data: data,
-                    }
-                OR-----------------------------
-                    data = {
-                        success: false,
-                        message: message,
-                    }
-                */
-                
-                // If data.success => go to home or open 2fa modal
-                // Else => display error
-
-                const { token } = data.data;
-                console.log(data.message);
-                
-                console.log("TOKEN: ", token);
-                localStorage.setItem('token', token);
-
-                // if 2FA is required then open PIN modal you won't get a token
-                // you'll get a message saying "2FA required"
-                // Open the PIN modal and send a request here: https://airblue-backend-staging-eac124cc32ab.herokuapp.com/auth/2fa_verify
-                // NOW, that will return a token
-
-              } else {
-                // Handle server errors
-                sendError(data.error || 'Login failed. Please try again.');
-              }
+                if (data.success && data.data && data.data.token) {
+                    // If login successful and token received, redirect or show dashboard
+                    localStorage.setItem('token', data.data.token);
+                    window.location.href = '/home';
+                } else if (data.message === "2FA required") {
+                    // If 2FA is required but no token, show PIN modal
+                    setShowPinModal(true);
+                }
+            } else {
+                throw new Error(data.message || 'Login failed. Please try again.');
+            }
         } catch (error) {
             console.error(error);
-            
+            sendError(error.message || 'An error occurred during login.');
         }
-
-       setShowPinModal(true);
     };
-
-    const handlePinSubmit = (pin) => {
-        setNotification('Verification Successful! Redirecting to homepage...');
-        setTimeout(() => {
-            window.location.href = '/home';
-        }, 1000);
-        setShowPinModal(false);
+    
+    const Setup2FAModal = ({ isOpen, onClose, onSetupComplete }) => {
+        const [qrCodeUrl, setQrCodeUrl] = useState('');
+    
+        useEffect(() => {
+            // Call backend to get QR code URL when the modal is open
+            if (isOpen) {
+                const fetchQRCode = async () => {
+                    const response = await fetch('https://airblue-backend-staging-eac124cc32ab.herokuapp.com/auth/setup-2fa', {
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`, // Assuming the token is required
+                        },
+                    });
+                    const data = await response.json();
+                    if (response.ok) {
+                        setQrCodeUrl(data.qrCodeUrl);
+                    } else {
+                        throw new Error('Failed to fetch QR code');
+                    }
+                };
+    
+                fetchQRCode().catch(error => {
+                    sendError(error.message);
+                    onClose(); // Close modal on error
+                });
+            }
+        }, [isOpen]);
+    
+        return isOpen ? (
+            <div style={styles.modalOverlay}>
+                <div style={styles.modal}>
+                    <h2>Set Up 2FA</h2>
+                    <img src={qrCodeUrl} alt="QR Code" style={styles.qrCode} />
+                    <p>Scan this code with your 2FA app</p>
+                    <button onClick={onSetupComplete} style={styles.button}>I've Set It Up</button>
+                    <button onClick={onClose} style={styles.button}>Cancel</button>
+                </div>
+            </div>
+        ) : null;
     };
-        
+    
+    const handlePinSubmit = async (pin) => {
+        try {
+            const response = await fetch(`https://airblue-backend-staging-eac124cc32ab.herokuapp.com/auth/2fa/verify`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ two_fa_code: pin })
+            });
+    
+            const data = await response.json();
+            if (response.ok) {
+                if (data.success) {
+                    localStorage.setItem('token', data.token);
+                    setNotification('Verification Successful! Redirecting to homepage...');
+                    setTimeout(() => {
+                        window.location.href = '/home';
+                    }, 1000);
+                } else {
+                    throw new Error(data.message || 'PIN verification failed.');
+                }
+            } else {
+                throw new Error(data.message || 'An error occurred during PIN verification.');
+            }
+        } catch (error) {
+            console.error(error);
+            setNotification(error.message);
+        }
+        finally {
+            setShowPinModal(false);
+        }
+    };
+                
     const handleCloseModal = () => {
         setShowPinModal(false);
     };
@@ -272,6 +312,7 @@ const styles = {
     pinContainer: {
         display: 'flex',
         flexDirection: 'row',
+        justifyContent: 'center', // Centers the pin inputs within the modal
         marginBottom: '20px',
     },
     pinInput: {
