@@ -1,5 +1,6 @@
 import React from 'react';
 import Header from '../components/Header';
+import Navbar from '../components/Navbar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
@@ -9,6 +10,7 @@ const EventDetailPage = () => {
         <div style={styles.page}>
             {/* Header Component */}
             <Header title="AirBlue System" />
+            <Navbar />
 
             <br></br>
             <br></br>

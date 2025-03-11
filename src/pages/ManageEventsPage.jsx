@@ -1,5 +1,6 @@
 import React from 'react';
 import Header from '../components/Header';
+import Navbar from '../components/Navbar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
@@ -10,6 +11,7 @@ const EventsPage = () => {
   return (
     <div style={styles.container}>
       <Header title="AirBlue System" />
+      <Navbar />
       <main style={styles.main}>
         <section style={styles.events}>
           {/* Container for back button and title */}

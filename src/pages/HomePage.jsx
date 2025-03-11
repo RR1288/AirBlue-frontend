@@ -2,6 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGlobe, faUser, faList, faPlane } from '@fortawesome/free-solid-svg-icons';
 import Header from '../components/Header';
+import Navbar from '../components/Navbar';
 import { Link } from 'react-router-dom';
 
 
@@ -11,6 +12,8 @@ const HomePage = () => {
         <div style={styles.page}>
             {/* Header component */}
             <Header title="AirBlue System" />
+
+            <Navbar />
 
             {/* Main content */}
             <div style={styles.mainContent}>

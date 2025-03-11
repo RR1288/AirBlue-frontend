@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import Header from '../components/Header';
+import Navbar from '../components/Navbar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTools } from '@fortawesome/free-solid-svg-icons';
 
@@ -13,6 +14,7 @@ const UnderConstruction = () => {
         <div style={styles.page}>
             {/* render existing Header component at the top */}
             <Header title="AirBlue System" />
+            <Navbar />
 
             {/* centered content */}
             <div style={styles.mainContent}>

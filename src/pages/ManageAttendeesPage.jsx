@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Header from '../components/Header';
+import Navbar from '../components/Navbar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faFilter } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
@@ -47,6 +48,7 @@ const ManageAttendees = () => {
   return (
     <div style={styles.container}>
       <Header title="AirBlue System" />
+      <Navbar />
       <main style={styles.main}>
         <section style={styles.attendees}>
           {/* Container for back button and title */}
