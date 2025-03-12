@@ -139,8 +139,9 @@ const LoginPage = () => {
                             // logout
                             localStorage.removeItem("token");
                             // Login (endpoint won't return a token now)
+                            
                             // Enter 2FA code now
-
+                            handleOpenModal;
                             // Redirect to home
                             window.location.href = "https://airblue-frontend-staging-e0760dff2ded.herokuapp.com/home";
                         }

@@ -74,6 +74,7 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '20px',
+        marginTop: '200px'
     },
     welcomeText: {
         // Style for the welcome message

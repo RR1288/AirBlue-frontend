@@ -5,6 +5,29 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
 const FinancePermission = () => {
+
+    const handleBudgetChange = async  (event) => {
+        event.preventDefault();
+
+        try {
+            //not sure what the endpoint is / if have one yet
+            const response = await fetch(`https://airblue-backend-staging-eac124cc32ab.herokuapp.com/finance/`, {
+
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json'
+                },
+                //body: JSON.stringify({ username, password })
+            });
+
+        } catch (error) {
+            console.error(error);
+            
+        }
+
+    };
+
   return (
     <div style={styles.container}>
       <Header title="AirBlue System" />
