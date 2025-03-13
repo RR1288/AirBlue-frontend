@@ -10,15 +10,14 @@ const FinancePermission = () => {
         event.preventDefault();
 
         try {
-            //not sure what the endpoint is / if have one yet
-            const response = await fetch(`https://airblue-backend-staging-eac124cc32ab.herokuapp.com/finance/`, {
+            const response = await fetch(`https://airblue-backend-staging-eac124cc32ab.herokuapp.com/events/set-budget`, {
 
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                   'Accept': 'application/json'
                 },
-                //body: JSON.stringify({ username, password })
+                body: JSON.stringify({ eventID, totalBudget, flightBudget })
             });
 
         } catch (error) {
