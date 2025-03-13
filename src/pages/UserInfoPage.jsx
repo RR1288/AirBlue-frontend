@@ -8,9 +8,11 @@ import { Link } from 'react-router-dom';
 const styles = {
   page: {
     display: 'flex',
-    minHeight: '100vh',
-    backgroundColor: '#ffffff',
-    overflowX: 'hidden', // Prevents content from shifting
+        flexDirection: 'column',
+        minHeight: '100vh',
+        width: '100vw',
+        backgroundColor: '#ffffff',
+        boxSizing: 'border-box',
   },
   contentWrapper: {
     flex: 1, 
@@ -18,14 +20,15 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '1080px',
+    padding: '100px',
     transition: 'margin-left 0.3s ease-in-out',
-    marginTop: '-900px',
+    marginTop: '10px',
   },
   headerRow: {
     display: 'flex',
     alignItems: 'center',
-    marginBottom: '20px',
+    marginBottom: '10px',
+    marginTop: '-50px',
   },
   backButton: {
     textDecoration: 'none',
@@ -38,11 +41,8 @@ const styles = {
     color: '#0B2853',
   },
   form: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '15px',
     width: '100%',
-    maxWidth: '800px',
+    maxWidth: '400px',
   },
   formGroup: {
     display: 'flex',

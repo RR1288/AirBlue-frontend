@@ -15,6 +15,7 @@ import ApprovalPage from './pages/ApprovalPage';
 import AdminPage from './pages/AdminPage';
 import FinanceEventDetails from './pages/FinanceEventDetails';
 import UserInfoPage from './pages/UserInfoPage';
+import RegisterPage from './pages/RegisterPage';
 
 
 function App() {
@@ -36,6 +37,8 @@ function App() {
                 <Route path="/admin" element={<AdminPage/>} />
                 <Route path="/finance-details" element={<FinanceEventDetails/>} />
                 <Route path="/user-info" element={<UserInfoPage/>} />
+                <Route path="/register" element={<RegisterPage/>} />
+
 
             
             </Routes>

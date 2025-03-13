@@ -34,14 +34,7 @@ const HomePage = () => {
                 </div>
                 </Link>
 
-                <Link to="/event-details" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <div style={styles.card}>
-                <FontAwesomeIcon icon={faList} style={styles.icon}/>
-                 <p style={styles.cardTitle}>Event Types</p>
-                </div>
-                </Link>
-
-                <Link to="/event-attendees" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Link to="/flight-search" style={{ textDecoration: 'none', color: 'inherit' }}>
                 <div style={styles.card}>
                 <FontAwesomeIcon icon={faPlane} style={styles.icon}/>
                 <p style={styles.cardTitle}>Flights</p>
