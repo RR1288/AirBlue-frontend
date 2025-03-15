@@ -20,14 +20,14 @@ const HomePage = () => {
                 {/* Cards container */}
                 <div style={styles.grid}>
 
-                    <Link to="/events" style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <Link to="/user-events" style={{ textDecoration: 'none', color: 'inherit' }}>
                         <div style={styles.card}>
                             <FontAwesomeIcon icon={faGlobe} style={styles.icon} />
                             <p style={styles.cardTitle}>Events</p>
                         </div>
                     </Link>
 
-                    <Link to="/manage-attendees" style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <Link to="/event-attendees" style={{ textDecoration: 'none', color: 'inherit' }}>
                         <div style={styles.card}>
                             <FontAwesomeIcon icon={faUser} style={styles.icon} />
                             <p style={styles.cardTitle}>Attendees</p>
