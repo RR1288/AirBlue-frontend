@@ -56,7 +56,6 @@ const EventAttendeesPage = () => {
             <Link to="/manage-events" style={styles.backButton}>
               <FontAwesomeIcon icon={faArrowLeft} />
             </Link>
-            <h2 style={styles.title1}>All Events</h2>
           </div>
           <h3 style={styles.title2}>Attendees</h3>
 
@@ -130,7 +129,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     padding: '20px',
-    marginTop: '-400px',
+    marginTop: '-20px',
   },
   headerRow: {
     display: 'flex',

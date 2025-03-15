@@ -10,7 +10,7 @@ const HomePage = () => {
     return (
         <div style={styles.page}>
             {/* Header component */}
-            <Header title="AirBlue System" />
+            <Header title="AirBlue System"  />
 
             {/* Main content */}
             <div style={styles.mainContent}>
@@ -67,7 +67,7 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '20px',
-        marginTop: '-200px', // Adjusts spacing from the top
+        marginTop: '0px', // Adjusts spacing from the top
     },
     welcomeText: {
         // Style for the welcome message

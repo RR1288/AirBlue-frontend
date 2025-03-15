@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faHome, faCalendarAlt, faUsers, faUserShield, faFileInvoiceDollar } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faHome, faCalendarAlt, faUsers, faUserShield, faFileInvoiceDollar, faQuestion } from "@fortawesome/free-solid-svg-icons";
 
 const AdminSidebar = ({ isOpen, setIsOpen }) => {
     return (
@@ -41,6 +41,10 @@ const AdminSidebar = ({ isOpen, setIsOpen }) => {
             <Link to="/admin" style={linkStyle} onClick={() => setIsOpen(false)}>
                 <FontAwesomeIcon icon={faUserShield} /> Administration
             </Link>
+            <Link to="/approval" style={linkStyle} onClick={() => setIsOpen(false)}>
+                <FontAwesomeIcon icon={faQuestion} /> Approval Requests
+            </Link>
+
 
             
         </div>

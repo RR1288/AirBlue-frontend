@@ -22,6 +22,7 @@ import UserInfoPage from './pages/UserInfoPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import UserEventsPage from './pages/UserEventsPage';
 import MyEventsPage from './pages/MyEventsPage';
+import EventsFinanceUser from './pages/EventsFinanceUser';
 
 
 function App() {
@@ -32,10 +33,10 @@ function App() {
                 <Route path="/manage-events" element={<ManageEventsPage />} />
                 <Route path="/manage-attendees" element={<ManageAttendeesPage />} />
                 <Route path="/event-details" element={<EventDetailPage/>} />
-                <Route path="/login" element={<LoginPage/>} />
+                <Route path="/" element={<LoginPage/>} />
                 <Route path="/event-edit" element={<EventEditPage/>} />
                 <Route path="/event-attendees" element={<EventAttendeesPage/>} />                
-                <Route path="/" element={<UnderConstruction/>} />
+                <Route path="/under-construction" element={<UnderConstruction/>} />
                 <Route path="/finance-permission" element={<FinancePermission/>} />
                 <Route path="/event-creation" element={<EventCreationPage/>} />
                 <Route path="/flight-search" element={<FlightSearchPage/>} />
@@ -50,6 +51,7 @@ function App() {
                 <Route path="/forgot-password" element={<ForgotPasswordPage/>} />
                 <Route path="/user-events" element={<UserEventsPage/>} />
                 <Route path="/my-events" element={<MyEventsPage/>} />
+                <Route path="/finance-events" element={<EventsFinanceUser/>} />
 
 
             

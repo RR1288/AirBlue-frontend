@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { sendError } from '../utils/response';
@@ -39,7 +39,7 @@ const RegisterAttendeePage = () => {
         }
 
         try {
-            const response = await fetch(`https://airblue-backend-staging-eac124cc32ab.herokuapp.com/auth/register`, {
+            const response = await fetch("https://airblue-backend-staging-eac124cc32ab.herokuapp.com/auth/register", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -65,7 +65,8 @@ const RegisterAttendeePage = () => {
 
     return (
         <div style={styles.page}>
-            <Header title="AirBlue System" style={styles.header} />
+            {/* Ensures Sidebar is hidden only when hideSidebar is explicitly passed */}
+            <Header title="AirBlue System" hideSidebar={true} />
             <div style={styles.mainContent}>
                 <h1 style={styles.h1}>Register as Attendee</h1>
                 <div style={styles.formContainer}>
@@ -148,25 +149,19 @@ const styles = {
         backgroundColor: '#ffffff',
         boxSizing: 'border-box',
     },
-    header: {
-        width: '100%',
-        textAlign: 'center',
-    },
     h1: {
         textAlign: 'center',
         color: '#0B2853',
         fontSize: '24px',
         fontWeight: '600',
-        margin: '20px 0',
+        marginBottom: '20px',
     },
     mainContent: {
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
         padding: '20px',
-        marginTop: '-450px',
     },
     formContainer: {
         display: 'flex',
@@ -182,10 +177,10 @@ const styles = {
         width: '100%',
     },
     formGroup: {
-        marginBottom: '20px',
+        marginBottom: '15px',
     },
     label: {
-        marginBottom: '10px',
+        marginBottom: '8px',
         fontWeight: 'bold',
         color: '#0B2853',
     },
@@ -206,8 +201,7 @@ const styles = {
         borderRadius: '4px',
         cursor: 'pointer',
         fontSize: '18px',
-        margin: '10px 0',
-        display: 'block',
+        marginTop: '10px',
     },
     notification: {
         position: 'fixed',

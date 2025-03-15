@@ -130,7 +130,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     padding: '20px',
-    marginTop: '-400px',
+    marginTop: '20px',
   },
   headerRow: {
     display: 'flex',

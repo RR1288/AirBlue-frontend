@@ -48,7 +48,7 @@ const PasswordResetPage = () => {
 
     return (
         <div style={styles.page}>
-            <Header title="AirBlue System" />
+            <Header title="AirBlue System" hideSidebar={true} />
             <div style={styles.mainContent}>
                 <h1 style={styles.h1}>Reset Your Password</h1>
                 <div style={styles.container}>
@@ -109,9 +109,7 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
         padding: '20px',
-        marginTop: '-390px',
     },
     h1: {
         textAlign: 'center',

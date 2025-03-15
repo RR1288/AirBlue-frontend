@@ -1,70 +1,160 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
 const EventCreationPage = () => {
+    const [formData, setFormData] = useState({
+        title: '',
+        date: '',
+        eventType: '',
+        location: '',
+        attendeeLimit: '',
+        description: '',
+        notes: ''
+    });
+
+    const navigate = useNavigate();
+
+    // Handles form input changes
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    // Handles form submission
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // TODO: Implement backend logic for event creation
+        try {
+            const response = await fetch('https://airblue-backend-staging-eac124cc32ab.herokuapp.com/events/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+                alert('Event successfully created!');
+                navigate('/manage-events'); // Redirect to manage events page
+            } else {
+                alert('Event creation failed. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error creating event:', error);
+        }
+    };
+
     return (
         <div style={styles.page}>
-            {/* _Header_Component_ */}
             <Header title="AirBlue System" />
 
             <div style={styles.mainContent}>
-                {/* _Back_Button_and_Title_ */}
                 <div style={styles.headerRow}>
                     <Link to="/manage-events" style={styles.backButton}>
                         <FontAwesomeIcon icon={faArrowLeft} style={styles.icon} />
-
                     </Link>
                     <h1 style={styles.eventTitle}>Create New Event</h1>
                 </div>
 
-                {/* _Event_Creation_Form_ */}
-                <form style={styles.form}>
+                <form style={styles.form} onSubmit={handleSubmit}>
                     <div style={styles.row}>
                         <label style={styles.label}>Event Title:</label>
-                        <input type="text" placeholder="Enter event title" style={styles.input} />
+                        <input 
+                            type="text" 
+                            name="title"
+                            placeholder="Enter event title" 
+                            style={styles.input}
+                            value={formData.title}
+                            onChange={handleChange}
+                            required
+                        />
                     </div>
 
                     <div style={styles.row}>
                         <label style={styles.label}>Date:</label>
-                        <input type="date" style={styles.input} />
+                        <input 
+                            type="date" 
+                            name="date"
+                            style={styles.input}
+                            value={formData.date}
+                            onChange={handleChange}
+                            required
+                        />
                     </div>
 
                     <div style={styles.row}>
                         <label style={styles.label}>Event Type:</label>
-                        <select style={styles.input}>
-                            <option>Select Event Type</option>
-                            <option>Board Meeting</option>
-                            <option>Conference</option>
-                            <option>Workshop</option>
+                        <select 
+                            name="eventType"
+                            style={styles.input}
+                            value={formData.eventType}
+                            onChange={handleChange}
+                            required
+                        >
+                            <option value="">Select Event Type</option>
+                            <option value="Board Meeting">Board Meeting</option>
+                            <option value="Conference">Conference</option>
+                            <option value="Workshop">Workshop</option>
                         </select>
                     </div>
 
                     <div style={styles.row}>
                         <label style={styles.label}>Location:</label>
-                        <input type="text" placeholder="Enter location" style={styles.input} />
-                    </div>
-
-                    <div style={styles.budgetRow}>
-                        <div style={styles.row}>
-                            <label style={styles.label}>Budget per Event:</label>
-                            <input type="text" placeholder="$0.00" style={styles.input} />
-                        </div>
-                        <div style={styles.row}>
-                            <label style={styles.label}>Budget per Attendee:</label>
-                            <input type="text" placeholder="$0.00" style={styles.input} />
-                        </div>
+                        <input 
+                            type="text" 
+                            name="location"
+                            placeholder="Enter location" 
+                            style={styles.input}
+                            value={formData.location}
+                            onChange={handleChange}
+                            required
+                        />
                     </div>
 
                     <div style={styles.row}>
-                        <label style={styles.label}>Notes:</label>
-                        <textarea placeholder="Enter additional notes" style={styles.textarea}></textarea>
+                        <label style={styles.label}>Max Attendees:</label>
+                        <input 
+                            type="number" 
+                            name="attendeeLimit"
+                            placeholder="Enter attendee limit" 
+                            style={styles.input}
+                            value={formData.attendeeLimit}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
+                    <div style={styles.row}>
+                        <label style={styles.label}>Event Description:</label>
+                        <textarea 
+                            name="description"
+                            placeholder="Provide a brief description" 
+                            style={styles.textarea}
+                            value={formData.description}
+                            onChange={handleChange}
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div style={styles.row}>
+                        <label style={styles.label}>Additional Notes:</label>
+                        <textarea 
+                            name="notes"
+                            placeholder="Enter any additional notes" 
+                            style={styles.textarea}
+                            value={formData.notes}
+                            onChange={handleChange}
+                        ></textarea>
                     </div>
 
                     <div style={styles.buttonRow}>
-                        <button type="button" style={styles.createButton}>Create Event</button>
+                        <button type="submit" style={styles.createButton}>Create Event</button>
                     </div>
                 </form>
             </div>
@@ -83,10 +173,10 @@ const styles = {
     },
     mainContent: {
         flex: 1,
-        maxWidth: '800px',
-        margin: '0 auto',
-        marginTop: '20px',
-        padding: '20px'
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: '20px',
     },
     headerRow: {
         display: 'flex',
@@ -109,7 +199,9 @@ const styles = {
     form: {
         display: 'flex',
         flexDirection: 'column',
-        gap: '20px'
+        gap: '20px',
+        width: '100%',
+        maxWidth: '500px'
     },
     row: {
         display: 'flex',
@@ -124,18 +216,16 @@ const styles = {
         padding: '10px',
         borderRadius: '4px',
         border: '1px solid #ccc',
-        backgroundColor: '#F9F9F9'
+        backgroundColor: '#F9F9F9',
+        fontSize: '16px'
     },
     textarea: {
         padding: '10px',
         minHeight: '100px',
         borderRadius: '4px',
         border: '1px solid #ccc',
-        backgroundColor: '#F9F9F9'
-    },
-    budgetRow: {
-        display: 'flex',
-        gap: '20px'
+        backgroundColor: '#F9F9F9',
+        fontSize: '16px'
     },
     buttonRow: {
         display: 'flex',
@@ -148,7 +238,8 @@ const styles = {
         border: 'none',
         borderRadius: '4px',
         padding: '10px 20px',
-        cursor: 'pointer'
+        cursor: 'pointer',
+        fontSize: '16px'
     },
 };
 

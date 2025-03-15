@@ -48,7 +48,7 @@ const ForgotPasswordPage = () => {
 
     return (
         <div style={styles.page}>
-            <Header title="AirBlue System" />
+            <Header title="AirBlue System" hideSidebar={true}/>
             <div style={styles.mainContent}>
                 <h1 style={styles.h1}>Forgot Password</h1>
                 {notification && <div style={styles.notification}>{notification}</div>}
@@ -128,9 +128,7 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
         padding: '20px',
-        marginTop: '-450px',
     },
     h1: {
         textAlign: 'center',

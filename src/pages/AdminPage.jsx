@@ -104,10 +104,10 @@ const styles = {
     },
     mainContent: {
         flex: 1,
-        maxWidth: '800px',
-        margin: '0 auto',
-        marginTop: '150px',
-        padding: '20px'
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: '20px',
     },
     headerRow: {
         display: 'flex',

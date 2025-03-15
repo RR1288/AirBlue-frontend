@@ -47,12 +47,10 @@ const styles = {
   },
   main: {
     flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '20px',
-    marginTop: '-800px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: '20px',
   },
   headerRow: {
     display: 'flex',

@@ -30,7 +30,7 @@ const UserInfoPage = () => {
 
     return (
         <div style={styles.container}>
-            <Header />
+            <Header  title="AirBlue System"  />
             <main style={styles.main}>
                 <section style={styles.infoSection}>
                     <h1 style={styles.h1}>User Information</h1>

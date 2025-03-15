@@ -2,26 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faCalendarAlt, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faCalendarAlt, faMapMarkerAlt, faDollarSign } from '@fortawesome/free-solid-svg-icons';
 
-const UserEventsPage = () => {
+const FinanceEventsPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredEvents, setFilteredEvents] = useState([]);
     const [events, setEvents] = useState([
         {
             id: 1,
-            title: 'Community Clean-Up Day',
+            title: 'Company Financial Review',
             date: '2025-04-22',
-            location: 'Central Park',
-            description: 'Join us for a day of community service to clean up our local park.',
+            location: 'Headquarters',
+            description: 'Annual financial review for shareholders and stakeholders.',
         },
         {
             id: 2,
-            title: 'Spring Art Festival',
+            title: 'Budget Allocation Meeting',
             date: '2025-05-15',
-            location: 'Downtown Art District',
-            description: 'Experience local art, music, and food at the annual Spring Art Festival.',
+            location: 'Finance Boardroom',
+            description: 'Meeting to discuss and allocate budgets for upcoming projects.',
         },
+        // Add more placeholder events as needed
     ]);
 
     useEffect(() => {
@@ -38,12 +39,12 @@ const UserEventsPage = () => {
 
     return (
         <div style={styles.container}>
-            <Header title="Airblue System" />
+            <Header title="AirBlue System" />
             <main style={styles.main}>
                 <section style={styles.searchSection}>
                     <input
                         type="text"
-                        placeholder="Search events..."
+                        placeholder="Search finance events..."
                         value={searchTerm}
                         onChange={handleSearchChange}
                         style={styles.searchInput}
@@ -62,15 +63,15 @@ const UserEventsPage = () => {
                                     <FontAwesomeIcon icon={faMapMarkerAlt} /> {event.location}
                                 </p>
                                 <p style={styles.eventDescription}>{event.description}</p>
-                                
-                                {/* View Details Button */}
-                                <Link to={`/event-details/${event.id}`} style={styles.detailsButton}>
-                                    View Details
+
+                                {/* Finance Details Link */}
+                                <Link to={`/finance-details`} style={styles.financeIcon}>
+                                    <FontAwesomeIcon icon={faDollarSign} />
                                 </Link>
                             </div>
                         ))
                     ) : (
-                        <p style={styles.noEventsMessage}>No events found.</p>
+                        <p style={styles.noEventsMessage}>No finance events found.</p>
                     )}
                 </section>
             </main>
@@ -126,6 +127,7 @@ const styles = {
         marginBottom: '20px',
         borderRadius: '8px',
         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+        position: 'relative',
     },
     eventTitle: {
         fontSize: '20px',
@@ -146,17 +148,13 @@ const styles = {
         fontSize: '16px',
         color: '#555',
     },
-    detailsButton: {
-        display: 'block',
-        textAlign: 'center',
-        backgroundColor: '#0B2853',
-        color: 'white',
-        textDecoration: 'none',
-        padding: '10px',
-        borderRadius: '5px',
-        marginTop: '10px',
-        fontSize: '16px',
-        fontWeight: 'bold',
+    financeIcon: {
+        position: 'absolute',
+        top: '15px',
+        right: '15px',
+        color: '#0B2853',
+        fontSize: '22px',
+        cursor: 'pointer',
     },
     noEventsMessage: {
         fontSize: '16px',
@@ -165,4 +163,4 @@ const styles = {
     },
 };
 
-export default UserEventsPage;
+export default FinanceEventsPage;

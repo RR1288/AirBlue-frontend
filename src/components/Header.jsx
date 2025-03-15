@@ -9,11 +9,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt, faBars } from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 
-function Header({ title, userRole }) {
+function Header({ title, userRole, hideSidebar = false }) { // hideSidebar now strictly controls sidebar rendering
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
-    // Function to render the appropriate sidebar based on user role
+    // Function to render the appropriate sidebar based ONLY on hideSidebar prop
     const renderSidebar = () => {
+        if (hideSidebar) return null; // Sidebar is completely removed when hideSidebar=true
+
         switch (userRole) {
             case "admin":
                 return <AdminSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />;
@@ -24,24 +26,26 @@ function Header({ title, userRole }) {
             case "eventPlanner":
                 return <EventPlannerSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />;
             case "user":
-            default: // change to test others
-                return <EventPlannerSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />;
+            default:
+                return <AdminSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />;
         }
     };
 
     return (
         <>
-            {/* Render the appropriate sidebar */}
+            {/* Sidebar will now ONLY be affected by hideSidebar */}
             {renderSidebar()}
 
             <header style={styles.header}>
-                {/* Menu button toggles sidebar */}
-                <button onClick={() => setSidebarOpen(!sidebarOpen)} style={styles.menuButton}>
-                    <FontAwesomeIcon icon={faBars} />
-                </button>
+                {/* Menu button toggles sidebar unless hidden */}
+                {!hideSidebar && (
+                    <button onClick={() => setSidebarOpen(!sidebarOpen)} style={styles.menuButton}>
+                        <FontAwesomeIcon icon={faBars} />
+                    </button>
+                )}
 
                 {/* Page title */}
-                <h1 style={styles.title}>{title}</h1>
+               <a href="home"><h1 style={styles.title}>{title}</h1></a>
 
                 {/* Sign out link with an icon */}
                 <Link to="/login" style={styles.signOut}>
@@ -55,7 +59,8 @@ function Header({ title, userRole }) {
 // PropTypes for validation
 Header.propTypes = {
     title: PropTypes.string.isRequired,
-    userRole: PropTypes.string.isRequired, // Ensure userRole is passed as a prop
+    userRole: PropTypes.string.isRequired,
+    hideSidebar: PropTypes.bool, // Added prop validation
 };
 
 // Styles for the header
@@ -78,6 +83,7 @@ const styles = {
     title: {
         margin: 0,
         fontSize: "18px",
+        color: "white",
     },
     signOut: {
         display: "flex",
@@ -94,3 +100,4 @@ const styles = {
 };
 
 export default Header;
+``

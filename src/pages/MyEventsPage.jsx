@@ -69,7 +69,7 @@ const MyEventsPage = () => {
                                         <h3 style={styles.eventTitle}>{event.title}</h3>
                                         <p style={styles.eventDetails}>{new Date(event.date).toLocaleDateString()} - {event.location}</p>
                                         <p style={styles.eventDescription}>{event.description}</p>
-                                        <button onClick={() => navigate(`/event/${event.id}`)} style={styles.detailsButton}>View Details</button>
+                                        <button onClick={() => navigate(`/event-details`)} style={styles.detailsButton}>View Details</button>
                                     </div>
                                 ))
                             ) : (
