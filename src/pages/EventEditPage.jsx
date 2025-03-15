@@ -1,15 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../components/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faFilter, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
 const EventsEditPage = () => {
+    const [eventDetails, setEventDetails] = useState({
+        title: "IEEE Board Meeting 2024",
+        eventType: "Board Meeting",
+        date: "2025-10-15",
+        location: "Rochester Conference Center",
+        notes: "Annual strategic planning meeting for IEEE members.",
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setEventDetails((prevDetails) => ({
+            ...prevDetails,
+            [name]: value,
+        }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log("Updated Event Details:", eventDetails);
+    };
+
     return (
         <div style={styles.page}>
             {/* Header Component */}
             <Header title="AirBlue System" />
-            
+
             {/* Main Content */}
             <div style={styles.mainContent}>
                 {/* Back Button and Title */}
@@ -17,36 +38,86 @@ const EventsEditPage = () => {
                     <Link to="/manage-events" style={styles.backButton}>
                         <FontAwesomeIcon icon={faArrowLeft} style={styles.icon} />
                     </Link>
-                    <h2 style={styles.eventTitle}>Events</h2>
+                    <h2 style={styles.eventTitle}>Edit Event</h2>
                 </div>
 
-                {/* Filter Section */}
-                <div style={styles.filterContainer}>
-                    <input
-                        type="text"
-                        placeholder="Event title"
-                        style={styles.filterInput}
-                        value="IEEE Board Meeting 2024"
-                    />
-                    <input
-                        type="text"
-                        placeholder="Event type"
-                        style={styles.filterInput}
-                        value="Board Meeting"
-                    />
-                    <FontAwesomeIcon icon={faFilter} style={styles.icon} />
-                    <button style={styles.clearButton}>CLEAR FILTERS</button>
-                    <button style={styles.searchButton}>SEARCH</button>
-                    <FontAwesomeIcon icon={faCog} style={styles.icon} />
-                </div>
+                {/* Event Edit Form */}
+                <form onSubmit={handleSubmit} style={styles.form}>
+                    {/* Event Title */}
+                    <div style={styles.row}>
+                        <label style={styles.label}>Event Title:</label>
+                        <input
+                            type="text"
+                            name="title"
+                            value={eventDetails.title}
+                            onChange={handleChange}
+                            style={styles.input}
+                            required
+                        />
+                    </div>
 
-                {/* Section Title */}
-                <h3 style={styles.month}>October</h3>
+                    {/* Event Type */}
+                    <div style={styles.row}>
+                        <label style={styles.label}>Event Type:</label>
+                        <select
+                            name="eventType"
+                            value={eventDetails.eventType}
+                            onChange={handleChange}
+                            style={styles.input}
+                        >
+                            <option value="Board Meeting">Board Meeting</option>
+                            <option value="Conference">Conference</option>
+                            <option value="Workshop">Workshop</option>
+                            <option value="Seminar">Seminar</option>
+                        </select>
+                    </div>
+
+                    {/* Event Date */}
+                    <div style={styles.row}>
+                        <label style={styles.label}>Event Date:</label>
+                        <input
+                            type="date"
+                            name="date"
+                            value={eventDetails.date}
+                            onChange={handleChange}
+                            style={styles.input}
+                        />
+                    </div>
+
+                    {/* Location */}
+                    <div style={styles.row}>
+                        <label style={styles.label}>Location:</label>
+                        <input
+                            type="text"
+                            name="location"
+                            value={eventDetails.location}
+                            onChange={handleChange}
+                            style={styles.input}
+                        />
+                    </div>
+
+                    {/* Notes */}
+                    <div style={styles.row}>
+                        <label style={styles.label}>Notes:</label>
+                        <textarea
+                            name="notes"
+                            value={eventDetails.notes}
+                            onChange={handleChange}
+                            style={styles.textarea}
+                        />
+                    </div>
+
+                    {/* Save Changes Button */}
+                    <button type="submit" style={styles.saveButton}>
+                        Save Changes
+                    </button>
+                </form>
             </div>
         </div>
     );
 };
 
+// Styles
 const styles = {
     page: {
         display: 'flex',
@@ -57,68 +128,77 @@ const styles = {
     },
     mainContent: {
         flex: 1,
-        maxWidth: '800px',
-        margin: '0 auto',
+        maxWidth: '600px',
+        margin: '10px',
+        alignItems: 'center',
         padding: '20px',
     },
     headerRow: {
         display: 'flex',
         alignItems: 'center',
         marginBottom: '20px',
-        marginTop: '200px',
     },
     backButton: {
         textDecoration: 'none',
         color: '#0B2853',
+        marginRight: '10px',
         fontSize: '16px',
         fontWeight: '600',
-        marginRight: '20px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '5px',
     },
     icon: {
         fontSize: '16px',
         color: '#0B2853',
-        cursor: 'pointer',
     },
     eventTitle: {
-        fontSize: '24px',
+        fontSize: '22px',
         fontWeight: 'bold',
         color: '#0B2853',
     },
-    filterContainer: {
+    form: {
         display: 'flex',
-        alignItems: 'center',
-        gap: '10px',
-        marginBottom: '20px',
+        flexDirection: 'column',
+        gap: '20px',
     },
-    filterInput: {
-        padding: '8px',
-        border: '1px solid #ccc',
-        borderRadius: '4px',
-        backgroundColor: 'white',
-        color: 'black',
-        flex: '1',
+    row: {
+        display: 'flex',
+        flexDirection: 'column',
     },
-    clearButton: {
-        backgroundColor: '#fff',
-        color: '#0B2853',
-        border: '1px solid #0B2853',
-        borderRadius: '5px',
-        padding: '5px 10px',
-        cursor: 'pointer',
-    },
-    searchButton: {
-        backgroundColor: '#0A306E',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '5px',
-        padding: '5px 10px',
-        cursor: 'pointer',
-    },
-    month: {
-        color: '#0B2853',
-        fontSize: '18px',
+    label: {
+        marginBottom: '5px',
         fontWeight: 'bold',
-        marginTop: '10px',
+        color: '#0B2853',
+    },
+    input: {
+        padding: '10px',
+        borderRadius: '4px',
+        border: '1px solid #ccc',
+        fontSize: '16px',
+        backgroundColor: '#FFFFFF',
+        color: '#333',
+    },
+    textarea: {
+        padding: '10px',
+        borderRadius: '4px',
+        border: '1px solid #ccc',
+        minHeight: '100px',
+        fontSize: '16px',
+        backgroundColor: '#FFFFFF',
+        color: '#333',
+    },
+    saveButton: {
+        backgroundColor: '#0B2853',
+        color: 'white',
+        border: 'none',
+        padding: '12px',
+        borderRadius: '4px',
+        fontSize: '16px',
+        fontWeight: 'bold',
+        cursor: 'pointer',
+        textAlign: 'center',
+        width: '100%',
     },
 };
 
