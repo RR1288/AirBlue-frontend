@@ -9,7 +9,7 @@ const EventsEditPage = () => {
         <div style={styles.page}>
             {/* Header Component */}
             <Header title="AirBlue System" />
-            
+
             {/* Main Content */}
             <div style={styles.mainContent}>
                 {/* Back Button and Title */}
@@ -60,6 +60,7 @@ const styles = {
         maxWidth: '800px',
         margin: '0 auto',
         padding: '20px',
+        marginTop: '-200px',
     },
     headerRow: {
         display: 'flex',

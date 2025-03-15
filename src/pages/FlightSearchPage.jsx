@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 const FlightSearchPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
-    
+
     // Default flights
     const flights = [
         { id: 1, destination: "Tirana, Albania", price: "$120", time: "10:30 AM" },
@@ -66,39 +66,39 @@ const FlightSearchPage = () => {
 
 // _STYLES_OBJECT_
 const styles = {
-    page: { 
-        display: 'flex', 
-        flexDirection: 'column', 
-        minHeight: '100vh', 
-        width: '100vw', 
+    page: {
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+        width: '100vw',
         backgroundColor: '#FFFFFF',
     },
-    mainContent: { 
-        flex: 1, 
-        maxWidth: '800px', 
-        margin: '0 auto', 
+    mainContent: {
+        flex: 1,
+        maxWidth: '800px',
+        margin: '0 auto',
         marginTop: '10px',
-        padding: '20px' 
+        padding: '20px'
     },
-    headerRow: { 
-        display: 'flex', 
-        alignItems: 'center', 
-        marginBottom: '20px' 
+    headerRow: {
+        display: 'flex',
+        alignItems: 'center',
+        marginBottom: '20px'
     },
-    backButton: { 
-        textDecoration: 'none', 
-        color: '#0B2853', 
-        marginRight: '20px' 
+    backButton: {
+        textDecoration: 'none',
+        color: '#0B2853',
+        marginRight: '20px'
     },
-    icon: { 
-        fontSize: '20px', 
+    icon: {
+        fontSize: '20px',
         marginRight: '10px',
         color: '#0B2853',
     },
-    title: { 
-        fontSize: '24px', 
-        fontWeight: 'bold', 
-        color: '#0B2853' 
+    title: {
+        fontSize: '24px',
+        fontWeight: 'bold',
+        color: '#0B2853'
     },
     description: {
         fontSize: '16px',
@@ -106,10 +106,10 @@ const styles = {
         marginBottom: '20px',
         textAlign: 'center'
     },
-    searchContainer: { 
-        display: 'flex', 
-        alignItems: 'center', 
-        gap: '10px', 
+    searchContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
         flexWrap: 'wrap',
         justifyContent: 'center',
         marginBottom: '20px'
@@ -124,20 +124,20 @@ const styles = {
         backgroundColor: '#F9F9F9',
         maxWidth: '300px'
     },
-    input: { 
-        flex: 1, 
-        border: 'none', 
-        padding: '10px', 
-        outline: 'none', 
-        backgroundColor: '#F9F9F9' 
+    input: {
+        flex: 1,
+        border: 'none',
+        padding: '10px',
+        outline: 'none',
+        backgroundColor: '#F9F9F9'
     },
-    searchButton: { 
-        backgroundColor: '#0B2853', 
-        color: 'white', 
-        padding: '10px 15px', 
-        borderRadius: '4px', 
-        cursor: 'pointer', 
-        border: 'none' 
+    searchButton: {
+        backgroundColor: '#0B2853',
+        color: 'white',
+        padding: '10px 15px',
+        borderRadius: '4px',
+        cursor: 'pointer',
+        border: 'none'
     },
     flightsContainer: {
         display: 'grid',

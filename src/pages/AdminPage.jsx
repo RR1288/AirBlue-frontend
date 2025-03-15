@@ -95,38 +95,38 @@ const AdminPage = () => {
 
 
 const styles = {
-    page: { 
-        display: 'flex', 
-        flexDirection: 'column', 
-        minHeight: '100vh', 
-        width: '100vw', 
-        backgroundColor: '#FFFFFF' 
+    page: {
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+        width: '100vw',
+        backgroundColor: '#FFFFFF'
     },
-    mainContent: { 
-        flex: 1, 
-        maxWidth: '800px', 
-        margin: '0 auto', 
+    mainContent: {
+        flex: 1,
+        maxWidth: '800px',
+        margin: '0 auto',
         marginTop: '150px',
-        padding: '20px' 
+        padding: '20px'
     },
-    headerRow: { 
-        display: 'flex', 
-        alignItems: 'center', 
-        marginBottom: '20px' 
+    headerRow: {
+        display: 'flex',
+        alignItems: 'center',
+        marginBottom: '20px'
     },
-    backButton: { 
-        textDecoration: 'none', 
-        color: '#0B2853', 
-        marginRight: '20px' 
+    backButton: {
+        textDecoration: 'none',
+        color: '#0B2853',
+        marginRight: '20px'
     },
-    icon: { 
-        fontSize: '20px', 
+    icon: {
+        fontSize: '20px',
         marginRight: '10px'
     },
-    title: { 
-        fontSize: '24px', 
-        fontWeight: 'bold', 
-        color: '#0B2853' 
+    title: {
+        fontSize: '24px',
+        fontWeight: 'bold',
+        color: '#0B2853'
     },
     description: {
         fontSize: '16px',
@@ -173,11 +173,11 @@ const styles = {
         outline: 'none',
         transition: '0.3s',
         appearance: 'none',  // Removes default browser styling
-        width: '80px', 
+        width: '80px',
         textAlign: 'center',
-        marginBottom:'10px',
+        marginBottom: '10px',
     },
-    
+
     removeButton: {
         backgroundColor: '#dc3545',
         color: 'white',

@@ -74,81 +74,81 @@ const EventCreationPage = () => {
 
 // _STYLES_OBJECT_
 const styles = {
-    page: { 
-        display: 'flex', 
-        flexDirection: 'column', 
-        minHeight: '100vh', 
-        width: '100vw', 
-        backgroundColor: '#FFFFFF' 
+    page: {
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+        width: '100vw',
+        backgroundColor: '#FFFFFF'
     },
-    mainContent: { 
-        flex: 1, 
-        maxWidth: '800px', 
-        margin: '0 auto', 
+    mainContent: {
+        flex: 1,
+        maxWidth: '800px',
+        margin: '0 auto',
         marginTop: '20px',
-        padding: '20px' 
+        padding: '20px'
     },
-    headerRow: { 
-        display: 'flex', 
-        alignItems: 'center', 
-        marginBottom: '20px' 
+    headerRow: {
+        display: 'flex',
+        alignItems: 'center',
+        marginBottom: '20px'
     },
-    backButton: { 
-        textDecoration: 'none', 
-        color: '#0B2853', 
-        marginRight: '20px' 
+    backButton: {
+        textDecoration: 'none',
+        color: '#0B2853',
+        marginRight: '20px'
     },
-    icon: { 
-        fontSize: '20px' 
+    icon: {
+        fontSize: '20px'
     },
-    eventTitle: { 
-        fontSize: '24px', 
-        fontWeight: 'bold', 
-        color: '#0B2853' 
+    eventTitle: {
+        fontSize: '24px',
+        fontWeight: 'bold',
+        color: '#0B2853'
     },
-    form: { 
-        display: 'flex', 
-        flexDirection: 'column', 
-        gap: '20px' 
+    form: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '20px'
     },
-    row: { 
-        display: 'flex', 
-        flexDirection: 'column' 
+    row: {
+        display: 'flex',
+        flexDirection: 'column'
     },
-    label: { 
-        marginBottom: '5px', 
-        color: '#0B2853', 
-        fontWeight: 'bold' 
+    label: {
+        marginBottom: '5px',
+        color: '#0B2853',
+        fontWeight: 'bold'
     },
-    input: { 
-        padding: '10px', 
-        borderRadius: '4px', 
-        border: '1px solid #ccc', 
-        backgroundColor: '#F9F9F9' 
+    input: {
+        padding: '10px',
+        borderRadius: '4px',
+        border: '1px solid #ccc',
+        backgroundColor: '#F9F9F9'
     },
-    textarea: { 
-        padding: '10px', 
-        minHeight: '100px', 
-        borderRadius: '4px', 
-        border: '1px solid #ccc', 
-        backgroundColor: '#F9F9F9' 
+    textarea: {
+        padding: '10px',
+        minHeight: '100px',
+        borderRadius: '4px',
+        border: '1px solid #ccc',
+        backgroundColor: '#F9F9F9'
     },
-    budgetRow: { 
-        display: 'flex', 
-        gap: '20px' 
+    budgetRow: {
+        display: 'flex',
+        gap: '20px'
     },
-    buttonRow: { 
-        display: 'flex', 
-        justifyContent: 'center', 
-        marginTop: '20px' 
+    buttonRow: {
+        display: 'flex',
+        justifyContent: 'center',
+        marginTop: '20px'
     },
-    createButton: { 
-        backgroundColor: '#0B2853', 
-        color: '#FFFFFF', 
-        border: 'none', 
-        borderRadius: '4px', 
-        padding: '10px 20px', 
-        cursor: 'pointer' 
+    createButton: {
+        backgroundColor: '#0B2853',
+        color: '#FFFFFF',
+        border: 'none',
+        borderRadius: '4px',
+        padding: '10px 20px',
+        cursor: 'pointer'
     },
 };
 

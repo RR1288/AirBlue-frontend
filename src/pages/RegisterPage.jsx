@@ -1,104 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
-import { sendError } from '../utils/response';
-
-const Notification = ({ message, onClose }) => {
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            onClose();
-        }, 2000);
-        return () => clearTimeout(timer);
-    }, [onClose]);
-
-    return <div style={styles.notification}>{message}</div>;
-};
-
-const PinModal = ({ isOpen, onSubmit, onClose }) => {
-    const [pin, setPin] = useState(new Array(4).fill(''));
-
-    const handleChange = (index, value) => {
-        const newPin = [...pin];
-        newPin[index] = value.replace(/[^0-9]/g, '');
-        setPin(newPin);
-        if (value && index < 3) {
-            document.getElementById(`pin-${index + 1}`).focus();
-        }
-    };
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        onSubmit(pin.join(''));
-    };
-
-    return isOpen ? (
-        <div style={styles.modalOverlay}>
-            <div style={styles.modal}>
-                <h2>Enter the PIN sent to your email to verify your account.</h2>
-                <form onSubmit={handleSubmit} style={styles.pinForm}>
-                    <div style={styles.pinContainer}>
-                        {pin.map((digit, index) => (
-                            <input
-                                key={index}
-                                id={`pin-${index}`}
-                                type="tel"
-                                maxLength="1"
-                                style={styles.pinInput}
-                                value={digit}
-                                onChange={(e) => handleChange(index, e.target.value)}
-                                autoFocus={index === 0}
-                            />
-                        ))}
-                    </div>
-                    <button type="submit" style={styles.button}>Verify</button>
-                </form>
-            </div>
-        </div>
-    ) : null;
-};
 
 const RegisterPage = () => {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [showPinModal, setShowPinModal] = useState(false);
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        password: '',
+    });
     const [notification, setNotification] = useState('');
     const navigate = useNavigate();
 
-    const handleRegisterSubmit = async (event) => {
-        event.preventDefault();
-        try {
-            const response = await fetch('https://airblue-backend-staging-eac124cc32ab.herokuapp.com/auth/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-                body: JSON.stringify({ name, email, password }),
-            });
-
-            const data = await response.json();
-            if (response.ok) {
-                setShowPinModal(true);
-            } else {
-                sendError(data.error || 'Registration failed. Please try again.');
-            }
-        } catch (error) {
-            console.error(error);
-        }
+    // Handle input changes
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
     };
 
-    const handlePinSubmit = (pin) => {
-        setNotification('Registration Successful! Redirecting to login page...');
+    // Handle registration form submission
+    const handleRegisterSubmit = (event) => {
+        event.preventDefault();
+
+        // Store user info locally (optional)
+        localStorage.setItem('userInfo', JSON.stringify({ 
+            name: formData.name, 
+            email: formData.email 
+        }));
+
+        setNotification('Registration Successful! Redirecting...');
+        
+        // **IMMEDIATE REDIRECT** to SetUserInfoPage
         setTimeout(() => {
-            navigate('/login');
-        }, 1000);
-        setShowPinModal(false);
+            navigate('/setuser-info');
+        }, 500); 
     };
 
     return (
         <div style={styles.page}>
-            <Header title="AirBlue System" style={styles.header} />
+            <Header title="AirBlue System" />
             <div style={styles.mainContent}>
                 <h1 style={styles.h1}>Register</h1>
                 <div style={styles.formContainer}>
@@ -107,38 +46,43 @@ const RegisterPage = () => {
                             <label htmlFor="name" style={styles.label}>Name:</label>
                             <input
                                 id="name"
+                                name="name"
                                 type="text"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                value={formData.name}
+                                onChange={handleChange}
                                 style={styles.input}
+                                required
                             />
                         </div>
                         <div style={styles.formGroup}>
                             <label htmlFor="email" style={styles.label}>Email:</label>
                             <input
                                 id="email"
+                                name="email"
                                 type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                value={formData.email}
+                                onChange={handleChange}
                                 style={styles.input}
+                                required
                             />
                         </div>
                         <div style={styles.formGroup}>
                             <label htmlFor="password" style={styles.label}>Password:</label>
                             <input
                                 id="password"
+                                name="password"
                                 type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                value={formData.password}
+                                onChange={handleChange}
                                 style={styles.input}
+                                required
                             />
                         </div>
                         <button type="submit" style={styles.button}>Register</button>
                     </form>
                 </div>
             </div>
-            <PinModal isOpen={showPinModal} onSubmit={handlePinSubmit} />
-            {notification && <Notification message={notification} onClose={() => setNotification('')} />}
+            {notification && <div style={styles.notification}>{notification}</div>}
         </div>
     );
 };
@@ -152,18 +96,6 @@ const styles = {
         backgroundColor: '#ffffff',
         boxSizing: 'border-box',
     },
-    header: {
-        width: '100%',
-        textAlign: 'center',
-    },
-    h1: {
-        textAlign: 'center',
-        color: '#0B2853',
-        fontSize: '24px',
-        fontWeight: '600',
-        marginTop: '-60px',
-        margin: '20px 0',
-    },
     mainContent: {
         flex: 1,
         display: 'flex',
@@ -171,6 +103,14 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '20px',
+        marginTop: '-450px',
+    },
+    h1: {
+        textAlign: 'center',
+        color: '#0B2853',
+        fontSize: '24px',
+        fontWeight: '600',
+        margin: '10px 0',
     },
     formContainer: {
         width: '100%',
@@ -181,10 +121,10 @@ const styles = {
         flexDirection: 'column',
     },
     formGroup: {
-        marginBottom: '20px',
+        marginBottom: '15px',
     },
     label: {
-        marginBottom: '10px',
+        marginBottom: '8px',
         fontWeight: 'bold',
         color: '#0B2853',
     },
@@ -192,6 +132,7 @@ const styles = {
         width: '100%',
         padding: '10px',
         fontSize: '16px',
+        color: '#000000',
         border: '1px solid #0B2853',
         borderRadius: '4px',
         backgroundColor: '#ffffff',
@@ -204,6 +145,13 @@ const styles = {
         borderRadius: '4px',
         cursor: 'pointer',
         fontSize: '18px',
+        marginTop: '10px',
+    },
+    notification: {
+        marginTop: '20px',
+        textAlign: 'center',
+        color: '#0B2853',
+        fontWeight: 'bold',
     },
 };
 

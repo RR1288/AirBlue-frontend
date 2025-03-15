@@ -81,11 +81,9 @@ const LoginPage = () => {
 
             if (response.ok) {
                 console.log(data);
-
                 const { token } = data.data;
                 console.log('TOKEN: ', token);
                 localStorage.setItem('token', token);
-
                 setShowPinModal(true);
             } else {
                 sendError(data.error || 'Login failed. Please try again.');
@@ -109,7 +107,7 @@ const LoginPage = () => {
 
     return (
         <div style={styles.page}>
-            <Header title="AirBlue System" style={styles.header} />
+            <Header title="AirBlue System" />
             <div style={styles.mainContent}>
                 <h1 style={styles.h1}>Login Page</h1>
                 <div style={styles.loginContainer}>
@@ -137,8 +135,16 @@ const LoginPage = () => {
                         <button type="submit" style={styles.button}>Log In</button>
                     </form>
 
-                    {/* Attendee Registration Button */}
-                    <button onClick={() => navigate('/register-attendee')} style={styles.registerButton}>
+                    {/* Forgot Password Link */}
+                    <div style={styles.forgotPasswordContainer}>
+                        <Link to="/forgot-password" style={styles.forgotPasswordLink}>Forgot Password</Link>
+                    </div>
+
+                    <div style={styles.registerPrompt}>
+                        Don't have an account? <Link to="/register" style={styles.registerLink}>Register</Link>
+                    </div>
+
+                    <button onClick={() => navigate('/attendee-register')} style={styles.registerButton}>
                         Register as Attendee
                     </button>
                 </div>
@@ -176,7 +182,7 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '20px',
-        marginTop: '-190px',
+        marginTop: '-450px',
     },
     loginContainer: {
         display: 'flex',
@@ -219,6 +225,16 @@ const styles = {
         margin: '10px 0',
         display: 'block',
     },
+    forgotPasswordContainer: {
+        marginTop: '10px',
+        textAlign: 'center',
+    },
+    forgotPasswordLink: {
+        color: '#0B2853',
+        textDecoration: 'none',
+        fontSize: '16px',
+        fontWeight: 'bold',
+    },
     registerButton: {
         padding: '10px 20px',
         backgroundColor: '#28a745', // Green for "Register as Attendee"
@@ -229,6 +245,17 @@ const styles = {
         fontSize: '18px',
         marginTop: '10px',
         display: 'block',
+    },
+    registerPrompt: {
+        marginTop: '20px',
+        textAlign: 'center',
+        color: '#0B2853',
+    },
+    registerLink: {
+        color: '#0B2853',
+        textDecoration: 'none',
+        fontWeight: 'bold',
+        marginLeft: '5px',
     },
 };
 

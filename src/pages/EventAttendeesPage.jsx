@@ -25,16 +25,16 @@ const EventAttendeesPage = () => {
 
   // Handle checkbox change for selecting attendees
   const handleCheckboxChange = (attendee) => {
-    setSelectedAttendees(prevSelected => 
-      prevSelected.includes(attendee) 
-        ? prevSelected.filter(name => name !== attendee) 
+    setSelectedAttendees(prevSelected =>
+      prevSelected.includes(attendee)
+        ? prevSelected.filter(name => name !== attendee)
         : [...prevSelected, attendee]
     );
   };
 
   // Function to remove selected attendees
   const removeAttendees = () => {
-    setAttendees(prevAttendees => 
+    setAttendees(prevAttendees =>
       prevAttendees.filter(attendee => !selectedAttendees.includes(attendee))
     );
     setSelectedAttendees([]); // Clear selected attendees after removal
@@ -85,10 +85,10 @@ const EventAttendeesPage = () => {
           <div style={styles.attendeeList}>
             {attendees.map((attendee, index) => (
               <div key={index} style={styles.attendeeItem}>
-                <input 
-                  type="checkbox" 
-                  checked={selectedAttendees.includes(attendee)} 
-                  onChange={() => handleCheckboxChange(attendee)} 
+                <input
+                  type="checkbox"
+                  checked={selectedAttendees.includes(attendee)}
+                  onChange={() => handleCheckboxChange(attendee)}
                   style={styles.checkbox}
                 />
                 <span>{attendee}</span>
@@ -130,6 +130,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     padding: '20px',
+    marginTop: '-400px',
   },
   headerRow: {
     display: 'flex',

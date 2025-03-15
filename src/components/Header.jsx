@@ -1,18 +1,38 @@
-// Import React for creating components
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import UserSidebar from "./UserSidebar"; // Import Sidebar Component
+import UserSidebar from "./UserSidebar";
+import AdminSidebar from "./AdminSidebar";
+import FinancePlannerSidebar from "./FinancePlannerSidebar";
+import EventPlannerSidebar from "./EventPlannerSidebar";
+import AttendeeSidebar from "./AttendeeSidebar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt, faBars } from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 
-function Header({ title }) {
+function Header({ title, userRole }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+
+    // Function to render the appropriate sidebar based on user role
+    const renderSidebar = () => {
+        switch (userRole) {
+            case "admin":
+                return <AdminSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />;
+            case "attendee":
+                return <AttendeeSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />;
+            case "financePlanner":
+                return <FinancePlannerSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />;
+            case "eventPlanner":
+                return <EventPlannerSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />;
+            case "user":
+            default: // change to test others
+                return <EventPlannerSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />;
+        }
+    };
 
     return (
         <>
-            {/* Sidebar Component (Controlled by State) */}
-            <UserSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
+            {/* Render the appropriate sidebar */}
+            {renderSidebar()}
 
             <header style={styles.header}>
                 {/* Menu button toggles sidebar */}
@@ -35,6 +55,7 @@ function Header({ title }) {
 // PropTypes for validation
 Header.propTypes = {
     title: PropTypes.string.isRequired,
+    userRole: PropTypes.string.isRequired, // Ensure userRole is passed as a prop
 };
 
 // Styles for the header

@@ -16,7 +16,7 @@ const EventDetailPage = () => {
             <br></br>
             <br></br>
             <br></br>
-            
+
 
             {/* Main Content */}
             <div style={styles.mainContent}>
@@ -30,11 +30,11 @@ const EventDetailPage = () => {
 
                 {/* Form Section */}
                 <form style={styles.form}>
-                {/* Date Input */}
-                <div style={styles.row}>
-                    <label style={styles.label}>Date:</label>
-                    <input type="date" placeholder="MM/DD/YYYY" style={styles.input} />
-                </div>
+                    {/* Date Input */}
+                    <div style={styles.row}>
+                        <label style={styles.label}>Date:</label>
+                        <input type="date" placeholder="MM/DD/YYYY" style={styles.input} />
+                    </div>
 
                     {/* Attendees Link */}
                     <div style={styles.formGroup}>
@@ -120,6 +120,7 @@ const styles = {
         maxWidth: '800px',
         margin: '0 auto',
         padding: '20px',
+        marginTop: '-100px',
     },
     headerRow: {
         display: 'flex',

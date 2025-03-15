@@ -1,176 +1,137 @@
-import React, { useState } from 'react';
-import Header from '../components/Header';
-import UserSidebar from '../components/UserSidebar'; 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSave, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
-
-const styles = {
-  page: {
-    display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-        width: '100vw',
-        backgroundColor: '#ffffff',
-        boxSizing: 'border-box',
-  },
-  contentWrapper: {
-    flex: 1, 
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '100px',
-    transition: 'margin-left 0.3s ease-in-out',
-    marginTop: '10px',
-  },
-  headerRow: {
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: '10px',
-    marginTop: '-50px',
-  },
-  backButton: {
-    textDecoration: 'none',
-    color: '#0B2853',
-    marginRight: '15px',
-  },
-  title: {
-    fontSize: '24px',
-    fontWeight: 'bold',
-    color: '#0B2853',
-  },
-  form: {
-    width: '100%',
-    maxWidth: '400px',
-  },
-  formGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  label: {
-    marginBottom: '5px',
-    color: '#0B2853',
-    fontWeight: 'bold',
-  },
-  input: {
-    padding: '10px',
-    borderRadius: '4px',
-    border: '1px solid #ccc',
-    backgroundColor: '#F9F9F9',
-    color: 'gray',
-  },
-  saveButton: {
-    backgroundColor: '#0A306E',
-    color: 'white',
-    padding: '10px',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '8px',
-    marginTop: '20px',
-  },
-};
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser, faEnvelope, faUserTag } from "@fortawesome/free-solid-svg-icons";
+import { faPhone } from "@fortawesome/free-solid-svg-icons/faPhone";
 
 const UserInfoPage = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [userInfo, setUserInfo] = useState({
-    firstName: '',
-    lastName: '',
-    phone: '',
-    email: '',
-    address: '',
-  });
+    const [userInfo, setUserInfo] = useState(null);
+    const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setUserInfo({ ...userInfo, [e.target.name]: e.target.value });
-  };
+    useEffect(() => {
+        // Simulated fetching logic (to be replaced with actual backend API call)
+        const storedUserInfo = JSON.parse(localStorage.getItem("userInfo"));
 
-  return (
-    <div style={styles.page}>
-      {/* Sidebar */}
-      <UserSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
+        if (storedUserInfo) {
+            setUserInfo(storedUserInfo);
+        } else {
+            // Placeholder user data for front-end development
+            setUserInfo({
+                firstName: "John",
+                lastName: "Doe",
+                email: "johndoe@example.com",
+                username: "johndoe123",
+                phone: "123-456-7890",
+                role: "User",
+            });
+        }
+    }, []);
 
-      {/* Main Content */}
-      <div style={{ flex: 1 }}>
-        <Header title="AirBlue System" setSidebarOpen={setSidebarOpen} />
-        <div style={styles.contentWrapper}>
-          {/* Back Button */}
-          <div style={styles.headerRow}>
-            <Link to="/register" style={styles.backButton}>
-              <FontAwesomeIcon icon={faArrowLeft} />
-            </Link>
-            <h2 style={styles.title}>User Info</h2>
-          </div>
-
-          {/* User Info Form */}
-          <form style={styles.form}>
-            <div style={styles.formGroup}>
-              <label style={styles.label}>First Name:</label>
-              <input
-                type="text"
-                name="firstName"
-                value={userInfo.firstName}
-                onChange={handleChange}
-                style={styles.input}
-              />
-            </div>
-
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Last Name:</label>
-              <input
-                type="text"
-                name="lastName"
-                value={userInfo.lastName}
-                onChange={handleChange}
-                style={styles.input}
-              />
-            </div>
-
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Phone Number:</label>
-              <input
-                type="tel"
-                name="phone"
-                value={userInfo.phone}
-                onChange={handleChange}
-                style={styles.input}
-              />
-            </div>
-
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Email:</label>
-              <input
-                type="email"
-                name="email"
-                value={userInfo.email}
-                onChange={handleChange}
-                style={styles.input}
-              />
-            </div>
-
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Address:</label>
-              <input
-                type="text"
-                name="address"
-                value={userInfo.address}
-                onChange={handleChange}
-                style={styles.input}
-              />
-            </div>
-
-            {/* Save Button */}
-            <button type="submit" style={styles.saveButton}>
-              <FontAwesomeIcon icon={faSave} /> Save Info
-            </button>
-          </form>
+    return (
+        <div style={styles.container}>
+            <Header />
+            <main style={styles.main}>
+                <section style={styles.infoSection}>
+                    <h1 style={styles.h1}>User Information</h1>
+                    {userInfo ? (
+                        <div style={styles.infoCard}>
+                            <p style={styles.infoItem}>
+                                <FontAwesomeIcon icon={faUser} style={styles.icon} />
+                                <strong> Full Name:</strong> {userInfo.firstName} {userInfo.lastName}
+                            </p>
+                            <p style={styles.infoItem}>
+                                <FontAwesomeIcon icon={faEnvelope} style={styles.icon} />
+                                <strong> Email:</strong> {userInfo.email}
+                            </p>
+                            <p style={styles.infoItem}>
+                                <FontAwesomeIcon icon={faUserTag} style={styles.icon} />
+                                <strong> Username:</strong> {userInfo.username}
+                            </p>
+                            <p style={styles.infoItem}>
+                                <FontAwesomeIcon icon={faPhone} style={styles.icon} />
+                                <strong> Phone Number:</strong> {userInfo.phone}
+                            </p>
+                            <p style={styles.infoItem}>
+                                <FontAwesomeIcon icon={faUserTag} style={styles.icon} />
+                                <strong> Role:</strong> {userInfo.role}
+                            </p>
+                            <button onClick={() => navigate("/reset-password")} style={styles.button}>
+                                Reset Password
+                            </button>
+                        </div>
+                    ) : (
+                        <p style={styles.noInfoMessage}>Loading user information...</p>
+                    )}
+                </section>
+            </main>
         </div>
-      </div>
-    </div>
-  );
+    );
+};
+
+const styles = {
+    container: {
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        width: "100vw",
+        backgroundColor: "#f9f9f9",
+        boxSizing: "border-box",
+    },
+    main: {
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: "20px",
+        marginTop: "20px",
+    },
+    infoSection: {
+        width: "100%",
+        maxWidth: "600px",
+        backgroundColor: "#fff",
+        padding: "20px",
+        borderRadius: "8px",
+        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+        textAlign: "center",
+    },
+    h1: {
+        fontSize: "24px",
+        color: "#0B2853",
+        fontWeight: "600",
+        marginBottom: "20px",
+    },
+    infoCard: {
+        textAlign: "center",
+    },
+    infoItem: {
+        fontSize: "16px",
+        color: "#333",
+        marginBottom: "10px",
+        display: "flex",
+        alignItems: "center",
+    },
+    icon: {
+        marginRight: "10px",
+        color: "#0B2853",
+    },
+    button: {
+        marginTop: "20px",
+        padding: "10px 15px",
+        backgroundColor: "#0B2853",
+        color: "white",
+        border: "none",
+        borderRadius: "4px",
+        cursor: "pointer",
+        fontSize: "16px",
+        width: "30%",
+        textAlign: "center",
+    },
+    noInfoMessage: {
+        fontSize: "16px",
+        color: "#999",
+        textAlign: "center",
+    },
 };
 
 export default UserInfoPage;

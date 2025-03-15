@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faHome, faPlane, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faHome, faPlane, faUser, faInfo, faClock } from "@fortawesome/free-solid-svg-icons";
+import { faGlobe } from "@fortawesome/free-solid-svg-icons/faGlobe";
 
 const UserSidebar = ({ isOpen, setIsOpen }) => {
     return (
@@ -44,8 +45,14 @@ const UserSidebar = ({ isOpen, setIsOpen }) => {
                 <Link to="/home" style={linkStyle} onClick={() => setIsOpen(false)}>
                     <FontAwesomeIcon icon={faHome} /> Home
                 </Link>
+                <Link to="/user-info" style={linkStyle} onClick={() => setIsOpen(false)}>
+                    <FontAwesomeIcon icon={faUser} /> User Info
+                </Link>
                 <Link to="/flight-search" style={linkStyle} onClick={() => setIsOpen(false)}>
                     <FontAwesomeIcon icon={faPlane} /> Flight Search
+                </Link>
+                <Link to="/events" style={linkStyle} onClick={() => setIsOpen(false)}>
+                    <FontAwesomeIcon icon={faGlobe} /> Events
                 </Link>
                 {/* Uncomment if Profile page exists */}
                 {/* <Link to="/profile" style={linkStyle} onClick={() => setIsOpen(false)}>

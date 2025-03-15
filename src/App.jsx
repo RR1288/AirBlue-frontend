@@ -14,8 +14,14 @@ import FlightSearchPage from './pages/FlightSearchPage';
 import ApprovalPage from './pages/ApprovalPage';
 import AdminPage from './pages/AdminPage';
 import FinanceEventDetails from './pages/FinanceEventDetails';
-import UserInfoPage from './pages/UserInfoPage';
+import SetUserInfoPage from './pages/SetUserInfoPage';
 import RegisterPage from './pages/RegisterPage';
+import AttendeeRegister from './pages/AttendeeRegister';
+import PasswordResetPage from './pages/PasswordResetPage';
+import UserInfoPage from './pages/UserInfoPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import UserEventsPage from './pages/UserEventsPage';
+import MyEventsPage from './pages/MyEventsPage';
 
 
 function App() {
@@ -36,8 +42,14 @@ function App() {
                 <Route path="/approval" element={<ApprovalPage/>} />
                 <Route path="/admin" element={<AdminPage/>} />
                 <Route path="/finance-details" element={<FinanceEventDetails/>} />
-                <Route path="/user-info" element={<UserInfoPage/>} />
+                <Route path="/setuser-info" element={<SetUserInfoPage/>} />
                 <Route path="/register" element={<RegisterPage/>} />
+                <Route path="/attendee-register" element={<AttendeeRegister/>} />
+                <Route path="/password-reset" element={<PasswordResetPage/>} />
+                <Route path="/user-info" element={<UserInfoPage/>} />
+                <Route path="/forgot-password" element={<ForgotPasswordPage/>} />
+                <Route path="/user-events" element={<UserEventsPage/>} />
+                <Route path="/my-events" element={<MyEventsPage/>} />
 
 
             

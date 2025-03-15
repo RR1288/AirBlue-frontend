@@ -19,7 +19,7 @@ const EventsPage = () => {
             </Link>
             <h2 style={styles.title}>Events</h2>
           </div>
-          
+
           {/* Filter Section */}
           <div style={styles.filterContainer}>
             <input
@@ -34,43 +34,43 @@ const EventsPage = () => {
               style={styles.filterInput}
               value="Board Meeting"
             />
-            <FontAwesomeIcon icon={faFilter} style={styles.icon}/>
+            <FontAwesomeIcon icon={faFilter} style={styles.icon} />
             <button style={styles.clearButton}>Clear Filters</button>
-  
-            <button style={styles.searchButton}>Search</button> 
-        
+
+            <button style={styles.searchButton}>Search</button>
+
             <Link to="/event-creation">
-            <button style={styles.searchButton}> Create Event </button>
+              <button style={styles.searchButton}> Create Event </button>
             </Link>
           </div>
 
           <h3 style={styles.month}>October</h3>
 
           <div style={styles.eventItem}>
-  <div style={styles.eventHeader}>
-    <div style={styles.eventDetails}>
-      <p>Date: 10/31/2024</p>
-      <p>Event Type: Board Meeting (Internal)</p>
-      <p>Location: Rochester Conference Center</p>
-      <p>Budget per attendee: $300</p>
-      <p>Event Budget: $5000</p>
-      <p>
-        Attendees:{" "}
-        <a href="/manageattendeespages" style={styles.link}>
-          Manage attendees
-        </a>
-      </p>
-      <p>Notes:</p>
-    </div>
-    <div style={styles.iconContainer}>
-      <FontAwesomeIcon icon={faPenToSquare} style={styles.icon} />
-      <FontAwesomeIcon icon={faTrash} style={styles.icon} />
-    </div>
-  </div>
-</div>
-<h3 style={styles.eventTitle}>IEEE Board Meeting 2024</h3>
-<div style={styles.eventItem}></div>
-<h3 style={styles.eventTitle}>IEEE Conference: ML Research 2024</h3>
+            <div style={styles.eventHeader}>
+              <div style={styles.eventDetails}>
+                <p>Date: 10/31/2024</p>
+                <p>Event Type: Board Meeting (Internal)</p>
+                <p>Location: Rochester Conference Center</p>
+                <p>Budget per attendee: $300</p>
+                <p>Event Budget: $5000</p>
+                <p>
+                  Attendees:{" "}
+                  <a href="/manageattendeespages" style={styles.link}>
+                    Manage attendees
+                  </a>
+                </p>
+                <p>Notes:</p>
+              </div>
+              <div style={styles.iconContainer}>
+                <FontAwesomeIcon icon={faPenToSquare} style={styles.icon} />
+                <FontAwesomeIcon icon={faTrash} style={styles.icon} />
+              </div>
+            </div>
+          </div>
+          <h3 style={styles.eventTitle}>IEEE Board Meeting 2024</h3>
+          <div style={styles.eventItem}></div>
+          <h3 style={styles.eventTitle}>IEEE Conference: ML Research 2024</h3>
 
 
         </section>
@@ -95,6 +95,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     padding: '20px',
+    marginTop: '-200px',
   },
   headerRow: {
     display: 'flex',
@@ -112,18 +113,18 @@ const styles = {
     fontSize: '16px',
     fontWeight: '600',
     marginRight: '315px',
-    marginLeft:'-345px' // Adjusts spacing between back button and title
+    marginLeft: '-345px' // Adjusts spacing between back button and title
   },
   title: {
     fontSize: '24px',
     marginTop: '160px',
-    marginBottom:'5px',
+    marginBottom: '5px',
     color: '#0B2853',
     fontWeight: '600',
     marginLeft: '10px', // Moves "Events" closer to the back button
   },
   month: {
-  color: '#0B2853',
+    color: '#0B2853',
   },
   events: {
     width: '100%',
@@ -156,7 +157,7 @@ const styles = {
     alignItems: 'flex-start',
     position: 'relative',
   },
-  
+
   iconContainer: {
     display: 'flex',
     gap: '00px',
@@ -165,13 +166,13 @@ const styles = {
     right: '00px',
     fontSize: '25px',
   },
-  
+
   icon: {
     color: '#0A306E',
     fontSize: '16px',
     cursor: 'pointer',
-    margin: '0 10px',    
-  },  
+    margin: '0 10px',
+  },
   filterContainer: {
     display: 'flex',
     alignItems: 'center',
@@ -193,7 +194,7 @@ const styles = {
     color: 'black', // Add this line
     flex: '1',
   },
-  
+
   clearButton: {
     backgroundColor: '#fff',
     color: '#0B2853',
@@ -212,7 +213,7 @@ const styles = {
     cursor: 'pointer',
     marginRight: '10px',
   },
-  
+
 };
 
 export default EventsPage;
