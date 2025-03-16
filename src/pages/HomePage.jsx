@@ -10,7 +10,7 @@ const HomePage = () => {
     return (
         <div style={styles.page}>
             {/* Header component */}
-            <Header title="AirBlue System" />
+            <Header title="AirBlue System"  />
 
             {/* Main content */}
             <div style={styles.mainContent}>
@@ -19,34 +19,27 @@ const HomePage = () => {
 
                 {/* Cards container */}
                 <div style={styles.grid}>
-                
-                <Link to="/manage-events" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <div style={styles.card}>
-                 <FontAwesomeIcon icon={faGlobe} style={styles.icon} />
-                 <p style={styles.cardTitle}>Events</p>
-                </div>
-                </Link>
-               
-                <Link to="/manage-attendees" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <div style={styles.card}>
-                <FontAwesomeIcon icon={faUser}  style={styles.icon}/>
-                <p style={styles.cardTitle}>Attendees</p>
-                </div>
-                </Link>
 
-                <Link to="/event-details" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <div style={styles.card}>
-                <FontAwesomeIcon icon={faList} style={styles.icon}/>
-                 <p style={styles.cardTitle}>Event Types</p>
-                </div>
-                </Link>
+                    <Link to="/user-events" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <div style={styles.card}>
+                            <FontAwesomeIcon icon={faGlobe} style={styles.icon} />
+                            <p style={styles.cardTitle}>Events</p>
+                        </div>
+                    </Link>
 
-                <Link to="/event-attendees" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <div style={styles.card}>
-                <FontAwesomeIcon icon={faPlane} style={styles.icon}/>
-                <p style={styles.cardTitle}>Flights</p>
-                </div>
-                </Link>
+                    <Link to="/event-attendees" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <div style={styles.card}>
+                            <FontAwesomeIcon icon={faUser} style={styles.icon} />
+                            <p style={styles.cardTitle}>Attendees</p>
+                        </div>
+                    </Link>
+
+                    <Link to="/flight-search" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <div style={styles.card}>
+                            <FontAwesomeIcon icon={faPlane} style={styles.icon} />
+                            <p style={styles.cardTitle}>Flights</p>
+                        </div>
+                    </Link>
 
 
                 </div>
@@ -74,6 +67,7 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '20px',
+        marginTop: '0px', // Adjusts spacing from the top
     },
     welcomeText: {
         // Style for the welcome message
@@ -103,7 +97,7 @@ const styles = {
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', // Add a subtle shadow
         cursor: 'pointer',
         transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-    
+
     },
     cardTitle: {
         // Style for card titles
@@ -113,7 +107,7 @@ const styles = {
         fontWeight: '500',
     },
     icon: {
-        fontSize:'36px',
+        fontSize: '36px',
         color: 'white'
     },
 };

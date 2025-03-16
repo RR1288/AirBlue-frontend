@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { sendError } from '../utils/response';
+
+
+// Login page shouldn't have a token check, but other pages should
+// const headers = new Headers();
+// headers.append('Authorization', `Bearer ${token}`);
+
 
 
 const Notification = ({ message, onClose }) => {
@@ -11,9 +18,7 @@ const Notification = ({ message, onClose }) => {
         return () => clearTimeout(timer);
     }, [onClose]);
 
-    return (
-        <div style={styles.notification}>{message}</div>
-    );
+    return <div style={styles.notification}>{message}</div>;
 };
 
 const PinModal = ({ isOpen, onSubmit, onClose }) => {
@@ -28,9 +33,44 @@ const PinModal = ({ isOpen, onSubmit, onClose }) => {
         }
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
+        //call verify endpoint
+        const response = await fetch('heroku/auth/2fa/verify', {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify({pin})
+        });
+        //await fetch -> response
+        //if response.ok -> data = await response.json()
+        if(response.ok){
+            const data = await response.json();
+            //dataParsed = JSON.parse(data);
+
+            console.log("TOKEN: ", token);
+            console.log(data.message);
+            console.log(data.data);
+            if(data.sucess){
+
+                alert("Verification Successful");
+                const { token } = data.data;
+                localStorage.setItem('token', token);
+
+                if(localStorage.token){
+                    headers = {'Authorization': localStorage.token}
+                }
+            }
+            else{
+                sendError(data.error || 'Verification failed. Please try again.');
+                alert("Verification failed. Please try again")
+            }
+        } else {
+                // Handle server errors
+                sendError(data.error || 'Verification failed. Please try again.');
+                alert("Verification failed. Please try again")
+              }
+        //check data.sucess, data.message, data.data (could be null)
         onSubmit(pin.join(''));
     };
 
@@ -65,6 +105,7 @@ const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [showPinModal, setShowPinModal] = useState(false);
     const [notification, setNotification] = useState('');
+    const navigate = useNavigate();
 
     const handleLoginSubmit = async (event) => {
         event.preventDefault();
@@ -73,10 +114,10 @@ const LoginPage = () => {
             const response = await fetch(`https://airblue-backend-staging-eac124cc32ab.herokuapp.com/auth/login`, {
                 method: 'POST',
                 headers: {
-                  'Content-Type': 'application/json',
-                  'Accept': 'application/json'
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
                 },
-                body: JSON.stringify({ username, password })
+                body: JSON.stringify({ username, password }),
             });
     
             const data = await response.json();
@@ -173,15 +214,16 @@ const LoginPage = () => {
         }
     };
                 
+
     const handleCloseModal = () => {
         setShowPinModal(false);
     };
 
     return (
         <div style={styles.page}>
-            <Header title="AirBlue System" style={styles.header} />
+            <Header title="AirBlue System" hideSidebar={true} />
             <div style={styles.mainContent}>
-            <h1 style={styles.h1}>Login Page</h1>
+                <h1 style={styles.h1}>Login Page</h1>
                 <div style={styles.loginContainer}>
                     <form onSubmit={handleLoginSubmit} style={styles.form}>
                         <div style={styles.formGroup}>
@@ -206,6 +248,19 @@ const LoginPage = () => {
                         </div>
                         <button type="submit" style={styles.button}>Log In</button>
                     </form>
+
+                    {/* Forgot Password Link */}
+                    <div style={styles.forgotPasswordContainer}>
+                        <Link to="/forgot-password" style={styles.forgotPasswordLink}>Forgot Password</Link>
+                    </div>
+
+                    <div style={styles.registerPrompt}>
+                        Don't have an account? <Link to="/register" style={styles.registerLink}>Register</Link>
+                    </div>
+
+                    <button onClick={() => navigate('/attendee-register')} style={styles.registerButton}>
+                        Register as Attendee
+                    </button>
                 </div>
             </div>
             <PinModal isOpen={showPinModal} onSubmit={handlePinSubmit} onClose={handleCloseModal} />
@@ -239,14 +294,7 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
         padding: '20px',
-    },
-    welcomeText: {
-        fontSize: '24px',
-        color: '#0B2853',
-        marginBottom: '40px',
-        fontWeight: '600',
     },
     loginContainer: {
         display: 'flex',
@@ -271,12 +319,12 @@ const styles = {
     },
     input: {
         width: '100%',
-    padding: '10px',
-    fontSize: '16px',
-    border: '1px solid #0B2853',
-    borderRadius: '4px',
-    backgroundColor: '#ffffff', 
-    color: '#000000' 
+        padding: '10px',
+        fontSize: '16px',
+        border: '1px solid #0B2853',
+        borderRadius: '4px',
+        backgroundColor: '#ffffff',
+        color: '#000000',
     },
     button: {
         padding: '10px 20px',
@@ -286,56 +334,49 @@ const styles = {
         borderRadius: '4px',
         cursor: 'pointer',
         fontSize: '18px',
-        alignSelf: 'center', 
-        margin: 'auto', 
-        display: 'block'
-    },        
-    modalOverlay: {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        margin: '10px 0',
+        display: 'block',
     },
-    modal: {
-        backgroundColor: '#fff',
-        padding: '20px',
-        borderRadius: '10px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
+
     pinContainer: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center', // Centers the pin inputs within the modal
         marginBottom: '20px',
-    },
-    pinInput: {
-        width: '40px',
-        height: '40px',
-        margin: '0 5px',
-        fontSize: '16px',
+
+    forgotPasswordContainer: {
+        marginTop: '10px',
         textAlign: 'center',
-        border: '1px solid #ccc',
-        borderRadius: '4px',
+
     },
-    notification: {
-        position: 'fixed',
-        top: '10%',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        backgroundColor: '#0B2853',
+    forgotPasswordLink: {
+        color: '#0B2853',
+        textDecoration: 'none',
+        fontSize: '16px',
+        fontWeight: 'bold',
+    },
+    registerButton: {
+        padding: '10px 20px',
+        backgroundColor: '#28a745', // Green for "Register as Attendee"
         color: 'white',
-        padding: '20px',
-        borderRadius: '10px',
-        zIndex: 1000,
+        border: 'none',
+        borderRadius: '4px',
+        cursor: 'pointer',
+        fontSize: '18px',
+        marginTop: '10px',
+        display: 'block',
     },
-    
+    registerPrompt: {
+        marginTop: '20px',
+        textAlign: 'center',
+        color: '#0B2853',
+    },
+    registerLink: {
+        color: '#0B2853',
+        textDecoration: 'none',
+        fontWeight: 'bold',
+        marginLeft: '5px',
+    },
 };
 
 export default LoginPage;
