@@ -23,40 +23,43 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import UserEventsPage from './pages/UserEventsPage';
 import MyEventsPage from './pages/MyEventsPage';
 import EventsFinanceUser from './pages/EventsFinanceUser';
+import { NotificationProvider } from './components/NotificationProvider';
 
 
 function App() {
     return (
-        <Router>
-            <Routes>
-                <Route path="/home" element={<HomePage />} />
-                <Route path="/manage-events" element={<ManageEventsPage />} />
-                <Route path="/manage-attendees" element={<ManageAttendeesPage />} />
-                <Route path="/event-details" element={<EventDetailPage/>} />
-                <Route path="/" element={<LoginPage/>} />
-                <Route path="/event-edit" element={<EventEditPage/>} />
-                <Route path="/event-attendees" element={<EventAttendeesPage/>} />                
-                <Route path="/under-construction" element={<UnderConstruction/>} />
-                <Route path="/finance-permission" element={<FinancePermission/>} />
-                <Route path="/event-creation" element={<EventCreationPage/>} />
-                <Route path="/flight-search" element={<FlightSearchPage/>} />
-                <Route path="/approval" element={<ApprovalPage/>} />
-                <Route path="/admin" element={<AdminPage/>} />
-                <Route path="/finance-details" element={<FinanceEventDetails/>} />
-                <Route path="/setuser-info" element={<SetUserInfoPage/>} />
-                <Route path="/register" element={<RegisterPage/>} />
-                <Route path="/attendee-register" element={<AttendeeRegister/>} />
-                <Route path="/password-reset" element={<PasswordResetPage/>} />
-                <Route path="/user-info" element={<UserInfoPage/>} />
-                <Route path="/forgot-password" element={<ForgotPasswordPage/>} />
-                <Route path="/user-events" element={<UserEventsPage/>} />
-                <Route path="/my-events" element={<MyEventsPage/>} />
-                <Route path="/finance-events" element={<EventsFinanceUser/>} />
-
-
-            
-            </Routes>
-        </Router>
+        <NotificationProvider>
+            <Router>
+                <Routes>
+                    <Route path="/home" element={<HomePage />} />
+                    <Route path="/manage-events" element={<ManageEventsPage />} />
+                    <Route path="/manage-attendees" element={<ManageAttendeesPage />} />
+                    <Route path="/event-details" element={<EventDetailPage/>} />
+                    <Route path="/" element={<LoginPage/>} />
+                    <Route path="/login" element={<LoginPage/>} />
+                    <Route path="/event-edit" element={<EventEditPage/>} />
+                    <Route path="/event-attendees" element={<EventAttendeesPage/>} />
+                    <Route path="/under-construction" element={<UnderConstruction/>} />
+                    <Route path="/finance-permission" element={<FinancePermission/>} />
+                    <Route path="/event-creation" element={<EventCreationPage/>} />
+                    <Route path="/flight-search" element={<FlightSearchPage/>} />
+                    <Route path="/approval" element={<ApprovalPage/>} />
+                    <Route path="/admin" element={<AdminPage/>} />
+                    <Route path="/finance-details" element={<FinanceEventDetails/>} />
+                    <Route path="/setuser-info" element={<SetUserInfoPage/>} />
+                    <Route path="/register" element={<RegisterPage/>} />
+                    <Route path="/attendee-register" element={<AttendeeRegister/>} />
+                    <Route path="/password-reset" element={<PasswordResetPage/>} />
+                    <Route path="/user-info" element={<UserInfoPage/>} />
+                    <Route path="/forgot-password" element={<ForgotPasswordPage/>} />
+                    <Route path="/user-events" element={<UserEventsPage/>} />
+                    <Route path="/my-events" element={<MyEventsPage/>} />
+                    <Route path="/finance-events" element={<EventsFinanceUser/>} />
+                    <Route path="/enable-2fa" element={<h1>Enable 2 FA page</h1>} />
+                
+                </Routes>
+            </Router>
+        </NotificationProvider>
     );
 }
 
