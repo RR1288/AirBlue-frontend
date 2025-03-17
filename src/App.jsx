@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
@@ -24,6 +25,7 @@ import UserEventsPage from './pages/UserEventsPage';
 import MyEventsPage from './pages/MyEventsPage';
 import EventsFinanceUser from './pages/EventsFinanceUser';
 import { NotificationProvider } from './components/NotificationProvider';
+import Enable2FAPage from './pages/Enable2FAPage';
 
 
 function App() {
@@ -55,7 +57,7 @@ function App() {
                     <Route path="/user-events" element={<UserEventsPage/>} />
                     <Route path="/my-events" element={<MyEventsPage/>} />
                     <Route path="/finance-events" element={<EventsFinanceUser/>} />
-                    <Route path="/enable-2fa" element={<h1>Enable 2 FA page</h1>} />
+                    <Route path="/enable-2fa" element={<Enable2FAPage/>} />
                 
                 </Routes>
             </Router>

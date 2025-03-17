@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './PinModal.module.css';
 
@@ -22,6 +22,7 @@ const PinModal = ({ isOpen, onSubmit, onClose }) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        const userId = localStorage.getItem('userId');
 
         const fullPin = pin.join('');
         if (fullPin.length < 6) {
@@ -33,7 +34,7 @@ const PinModal = ({ isOpen, onSubmit, onClose }) => {
             const response = await fetch(`${API_URL}/auth/2fa/verify`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ pin: fullPin }),
+                body: JSON.stringify({ userId, twoFactorCode: fullPin }),
             });
 
             const data = await response.json();
