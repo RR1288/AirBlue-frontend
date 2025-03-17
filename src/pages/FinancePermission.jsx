@@ -42,7 +42,7 @@ const FinancePermission = () => {
 
           {/* Permission Information */}
           <p style={styles.description}>
-            Manage access to financial data and transactions. Ensure compliance 
+            Manage access to financial data and transactions. Ensure compliance
             with organizational policies while granting necessary permissions.
           </p>
 
@@ -69,11 +69,10 @@ const styles = {
   },
   main: {
     flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '20px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: '20px',
   },
   headerRow: {
     display: 'flex',

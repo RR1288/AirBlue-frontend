@@ -25,16 +25,16 @@ const EventAttendeesPage = () => {
 
   // Handle checkbox change for selecting attendees
   const handleCheckboxChange = (attendee) => {
-    setSelectedAttendees(prevSelected => 
-      prevSelected.includes(attendee) 
-        ? prevSelected.filter(name => name !== attendee) 
+    setSelectedAttendees(prevSelected =>
+      prevSelected.includes(attendee)
+        ? prevSelected.filter(name => name !== attendee)
         : [...prevSelected, attendee]
     );
   };
 
   // Function to remove selected attendees
   const removeAttendees = () => {
-    setAttendees(prevAttendees => 
+    setAttendees(prevAttendees =>
       prevAttendees.filter(attendee => !selectedAttendees.includes(attendee))
     );
     setSelectedAttendees([]); // Clear selected attendees after removal
@@ -56,7 +56,6 @@ const EventAttendeesPage = () => {
             <Link to="/home" style={styles.backButton}>
               <FontAwesomeIcon icon={faArrowLeft} />
             </Link>
-            <h2 style={styles.title1}>All Events</h2>
           </div>
           <h3 style={styles.title2}>Attendees</h3>
 
@@ -85,10 +84,10 @@ const EventAttendeesPage = () => {
           <div style={styles.attendeeList}>
             {attendees.map((attendee, index) => (
               <div key={index} style={styles.attendeeItem}>
-                <input 
-                  type="checkbox" 
-                  checked={selectedAttendees.includes(attendee)} 
-                  onChange={() => handleCheckboxChange(attendee)} 
+                <input
+                  type="checkbox"
+                  checked={selectedAttendees.includes(attendee)}
+                  onChange={() => handleCheckboxChange(attendee)}
                   style={styles.checkbox}
                 />
                 <span>{attendee}</span>
@@ -130,13 +129,14 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     padding: '20px',
+    marginTop: '-20px',
   },
   headerRow: {
     display: 'flex',
     alignItems: 'center',
     width: '100%',
     maxWidth: '800px',
-    marginBottom: '20px',
+
   },
   backButton: {
     display: 'flex',
@@ -145,7 +145,7 @@ const styles = {
     color: '#0B2853',
     fontSize: '16px',
     fontWeight: '600',
-    marginTop: '85px',
+    marginTop: '5px',
     marginRight: '389px',
     marginLeft: '-400px' // Adjusts spacing between back button and title
   },
@@ -153,14 +153,14 @@ const styles = {
     fontSize: '24px',
     color: '#0B2853',
     fontWeight: '600',
-    marginTop: '85px',
+    marginTop: '-90px',
     marginBottom: '10px',
   },
   title2: {
     fontSize: '24px',
     color: '#0B2853',
     fontWeight: '600',
-    marginTop: '25px',
+    marginTop: '5px',
   },
   filterContainer: {
     display: 'flex',

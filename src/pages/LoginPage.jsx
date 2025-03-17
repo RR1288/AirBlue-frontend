@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { sendError } from '../utils/response';
+
 
 // Login page shouldn't have a token check, but other pages should
 // const headers = new Headers();
 // headers.append('Authorization', `Bearer ${token}`);
 
 
+
 const Notification = ({ message, onClose }) => {
     useEffect(() => {
         const timer = setTimeout(() => {
             onClose();
-        }, 200);
+        }, 5000);
         return () => clearTimeout(timer);
     }, [onClose]);
 
-    return (
-        <div style={styles.notification}>{message}</div>
-    );
+    return <div style={styles.notification}>{message}</div>;
 };
 
 const PinModal = ({ isOpen, onSubmit, onClose }) => {
@@ -104,21 +105,21 @@ const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [showPinModal, setShowPinModal] = useState(false);
     const [notification, setNotification] = useState('');
+    const navigate = useNavigate();
 
-    const handleLoginSubmit = async  (event) => {
+    const handleLoginSubmit = async (event) => {
         event.preventDefault();
-
+    
         try {
             const response = await fetch(`https://airblue-backend-staging-eac124cc32ab.herokuapp.com/auth/login`, {
-
                 method: 'POST',
                 headers: {
-                  'Content-Type': 'application/json',
-                  'Accept': 'application/json'
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
                 },
-                body: JSON.stringify({ username, password })
+                body: JSON.stringify({ username, password }),
             });
-
+    
             const data = await response.json();
             
             if (response.ok) {
@@ -193,20 +194,85 @@ const LoginPage = () => {
               }
         } catch (error) {
             console.error(error);
-            
+            sendError(error.message || 'An error occurred during login.');
         }
-
-       setShowPinModal(true);
     };
-
-    const handlePinSubmit = (pin) => {
-        setNotification('Verification Successful! Redirecting to homepage...');
-        setTimeout(() => {
-            window.location.href = '/home';
-        }, 1000);
-        setShowPinModal(false);
+    
+    const Setup2FAModal = ({ isOpen, onClose, onSetupComplete }) => {
+        const [qrCodeUrl, setQrCodeUrl] = useState('');
+    
+        useEffect(() => {
+            // Call backend to get QR code URL when the modal is open
+            if (isOpen) {
+                const fetchQRCode = async () => {
+                    const response = await fetch('https://airblue-backend-staging-eac124cc32ab.herokuapp.com/auth/setup-2fa', {
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`, // Assuming the token is required
+                        },
+                    });
+                    const data = await response.json();
+                    if (response.ok) {
+                        setQrCodeUrl(data.qrCodeUrl);
+                    } else {
+                        throw new Error('Failed to fetch QR code');
+                    }
+                };
+    
+                fetchQRCode().catch(error => {
+                    sendError(error.message);
+                    onClose(); // Close modal on error
+                });
+            }
+        }, [isOpen]);
+    
+        return isOpen ? (
+            <div style={styles.modalOverlay}>
+                <div style={styles.modal}>
+                    <h2>Set Up 2FA</h2>
+                    <img src={qrCodeUrl} alt="QR Code" style={styles.qrCode} />
+                    <p>Scan this code with your 2FA app</p>
+                    <button onClick={onSetupComplete} style={styles.button}>I've Set It Up</button>
+                    <button onClick={onClose} style={styles.button}>Cancel</button>
+                </div>
+            </div>
+        ) : null;
     };
-        
+    
+    const handlePinSubmit = async (pin) => {
+        try {
+            const response = await fetch(`https://airblue-backend-staging-eac124cc32ab.herokuapp.com/auth/2fa/verify`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ two_fa_code: pin })
+            });
+    
+            const data = await response.json();
+            if (response.ok) {
+                if (data.success) {
+                    localStorage.setItem('token', data.token);
+                    setNotification('Verification Successful! Redirecting to homepage...');
+                    setTimeout(() => {
+                        window.location.href = '/home';
+                    }, 1000);
+                } else {
+                    throw new Error(data.message || 'PIN verification failed.');
+                }
+            } else {
+                throw new Error(data.message || 'An error occurred during PIN verification.');
+            }
+        } catch (error) {
+            console.error(error);
+            setNotification(error.message);
+        }
+        finally {
+            setShowPinModal(false);
+        }
+    };
+                
+
     const handleCloseModal = () => {
         setShowPinModal(false);
     };
@@ -217,9 +283,9 @@ const LoginPage = () => {
 
     return (
         <div style={styles.page}>
-            <Header title="AirBlue System" style={styles.header} />
+            <Header title="AirBlue System" hideSidebar={true} />
             <div style={styles.mainContent}>
-            <h1 style={styles.h1}>Login Page</h1>
+                <h1 style={styles.h1}>Login Page</h1>
                 <div style={styles.loginContainer}>
                     <form onSubmit={handleLoginSubmit} style={styles.form}>
                         <div style={styles.formGroup}>
@@ -244,6 +310,19 @@ const LoginPage = () => {
                         </div>
                         <button type="submit" style={styles.button}>Log In</button>
                     </form>
+
+                    {/* Forgot Password Link */}
+                    <div style={styles.forgotPasswordContainer}>
+                        <Link to="/forgot-password" style={styles.forgotPasswordLink}>Forgot Password</Link>
+                    </div>
+
+                    <div style={styles.registerPrompt}>
+                        Don't have an account? <Link to="/register" style={styles.registerLink}>Register</Link>
+                    </div>
+
+                    <button onClick={() => navigate('/attendee-register')} style={styles.registerButton}>
+                        Register as Attendee
+                    </button>
                 </div>
             </div>
             <PinModal isOpen={showPinModal} onSubmit={handlePinSubmit} onClose={handleCloseModal} />
@@ -277,14 +356,7 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
         padding: '20px',
-    },
-    welcomeText: {
-        fontSize: '24px',
-        color: '#0B2853',
-        marginBottom: '40px',
-        fontWeight: '600',
     },
     loginContainer: {
         display: 'flex',
@@ -309,12 +381,12 @@ const styles = {
     },
     input: {
         width: '100%',
-    padding: '10px',
-    fontSize: '16px',
-    border: '1px solid #0B2853',
-    borderRadius: '4px',
-    backgroundColor: '#ffffff', 
-    color: '#000000' 
+        padding: '10px',
+        fontSize: '16px',
+        border: '1px solid #0B2853',
+        borderRadius: '4px',
+        backgroundColor: '#ffffff',
+        color: '#000000',
     },
     button: {
         padding: '10px 20px',
@@ -324,55 +396,49 @@ const styles = {
         borderRadius: '4px',
         cursor: 'pointer',
         fontSize: '18px',
-        alignSelf: 'center', 
-        margin: 'auto', 
-        display: 'block'
-    },        
-    modalOverlay: {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        margin: '10px 0',
+        display: 'block',
     },
-    modal: {
-        backgroundColor: '#fff',
-        padding: '20px',
-        borderRadius: '10px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
+
     pinContainer: {
         display: 'flex',
         flexDirection: 'row',
+        justifyContent: 'center', // Centers the pin inputs within the modal
         marginBottom: '20px',
-    },
-    pinInput: {
-        width: '40px',
-        height: '40px',
-        margin: '0 5px',
-        fontSize: '16px',
+
+    forgotPasswordContainer: {
+        marginTop: '10px',
         textAlign: 'center',
-        border: '1px solid #ccc',
-        borderRadius: '4px',
+
     },
-    notification: {
-        position: 'fixed',
-        top: '10%',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        backgroundColor: '#0B2853',
+    forgotPasswordLink: {
+        color: '#0B2853',
+        textDecoration: 'none',
+        fontSize: '16px',
+        fontWeight: 'bold',
+    },
+    registerButton: {
+        padding: '10px 20px',
+        backgroundColor: '#28a745', // Green for "Register as Attendee"
         color: 'white',
-        padding: '20px',
-        borderRadius: '10px',
-        zIndex: 1000,
+        border: 'none',
+        borderRadius: '4px',
+        cursor: 'pointer',
+        fontSize: '18px',
+        marginTop: '10px',
+        display: 'block',
     },
-    
+    registerPrompt: {
+        marginTop: '20px',
+        textAlign: 'center',
+        color: '#0B2853',
+    },
+    registerLink: {
+        color: '#0B2853',
+        textDecoration: 'none',
+        fontWeight: 'bold',
+        marginLeft: '5px',
+    },
 };
 
 export default LoginPage;

@@ -23,16 +23,16 @@ const ManageAttendees = () => {
 
   // Handle checkbox change for selecting attendees
   const handleCheckboxChange = (attendee) => {
-    setSelectedAttendees(prevSelected => 
-      prevSelected.includes(attendee) 
-        ? prevSelected.filter(name => name !== attendee) 
+    setSelectedAttendees(prevSelected =>
+      prevSelected.includes(attendee)
+        ? prevSelected.filter(name => name !== attendee)
         : [...prevSelected, attendee]
     );
   };
 
   // Function to remove selected attendees
   const removeAttendees = () => {
-    setAttendees(prevAttendees => 
+    setAttendees(prevAttendees =>
       prevAttendees.filter(attendee => !selectedAttendees.includes(attendee))
     );
     setSelectedAttendees([]); // Clear selected attendees after removal
@@ -83,10 +83,10 @@ const ManageAttendees = () => {
           <div style={styles.attendeeList}>
             {attendees.map((attendee, index) => (
               <div key={index} style={styles.attendeeItem}>
-                <input 
-                  type="checkbox" 
-                  checked={selectedAttendees.includes(attendee)} 
-                  onChange={() => handleCheckboxChange(attendee)} 
+                <input
+                  type="checkbox"
+                  checked={selectedAttendees.includes(attendee)}
+                  onChange={() => handleCheckboxChange(attendee)}
                   style={styles.checkbox}
                 />
                 <span>{attendee}</span>
@@ -130,6 +130,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     padding: '20px',
+    marginTop: '20px',
   },
   headerRow: {
     display: 'flex',
@@ -141,25 +142,25 @@ const styles = {
   backButton: {
     display: 'flex',
     alignItems: 'left',
-    marginTop: '60px',
+    marginTop: '-170px',
     color: '#0B2853',
     fontSize: '16px',
     fontWeight: '600',
     marginRight: '425px',
-    marginLeft:'-443px' // Adjusts spacing between back button and title
+    marginLeft: '-443px' // Adjusts spacing between back button and title
   },
   title1: {
     fontSize: '24px',
     color: '#0B2853',
     fontWeight: '600',
-    marginTop: '60px',
+    marginTop: '-170px',
     marginBottom: '10px',
   },
   title2: {
     fontSize: '24px',
     color: '#0B2853',
     fontWeight: '600',
-    marginTop: '25px',
+    marginTop: '-65px',
   },
   filterContainer: {
     display: 'flex',
