@@ -123,17 +123,75 @@ const LoginPage = () => {
             const data = await response.json();
             
             if (response.ok) {
-                if (data.success && data.data && data.data.token) {
-                    // If login successful and token received, redirect or show dashboard
-                    localStorage.setItem('token', data.data.token);
-                    window.location.href = '/home';
-                } else if (data.message === "2FA required") {
-                    // If 2FA is required but no token, show PIN modal
-                    setShowPinModal(true);
-                }
-            } else {
-                throw new Error(data.message || 'Login failed. Please try again.');
-            }
+                console.log(data);  
+                    if(data.sucess){
+                        //tell user credentials right
+                        if(data.data.two_fa_required){
+                            //show a modal
+                            handleOpenModal;
+                            //user needs to enter password
+                        }
+                        else{
+                            // Login without 2fa
+                            // User is given a token
+                            const { token } = data.data.token;
+                            localStorage.setItem('token', token);
+                            // user Sets up 2FA (get qrcode) within the app
+                            // logout
+                            localStorage.removeItem("token");
+                            // Login (endpoint won't return a token now)
+                            
+                            // Enter 2FA code now
+                            handleOpenModal;
+                            // Redirect to home
+                            window.location.href = "https://airblue-frontend-staging-e0760dff2ded.herokuapp.com/home";
+                        }
+                        if(data.data.token){
+                            //save in localstore
+                            const { token } = data.data.token;
+                            localStorage.setItem('token', token);
+                        }
+                        else{
+                            //display error message
+                            alert("Unable to save token to local storage");
+                        }
+                    }
+                    else{
+                        alert("Error: Data was unsucessful")
+                    }
+
+                /*
+                This is the structure of "data"
+                    data = {
+                        success: true,
+                        message: message,
+                        data: data,
+                    }
+                OR-----------------------------
+                    data = {
+                        success: false,
+                        message: message,
+                    }
+                */
+                
+                // If data.success => go to home or open 2fa modal
+                // Else => display error
+
+                const { token } = data.data;
+                console.log(data.message);
+                
+                console.log("TOKEN: ", token);
+                localStorage.setItem('token', token);
+
+                // if 2FA is required then open PIN modal you won't get a token
+                // you'll get a message saying "2FA required"
+                // Open the PIN modal and send a request here: https://airblue-backend-staging-eac124cc32ab.herokuapp.com/auth/2fa_verify
+                // NOW, that will return a token
+
+              } else {
+                // Handle server errors
+                sendError(data.error || 'Login failed. Please try again.');
+              }
         } catch (error) {
             console.error(error);
             sendError(error.message || 'An error occurred during login.');
@@ -217,6 +275,10 @@ const LoginPage = () => {
 
     const handleCloseModal = () => {
         setShowPinModal(false);
+    };
+
+    const handleOpenModal = () => {
+        setShowPinModal(true);
     };
 
     return (
@@ -377,6 +439,6 @@ const styles = {
         fontWeight: 'bold',
         marginLeft: '5px',
     },
-};
+}};
 
 export default LoginPage;

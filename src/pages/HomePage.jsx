@@ -1,8 +1,10 @@
+// eslint-disable-next-line no-unused-vars
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGlobe, faUser, faList, faPlane } from '@fortawesome/free-solid-svg-icons';
 import Header from '../components/Header';
 import { Link } from 'react-router-dom';
+import Footer from '../components/Footer';
 
 
 // Main HomePage component
@@ -44,6 +46,8 @@ const HomePage = () => {
 
                 </div>
             </div>
+
+            <Footer/>
         </div>
     );
 };
