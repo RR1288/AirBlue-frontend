@@ -1,0 +1,80 @@
+/* HomePage.module.css */
+
+.page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    background-color: #ffffff;
+    box-sizing: border-box;
+}
+
+.header {
+    width: 100%;
+    text-align: center;
+}
+
+/* Main content container */
+.mainContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Welcome message */
+.welcomeText {
+    font-size: 24px;
+    color: #0B2853;
+    margin-bottom: 40px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Grid layout for cards */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
+    gap: 20px;
+    width: 90%; /* Ensures it takes up most of the screen */
+    max-width: 1200px; /* Prevents it from becoming too wide */
+    padding: 0 10px;
+}
+
+/* Card styles */
+.card {
+    background-color: #0B2853;
+    border-radius: 8px;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Card title */
+.cardTitle {
+    color: #FFFFFF;
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+/* Icons */
+.icon {
+    font-size: 36px;
+    color: white;
+}
+
