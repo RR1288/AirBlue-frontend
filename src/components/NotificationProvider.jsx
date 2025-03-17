@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React, { createContext, useState, useCallback, useContext } from 'react';
 import PropTypes from 'prop-types';
 import styles from './Notification.module.css';
