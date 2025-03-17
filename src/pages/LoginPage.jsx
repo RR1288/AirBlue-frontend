@@ -439,6 +439,6 @@ const styles = {
         fontWeight: 'bold',
         marginLeft: '5px',
     },
-};
+}};
 
 export default LoginPage;
