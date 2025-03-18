@@ -1,0 +1,124 @@
+/* LoginPage.module.css */
+
+.page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    background-color: #ffffff;
+    box-sizing: border-box;
+}
+
+.header {
+    width: 100%;
+    text-align: center;
+}
+
+.h1 {
+    text-align: center;
+    color: #0b2853;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 20px 0;
+}
+
+.mainContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.loginContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 400px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.formGroup {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.label {
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #0b2853;
+}
+
+.input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #0b2853;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.button {
+    padding: 10px 20px;
+    background-color: #0b2853;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+    margin: 10px 0;
+    display: block;
+}
+
+.pinContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.forgotPasswordContainer {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.forgotPasswordLink {
+    color: #0b2853;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.registerButton {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+    margin-top: 10px;
+    display: block;
+}
+
+.registerPrompt {
+    margin-top: 20px;
+    text-align: center;
+    color: #0b2853;
+}
+
+.registerLink {
+    color: #0b2853;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 5px;
+}

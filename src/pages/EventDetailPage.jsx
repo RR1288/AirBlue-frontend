@@ -10,103 +10,45 @@ const EventDetailPage = () => {
             {/* Header Component */}
             <Header title="AirBlue System" />
 
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            
-
-            {/* Main Content */}
             <div style={styles.mainContent}>
                 {/* Back Button and Title */}
                 <div style={styles.headerRow}>
-                    <Link to="/manage-events" style={styles.backButton}>
+                    <Link to="/home" style={styles.backButton}>
                         <FontAwesomeIcon icon={faArrowLeft} style={styles.icon} />
                     </Link>
                     <h1 style={styles.eventTitle}>IEEE Board Meeting 2024</h1>
                 </div>
 
-                {/* Form Section */}
-                <form style={styles.form}>
-                {/* Date Input */}
-                <div style={styles.row}>
-                    <label style={styles.label}>Date:</label>
-                    <input type="date" placeholder="MM/DD/YYYY" style={styles.input} />
-                </div>
-
+                {/* Event Details Section (Static Text) */}
+                <div style={styles.detailsContainer}>
+                    <p style={styles.detail}><strong>Date:</strong> October 31, 2024</p>
+                    <p style={styles.detail}><strong>Event Type:</strong> Board Meeting</p>
+                    <p style={styles.detail}><strong>Location:</strong> Rochester Conference Center</p>
+                    
                     {/* Attendees Link */}
-                    <div style={styles.formGroup}>
-                        <label style={styles.label}>Attendees:</label>
-                        <a href="/manage-attendees" style={styles.link}>
-                            Manage attendees
-                        </a>
-                    </div>
+                    <p style={styles.detail}>
+                        <strong>Attendees: </strong> 
+                        <Link to="/event-attendees" style={styles.link}>View Attendees</Link>
+                    </p>
 
-                    {/* Event Type Dropdown */}
-                    <div style={styles.formGroup}>
-                        <label style={styles.label}>Event Type:</label>
-                        <select style={styles.select}>
-                            <option>Board Meeting</option>
-                            <option>Quarter Meeting</option>
-                            <option>Conference</option>
-                            <option>+ Add Event Type</option>
-                        </select>
-                    </div>
+                    {/* Budget Section (Read-Only) */}
+                    <p style={styles.detail}><strong>Budget per Event:</strong> $5,000.00</p>
+                    <p style={styles.detail}><strong>Budget per Attendee:</strong> $400.00</p>
 
-                    {/* Location Input and Map */}
-                    <div style={styles.formGroup}>
-                        <label style={styles.label}>Location:</label>
-                        <div style={styles.locationContainer}>
-                            <select style={styles.select}>
-                                <option>Rochester Conference Center</option>
-                                <option>New York Hall</option>
-                            </select>
-                            <img
-                                src="../src/images/map.png"
-                                alt="Map Placeholder"
-                                style={styles.map}
-                            />
-                        </div>
+                    {/* Notes Section (Read-Only) */}
+                    <div style={styles.notesContainer}>
+                        <strong>Notes:</strong>
+                        <p style={styles.notes}>
+                            Event Notes: The IEEE Board Meeting is scheduled for October 31, 2024 at the Rochester Conference Center. Awaiting RSVP's.
+                        </p>
                     </div>
-
-                    {/* Budget Section */}
-                    <div style={styles.budgetRow}>
-                        <div style={styles.formGroup}>
-                            <label style={styles.label}>Budget per event:</label>
-                            <input type="text" defaultValue="$5,000.00" style={styles.input} />
-                        </div>
-                        <div style={styles.formGroup}>
-                            <label style={styles.label}>Budget per attendee:</label>
-                            <input type="text" defaultValue="$400.00" style={styles.input} />
-                        </div>
-                    </div>
-
-                    {/* Notes Section */}
-                    <div style={styles.formGroup}>
-                        <label style={styles.label}>Notes:</label>
-                        <textarea
-                            style={styles.textarea}
-                            defaultValue="It is a long established fact that a reader will be distracted by the readable content..."
-                        ></textarea>
-                    </div>
-
-                    {/* Buttons */}
-                    <div style={styles.actionRow}>
-                        <button type="button" style={styles.discardButton}>
-                            Discard changes
-                        </button>
-                        <button type="submit" style={styles.saveButton}>
-                            Save changes
-                        </button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     );
 };
 
+// **Styles**
 const styles = {
     page: {
         display: 'flex',
@@ -120,6 +62,7 @@ const styles = {
         maxWidth: '800px',
         margin: '0 auto',
         padding: '20px',
+        marginTop: '20px',
     },
     headerRow: {
         display: 'flex',
@@ -129,9 +72,7 @@ const styles = {
     backButton: {
         textDecoration: 'none',
         color: '#0B2853',
-        marginRight: '480px',
-        marginLeft: '-510px',
-        margintop: '60px',
+        marginRight: '20px',
     },
     icon: {
         fontSize: '20px',
@@ -140,80 +81,29 @@ const styles = {
         fontSize: '24px',
         fontWeight: 'bold',
         color: '#0B2853',
-        margintop: '60px',
     },
-    form: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '20px',
-    },
-    formGroup: {
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    label: {
-        marginBottom: '5px',
-        marginRight: 'auto',
-        color: '#0B2853',
-        fontWeight: 'bold',
-    },
-    input: {
-        padding: '10px',
-        marginLeft: '40px',
-        borderRadius: '4px',
-        border: '1px solid #ccc',
+    detailsContainer: {
         backgroundColor: '#F9F9F9',
-        color: 'gray',
+        padding: '20px',
+        borderRadius: '10px',
+        boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
     },
-    select: {
-        padding: '10px',
-        color: 'gray',
-        borderRadius: '4px',
-        border: '1px solid #ccc',
+    detail: {
+        fontSize: '18px',
+        color: '#333',
+        marginBottom: '10px',
+    },
+    notesContainer: {
+        marginTop: '20px',
+        color: '#333',
+    },
+    notes: {
+        fontSize: '16px',
+        color: '#000000',
         backgroundColor: '#F9F9F9',
-    },
-    locationContainer: {
-        display: 'flex',
-        gap: '20px',
-        alignItems: 'center',
-    },
-    map: {
-        width: '200px',
-        height: '100px',
-        border: '1px solid #ccc',
-        borderRadius: '4px',
-    },
-    budgetRow: {
-        display: 'flex',
-        gap: '20px',
-    },
-    textarea: {
         padding: '10px',
-        backgroundColor: '#F9F9F9',
-        color: 'gray',
-        borderRadius: '4px',
+        borderRadius: '5px',
         border: '1px solid #ccc',
-        minHeight: '100px',
-    },
-    actionRow: {
-        display: 'flex',
-        justifyContent: 'space-between',
-    },
-    discardButton: {
-        backgroundColor: '#FFFFFF',
-        color: '#0B2853',
-        border: '1px solid #0B2853',
-        borderRadius: '4px',
-        padding: '10px 20px',
-        cursor: 'pointer',
-    },
-    saveButton: {
-        backgroundColor: '#0B2853',
-        color: '#FFFFFF',
-        border: 'none',
-        borderRadius: '4px',
-        padding: '10px 20px',
-        cursor: 'pointer',
     },
     link: {
         color: '#0B2853',
