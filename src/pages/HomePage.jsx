@@ -3,39 +3,11 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faGlobe,
-  faUser,
-  faPlane,
-  faMoneyBill,
-  faChartBar,
-  faCalendarPlus,
-  faUsers,
-} from "@fortawesome/free-solid-svg-icons";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import styles from "./HomePage.module.css";
+import { roleOptions } from "../config/roleOptions";
 
-// Mapping of roles to their available dashboard cards
-const cardOptions = {
-  admin: [
-    { link: "/admin-add-staff", icon: faUser, title: "Add Staff" },
-    // Add more admin functionalities if needed
-  ],
-  eventPlanner: [
-    { link: "/create-event", icon: faCalendarPlus, title: "Create Event" },
-    { link: "/manage-attendees", icon: faUsers, title: "Manage Attendees" },
-    { link: "/approve-flights", icon: faPlane, title: "Approve Flights" },
-  ],
-  financePlanner: [
-    { link: "/assign-budget", icon: faMoneyBill, title: "Assign Budget" },
-    { link: "/event-stats", icon: faChartBar, title: "Event Statistics" },
-  ],
-  attendee: [
-    { link: "/my-events", icon: faGlobe, title: "My Events" },
-    { link: "/select-flight", icon: faPlane, title: "Select Flight" },
-  ],
-};
 
 const HomePage = () => {
   // State to keep track of the selected role.
@@ -78,13 +50,13 @@ const HomePage = () => {
             selectedRole.slice(1)})
         </h2>
         <div className={styles.grid}>
-          {cardOptions[selectedRole] &&
-            cardOptions[selectedRole].map((card, index) => (
+          {roleOptions[selectedRole] &&
+            roleOptions[selectedRole].map((card, index) => (
               <Card
                 key={index}
                 link={card.link}
                 icon={card.icon}
-                title={card.title}
+                title={card.label}
               />
             ))}
         </div>
