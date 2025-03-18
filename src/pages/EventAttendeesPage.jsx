@@ -3,7 +3,6 @@ import Header from '../components/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faFilter } from '@fortawesome/free-solid-svg-icons';
 import { Link, useParams } from 'react-router-dom';
-import axios from 'axios';
 import { AuthContext } from "../context/AuthContext";
 
 const EventAttendeesPage = () => {
@@ -29,11 +28,25 @@ const EventAttendeesPage = () => {
   useEffect(() => {
     if (!user) return; // Ensure user is logged in
 
-    axios.get(`/api/attendees/${eventId}`, { headers: { Authorization: `Bearer ${user.token}` } })
-      .then(response => setAttendees(response.data))
+    fetch(`/api/attendees/${eventId}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${user.token}`
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(err => {
+            throw new Error(err.message || "Error fetching attendees.");
+          });
+        }
+        return response.json();
+      })
+      .then(data => setAttendees(data))
       .catch(err => {
-        setError(err.response?.data?.message || "Error fetching attendees.");
+        setError(err.message);
       });
+    
   }, [eventId, user]);
 
 
