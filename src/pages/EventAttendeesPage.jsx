@@ -28,7 +28,7 @@ const EventAttendeesPage = () => {
   useEffect(() => {
     if (!user) return; // Ensure user is logged in
 
-    fetch(`/api/attendees/${eventId}`, {
+    fetch( `${import.meta.env.VITE_API_URL}/events/attendees/{eventId}}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${user.token}`
