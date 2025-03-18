@@ -1,0 +1,44 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #0A306E;
+    color: white;
+    padding: 10px 20px;
+  }
+  
+  .menuButton {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .title {
+    margin: 0;
+    font-size: 18px;
+    color: white;
+  }
+  
+  .roleSwitcher {
+    margin-left: 20px;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .signOut {
+    display: flex;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+  .signOutIcon {
+    margin-right: 8px;
+    font-size: 16px;
+  }
+  

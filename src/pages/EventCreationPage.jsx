@@ -36,6 +36,7 @@ const EventCreationPage = () => {
         const start = new Date(formData.startDate);
         const end = new Date(formData.endDate);
         
+        // TODO: check that start date is a future date
         if (start > end) {
             alert("Start date must be before the end date.");
             return;
@@ -44,7 +45,6 @@ const EventCreationPage = () => {
         // Convert to yyyy-mm-dd format
         const formattedStartDate = new Date(formData.startDate).toISOString().split('T')[0];
         const formattedEndDate = new Date(formData.endDate).toISOString().split('T')[0];
-
 
         // This is what the endpoint will accept
         const body = {
@@ -62,11 +62,15 @@ const EventCreationPage = () => {
         try {
             const response = await getData("POST", "/events/create-event", body);
             if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+                
                 addNotification({
                     type: 'success',
                     title: 'Event successfully created!',
-                    //message: '2FA setup successful. Please scan the QR code with your authenticator app.',
+                    message: data.message,
                   });
+
                 navigate("/manage-events"); // Redirect to manage events page
             } else {
                 alert("Event creation failed. Please try again.");
@@ -117,7 +121,7 @@ const EventCreationPage = () => {
                             type="date"
                             name="dateStart"
                             className={styles.input}
-                            value={formData.date}
+                            value={formData.dateStart}
                             onChange={handleChange}
                             required
                         />
@@ -128,7 +132,7 @@ const EventCreationPage = () => {
                             type="date"
                             name="dateEnd"
                             className={styles.input}
-                            value={formData.date}
+                            value={formData.dateEnd}
                             onChange={handleChange}
                             required
                         />
