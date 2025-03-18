@@ -22,7 +22,7 @@ import {
       { link: "/approve-flights", icon: faPlane, label: "Approve Flights" },
     ],
     financePlanner: [
-      { link: "/assign-budget", icon: faMoneyBill, label: "Assign Budget" },
+      { link: "/finance-events", icon: faMoneyBill, label: "Assign Budget" },
       { link: "/event-stats", icon: faChartBar, label: "Event Statistics" },
     ],
     attendee: [
