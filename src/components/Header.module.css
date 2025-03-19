@@ -16,9 +16,11 @@
   }
   
   .title {
-    margin: 0;
+    margin: 0px;
+    align-items: center;
     font-size: 18px;
     color: white;
+    
   }
   
   .roleSwitcher {
@@ -26,6 +28,21 @@
     padding: 5px;
     border-radius: 5px;
     font-size: 16px;
+    background-color: #0A306E;
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: bold;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+
+  .roleSwitcher:hover {
+    background-color: #0A306E;
+  }
+
+  .roleSwitcher:focus {
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
   }
   
   .signOut {

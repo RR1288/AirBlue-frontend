@@ -13,7 +13,7 @@ import {
   
   const roleOptions = {
     admin: [
-      { link: "/admin-add-staff", icon: faUser, label: "Add Staff" },
+      { link: "/admin", icon: faUser, label: "Admin Panel" },
     ],
     eventPlanner: [
       { link: "/create-event", icon: faCalendarPlus, label: "Create Event" },
@@ -35,7 +35,7 @@ import {
   const sidebarOptions = Object.fromEntries(
     Object.entries(roleOptions).map(([role, options]) => [
       role,
-      [{ link: "/home", icon: faHome, label: "Home" }, ...options, { link: "/account-settings", icon: faCog, label: "Account Settings" }],
+      [{ link: "/home", icon: faHome, label: "Home" }, ...options, { link: "/user-info", icon: faCog, label: "User Info" }],
     ])
   );
   
