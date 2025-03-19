@@ -6,14 +6,16 @@ import { Link } from 'react-router-dom';
 
 const FlightSearchPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
-
+    const [flights, setFlights] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     // Default flights
-    const flights = [
-        { id: 1, destination: "Tirana, Albania", price: "$120", time: "10:30 AM" },
-        { id: 2, destination: "Pristina, Kosovo", price: "$90", time: "12:00 PM" },
-        { id: 3, destination: "Skopje, North Macedonia", price: "$100", time: "2:45 PM" },
-        { id: 4, destination: "Shkodër, Albania", price: "$80", time: "4:00 PM" },
-    ];
+    // const flights = [
+    //     { id: 1, destination: "Tirana, Albania", price: "$120", time: "10:30 AM" },
+    //     { id: 2, destination: "Pristina, Kosovo", price: "$90", time: "12:00 PM" },
+    //     { id: 3, destination: "Skopje, North Macedonia", price: "$100", time: "2:45 PM" },
+    //     { id: 4, destination: "Shkodër, Albania", price: "$80", time: "4:00 PM" },
+    // ];
 
     return (
         <div style={styles.page}>
@@ -58,6 +60,26 @@ const FlightSearchPage = () => {
                             <p style={styles.cardText}>Departure: {flight.time}</p>
                         </div>
                     ))}
+                </div>
+
+                {/* Loading & Error Handling */}
+                {loading && <p>Loading flights...</p>}
+                {error && <p style={{ color: "red" }}>Error: {error}</p>}
+
+                {/* Flight Cards */}
+                <div style={styles.flightsContainer}>
+                    {flights.length > 0 ? (
+                        flights.map((flight) => (
+                            <div key={flight.id} style={styles.card}>
+                                <FontAwesomeIcon icon={faPlaneDeparture} style={styles.cardIcon} />
+                                <h3 style={styles.cardTitle}>{flight.destination}</h3>
+                                <p style={styles.cardText}>Price: ${flight.cost}</p>
+                                <p style={styles.cardText}>Departure: {flight.departure_time}</p>
+                            </div>
+                        ))
+                    ) : (
+                        !loading && <p>No flights available</p>
+                    )}
                 </div>
             </div>
         </div>
