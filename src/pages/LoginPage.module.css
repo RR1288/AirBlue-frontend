@@ -70,7 +70,7 @@
 .button {
     padding: 10px 20px;
     background-color: #0b2853;
-    color: white;
+    color: blue;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -78,12 +78,19 @@
     margin: 10px 0;
     display: block;
 }
+.button:hover{
+    color: blue;
+    background-color: aqua;
+}
 
 .pinContainer {
     display: flex;
     flex-direction: row;
     justify-content: center;
     margin-bottom: 20px;
+}
+._closeButton_86v94_75 {
+    background-color: aqua;
 }
 
 .forgotPasswordContainer {
