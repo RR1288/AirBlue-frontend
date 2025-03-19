@@ -95,13 +95,15 @@ const Enable2FAPage = () => {
       {qrCodeUrl ? (
         <div>
           <h2>Scan the QR code with your authenticator app</h2>
-          <img src={qrCodeUrl} alt="QR Code for 2FA" className={styles.qrCode} />
-          <button onClick={() => setShowPinModal(true)} className={styles.button}>
-            Verify 2FA Setup
-          </button>
+          <div className='centerQR'>
+            <img src={qrCodeUrl} alt="QR Code for 2FA" className={styles.qrCode} />
+            <button onClick={() => setShowPinModal(true)} className={styles.button}>
+              Verify 2FA Setup
+            </button>
+          </div>
         </div>
       ) : (
-        <button onClick={handleEnable2FA} className={styles.button}>
+        <button onClick={handleEnable2FA} className={styles.button2fa}>
           Enable 2FA
         </button>
       )}

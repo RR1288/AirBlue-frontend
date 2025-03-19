@@ -42,9 +42,11 @@
     font-size: 16px;
   }
 
-  /* .closeButton:hover{
-    background-color: aqua;
-  } */
+  /* hover not working for some reason */
+  .closeButton:hover{
+    background: aqua;
+    color: white;
+  }
   
   .message {
     margin-top: 5px;

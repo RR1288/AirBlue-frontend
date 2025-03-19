@@ -79,7 +79,7 @@
     display: block;
 }
 .button:hover{
-    color: blue;
+    color: white;
     background-color: aqua;
 }
 
@@ -89,9 +89,7 @@
     justify-content: center;
     margin-bottom: 20px;
 }
-._closeButton_86v94_75 {
-    background-color: aqua;
-}
+
 
 .forgotPasswordContainer {
     margin-top: 10px;
