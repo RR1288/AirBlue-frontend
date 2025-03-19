@@ -50,7 +50,7 @@ const FlightSearchPage = () => {
                     <button style={styles.searchButton}>Search</button>
                 </div>
 
-                {/* _Flight Cards_ */}
+                {/* _Flight Cards_
                 <div style={styles.flightsContainer}>
                     {flights.map((flight) => (
                         <div key={flight.id} style={styles.card}>
@@ -60,7 +60,7 @@ const FlightSearchPage = () => {
                             <p style={styles.cardText}>Departure: {flight.time}</p>
                         </div>
                     ))}
-                </div>
+                </div> */}
 
                 {/* Loading & Error Handling */}
                 {loading && <p>Loading flights...</p>}
