@@ -102,40 +102,4 @@ Header.propTypes = {
     hideSidebar: PropTypes.bool, // Added prop validation
 };
 
-// Styles for the header
-const styles = {
-    header: {
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        backgroundColor: "#0A306E",
-        color: "white",
-        padding: "10px 20px",
-    },
-    menuButton: {
-        background: "none",
-        border: "none",
-        color: "white",
-        fontSize: "20px",
-        cursor: "pointer",
-    },
-    title: {
-        margin: 0,
-        fontSize: "18px",
-        color: "white",
-    },
-    signOut: {
-        display: "flex",
-        alignItems: "center",
-        color: "white",
-        textDecoration: "none",
-        padding: "5px 10px",
-        borderRadius: "5px",
-    },
-    signOutIcon: {
-        marginRight: "8px",
-        fontSize: "16px",
-    },
-};
-
 export default Header;
