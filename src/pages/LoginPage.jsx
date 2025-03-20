@@ -63,6 +63,9 @@ const LoginPage = () => {
 
                 navigate("/enable-2fa");
             } else if (data.message === "2FA required") {
+                localStorage.setItem("username", data.data.username);
+                localStorage.setItem("roles", data.data.roles);
+                localStorage.setItem("userId", data.data.userId);
                 addNotification({
                     type: "info",
                     title: "Two-Factor Authentication",

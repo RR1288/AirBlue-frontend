@@ -19,6 +19,7 @@
 }
 
 .column {
+  color:#ffffff;
   flex: 1;
   min-width: 250px;
   margin-bottom: 1rem;
@@ -40,7 +41,7 @@ h2 {
 }
 
 .pageLinks {
-  color: #a5b4fc; /* Light purple-blue */
+  color: #ffffff; /* Light purple-blue */
   text-decoration: none;
   font-weight: bold;
   transition: color 0.3s ease-in-out;

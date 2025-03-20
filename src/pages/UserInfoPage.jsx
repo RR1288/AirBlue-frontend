@@ -56,7 +56,7 @@ const UserInfoPage = () => {
                                 <FontAwesomeIcon icon={faUserTag} style={styles.icon} />
                                 <strong> Role:</strong> {userInfo.role}
                             </p>
-                            <button onClick={() => navigate("/reset-password")} style={styles.button}>
+                            <button onClick={() => navigate("/forgot-password")} style={styles.button}>
                                 Reset Password
                             </button>
                         </div>
