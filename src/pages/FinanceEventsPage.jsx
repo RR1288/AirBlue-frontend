@@ -119,7 +119,7 @@ const FinanceEventsPage = () => {
         }
     };
 
-    const assignEventToMe = async (eventId, totalBudget, perAttendeeBudget) => {
+    const assignEventToMe = async (eventId) => {
         setLoadingAssign(true);
         try {
             const res = await getData("POST", "/events/join-eventstaff-finance", {
