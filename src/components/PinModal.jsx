@@ -1,8 +1,6 @@
 import  { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './PinModal.module.css';
-// import { useNotifications } from '../components/NotificationProvider';
-// import { addNotification } from '../components/NotificationProvider';
 
 const PinModal = ({ isOpen, onSubmit, onClose }) => {
     const [pin, setPin] = useState(new Array(6).fill(''));
@@ -48,12 +46,6 @@ const PinModal = ({ isOpen, onSubmit, onClose }) => {
             if (data.success) {
                 const { token } = data.data;
                 localStorage.setItem('token', token);
-                //alert('Verification Successful');
-                // addNotification({
-                //     type: 'success',
-                //     title: '2FA Verification Success',
-                //     message: 'Verification Successful!',
-                //   });
                 onSubmit(fullPin);
             } else {
                 throw new Error(data.error || 'Verification failed.');
