@@ -13,7 +13,7 @@ const EventDetailPage = () => {
             <div style={styles.mainContent}>
                 {/* Back Button and Title */}
                 <div style={styles.headerRow}>
-                    <Link to="/home" style={styles.backButton}>
+                    <Link to="/my-events" style={styles.backButton}>
                         <FontAwesomeIcon icon={faArrowLeft} style={styles.icon} />
                     </Link>
                     <h1 style={styles.eventTitle}>IEEE Board Meeting 2024</h1>
@@ -24,12 +24,6 @@ const EventDetailPage = () => {
                     <p style={styles.detail}><strong>Date:</strong> October 31, 2024</p>
                     <p style={styles.detail}><strong>Event Type:</strong> Board Meeting</p>
                     <p style={styles.detail}><strong>Location:</strong> Rochester Conference Center</p>
-                    
-                    {/* Attendees Link */}
-                    <p style={styles.detail}>
-                        <strong>Attendees: </strong> 
-                        <Link to="/event-attendees" style={styles.link}>View Attendees</Link>
-                    </p>
 
                     {/* Budget Section (Read-Only) */}
                     <p style={styles.detail}><strong>Budget per Event:</strong> $5,000.00</p>

@@ -75,9 +75,8 @@ const styles = {
     },
     mainContent: {
         flex: 1,
-        maxWidth: '800px',
+        maxWidth: '1000px',
         margin: '0 auto',
-        marginTop: '10px',
         padding: '20px'
     },
     headerRow: {
@@ -134,6 +133,7 @@ const styles = {
     searchButton: {
         backgroundColor: '#0B2853',
         color: 'white',
+        marginTop: '0px',
         padding: '10px 15px',
         borderRadius: '4px',
         cursor: 'pointer',

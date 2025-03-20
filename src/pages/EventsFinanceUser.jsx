@@ -44,6 +44,7 @@ const FinanceEventsPage = () => {
                 A: "admin",
                 E: "eventPlanner",
                 F: "financePlanner",
+                T: "attendee",
             };
             const availableRoles = rolesString
                 .split("")
@@ -79,19 +80,6 @@ const FinanceEventsPage = () => {
                 onRoleChange={handleRoleChange}
             />
             <main className={styles.main}>
-                <section className={styles.searchSection}>
-                    <input
-                        type="text"
-                        placeholder="Search finance events..."
-                        value={searchTerm}
-                        onChange={handleSearchChange}
-                        className={styles.searchInput}
-                    />
-                    <FontAwesomeIcon
-                        icon={faSearch}
-                        className={styles.searchIcon}
-                    />
-                </section>
                 <section className={styles.eventsSection}>
                     {filteredEvents.length > 0 ? (
                         filteredEvents.map((event) => (

@@ -57,6 +57,7 @@
   .input {
     padding: 10px;
     border-radius: 4px;
+    color:gray;
     border: 1px solid #ccc;
     background-color: #f9f9f9;
     font-size: 16px;
@@ -65,6 +66,7 @@
   .textarea {
     padding: 10px;
     min-height: 100px;
+    color:gray;
     border-radius: 4px;
     border: 1px solid #ccc;
     background-color: #f9f9f9;
