@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Header from '../components/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserShield, faTrash, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faUserShield, faTrash, faArrowLeft, faAlignJustify } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
 const AdminPage = () => {
@@ -100,61 +100,74 @@ const styles = {
         flexDirection: 'column',
         minHeight: '100vh',
         width: '100vw',
-        backgroundColor: '#FFFFFF'
+        backgroundColor: '#FFFFFF',
     },
     mainContent: {
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: '20px',
+        padding: '40px 20px',
     },
     headerRow: {
         display: 'flex',
         alignItems: 'center',
-        marginBottom: '20px'
+        marginBottom: '20px',
+        width: '100%',
+        maxWidth: '900px',
     },
     backButton: {
         textDecoration: 'none',
-        color: '#0B2853',
-        marginRight: '20px'
+        color: '#0A306E',
+        backgroundColor: '#ffffff',
+        padding: '8px 12px',
+        borderRadius: '5px',
+        fontSize: '16px',
+        fontWeight: 'bold',
     },
     icon: {
-        fontSize: '20px',
-        marginRight: '10px'
+        fontSize: '18px',
+        marginRight: '8px',
     },
     title: {
-        fontSize: '24px',
+        fontSize: '28px',
         fontWeight: 'bold',
-        color: '#0B2853'
+        color: '#0B2853',
+        textAlign: 'center',
+        margin: '10px 0',
     },
     description: {
         fontSize: '16px',
         color: '#333',
-        marginBottom: '20px',
-        textAlign: 'center'
+        marginBottom: '30px',
+        textAlign: 'center',
+        maxWidth: '600px',
     },
     tableContainer: {
         width: '100%',
+        maxWidth: '900px',
         overflowX: 'auto',
-        marginTop: '20px',
+        borderRadius: '8px',
+        backgroundColor: '#FFFFFF',
+        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
     },
     table: {
         width: '100%',
         borderCollapse: 'collapse',
-        backgroundColor: '#F9F9F9',
         borderRadius: '8px',
         overflow: 'hidden',
     },
     th: {
-        backgroundColor: '#0B2853',
+        backgroundColor: '#0A306E',
         color: 'white',
-        padding: '10px',
+        padding: '12px',
         textAlign: 'left',
+        fontSize: '16px',
     },
     td: {
-        padding: '10px',
+        padding: '12px',
         borderBottom: '1px solid #ddd',
+        fontSize: '15px',
     },
     row: {
         backgroundColor: 'white',
@@ -162,32 +175,33 @@ const styles = {
     },
     roleDropdown: {
         padding: '8px',
-        borderRadius: '3px',
-        border: '1px solid #0B2853',  // AirBlue primary color border
+        borderRadius: '5px',
+        border: '1px solid #0A306E',
         cursor: 'pointer',
-        marginRight: '10px',
-        backgroundColor: '#FFFFFF',  // White background
-        color: '#0B2853',  // AirBlue text color
-        fontSize: '14px',
+        backgroundColor: '#FFFFFF',
+        color: '#0A306E',
+        fontSize: '15px',
         fontWeight: 'bold',
         outline: 'none',
         transition: '0.3s',
-        appearance: 'none',  // Removes default browser styling
-        width: '80px',
+        width: '120px',
         textAlign: 'center',
-        marginBottom: '10px',
     },
-
     removeButton: {
         backgroundColor: '#dc3545',
         color: 'white',
-        padding: '8px 12px',
+        padding: '8px 15px',
         borderRadius: '5px',
         border: 'none',
         cursor: 'pointer',
         display: 'flex',
         alignItems: 'center',
-        gap: '5px'
+        gap: '5px',
+        fontSize: '14px',
+        transition: '0.2s ease-in-out',
+    },
+    removeButtonHover: {
+        backgroundColor: '#b52b3a',
     },
     placeholderText: {
         textAlign: 'center',
@@ -196,5 +210,6 @@ const styles = {
         color: '#888',
     }
 };
+
 
 export default AdminPage;

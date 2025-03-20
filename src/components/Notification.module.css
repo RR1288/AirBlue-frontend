@@ -36,10 +36,16 @@
   }
   
   .closeButton {
-    background: transparent;
+    background: #0056b3;
     border: none;
     cursor: pointer;
     font-size: 16px;
+  }
+
+  /* hover not working for some reason */
+  .closeButton:hover{
+    background: aqua;
+    color: white;
   }
   
   .message {

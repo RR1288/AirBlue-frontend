@@ -63,10 +63,13 @@ const LoginPage = () => {
 
                 navigate("/enable-2fa");
             } else if (data.message === "2FA required") {
+                localStorage.setItem("username", data.data.username);
+                localStorage.setItem("roles", data.data.roles);
+                localStorage.setItem("userId", data.data.userId);
                 addNotification({
                     type: "info",
                     title: "Two-Factor Authentication",
-                    message: "Please enter the PIN sent to your email.",
+                    message: "Please enter the PIN from your authentication app",
                 });
                 setShowPinModal(true);
             }

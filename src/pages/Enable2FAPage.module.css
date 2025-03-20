@@ -8,6 +8,8 @@
     height: 100vh;
     padding: 20px;
     background-color: #f4f4f9;
+    width: 100%;
+    text-align: center;
   }
   
   h1 {
@@ -15,6 +17,15 @@
     color: #333;
     margin-bottom: 20px;
   }
+
+  /* .page > div {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    
+  } */
   
   button {
     background-color: #007bff;
@@ -26,6 +37,7 @@
     cursor: pointer;
     margin-top: 20px;
     transition: background-color 0.3s ease;
+    width: auto;
   }
   
   button:disabled {
@@ -46,7 +58,7 @@
   .qrCode {
     width: 200px;
     height: 200px;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
   }
   
   .input {

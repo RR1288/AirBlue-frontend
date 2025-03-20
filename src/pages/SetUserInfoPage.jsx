@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import Header from '../components/Header';
-import UserSidebar from '../components/UserSidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSave, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
+import Sidebar from '../components/Sidebar';
 
 const styles = {
   page: {
@@ -91,7 +91,7 @@ const UserInfoPage = () => {
   return (
     <div style={styles.page}>
       {/* Sidebar */}
-      <UserSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
+      <Sidebar roles={[]} isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
 
       {/* Main Content */}
       <div style={{ flex: 1 }}>

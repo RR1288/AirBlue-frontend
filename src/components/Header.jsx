@@ -1,105 +1,105 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import UserSidebar from "./UserSidebar";
-import AdminSidebar from "./AdminSidebar";
-import FinancePlannerSidebar from "./FinancePlannerSidebar";
-import EventPlannerSidebar from "./EventPlannerSidebar";
-import AttendeeSidebar from "./AttendeeSidebar";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOutAlt, faBars } from "@fortawesome/free-solid-svg-icons";
+// eslint-disable-next-line no-unused-vars
+import React, {useState, useMemo} from "react";
+import {Link} from "react-router-dom";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faSignOutAlt, faBars} from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
+import styles from "./Header.module.css";
+import Sidebar from "./Sidebar";
 
-function Header({ title, userRole, hideSidebar = false }) { // hideSidebar now strictly controls sidebar rendering
+function Header({title, userRole, hideSidebar = false, onRoleChange}) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
-    // Function to render the appropriate sidebar based ONLY on hideSidebar prop
-    const renderSidebar = () => {
-        if (hideSidebar) return null; // Sidebar is completely removed when hideSidebar=true
-
-        switch (userRole) {
-            case "admin":
-                return <AdminSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />;
-            case "attendee":
-                return <AttendeeSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />;
-            case "financePlanner":
-                return <FinancePlannerSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />;
-            case "eventPlanner":
-                return <EventPlannerSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />;
-            case "user":
-            default:
-                return <AdminSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />;
+    // Retrieve and map roles from localStorage.
+    // If no roles are found, assume the user is an attendee.
+    const availableRoles = useMemo(() => {
+        const stored = localStorage.getItem("roles") || "";
+        if (stored === "") {
+            return ["attendee"];
         }
+        const roleMap = {
+            A: "admin",
+            E: "eventPlanner",
+            F: "financePlanner",
+            T: "attendee",
+        };
+        return stored
+            .split("")
+            .map((letter) => roleMap[letter])
+            .filter(Boolean);
+    }, []);
+
+    // Handle role switcher changes.
+    const handleRoleChange = (e) => {
+        const newRole = e.target.value;
+        if (onRoleChange) {
+            onRoleChange(newRole);
+        }
+    };
+
+    // Render the appropriate sidebar based on the current userRole.
+    const renderSidebar = () => {
+        if (hideSidebar) return null;
+        return (
+            <Sidebar
+                userRole={userRole}
+                isOpen={sidebarOpen}
+                setIsOpen={setSidebarOpen}
+            />
+        );
     };
 
     return (
         <>
-            {/* Sidebar will now ONLY be affected by hideSidebar */}
             {renderSidebar()}
-
-            <header style={styles.header}>
-                {/* Menu button toggles sidebar unless hidden */}
+            <header className={styles.header}>
                 {!hideSidebar && (
-                    <button onClick={() => setSidebarOpen(!sidebarOpen)} style={styles.menuButton}>
+                    <button
+                        onClick={() => setSidebarOpen(!sidebarOpen)}
+                        className={styles.menuButton}
+                    >
                         <FontAwesomeIcon icon={faBars} />
                     </button>
                 )}
-
-                {/* Page title */}
-               <a href="home"><h1 style={styles.title}>{title}</h1></a>
-
-                {/* Sign out link with an icon */}
-                <Link to="/login" style={styles.signOut}>
-                    <FontAwesomeIcon icon={faSignOutAlt} style={styles.signOutIcon} /> Sign Out
+                <a href="/home">
+                    <h1 className={styles.title}>{title}</h1>
+                </a>
+                {/* Render role switcher if more than one role is available */}
+                {availableRoles.length > 1 && (
+                    <select
+                        value={userRole}
+                        onChange={handleRoleChange}
+                        className={styles.roleSwitcher}
+                    >
+                        {availableRoles.map((role) => (
+                            <option
+                                key={role}
+                                value={role}
+                            >
+                                {role.charAt(0).toUpperCase() + role.slice(1)}
+                            </option>
+                        ))}
+                    </select>
+                )}
+                <Link
+                    to="/login"
+                    className={styles.signOut}
+                >
+                    <FontAwesomeIcon
+                        icon={faSignOutAlt}
+                        className={styles.signOutIcon}
+                    />{" "}
+                    Sign Out
                 </Link>
             </header>
         </>
     );
 }
 
-// PropTypes for validation
 Header.propTypes = {
     title: PropTypes.string.isRequired,
     userRole: PropTypes.string.isRequired,
     hideSidebar: PropTypes.bool, // Added prop validation
 };
 
-// Styles for the header
-const styles = {
-    header: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: '#0A306E', // Header background color
-        color: 'white',
-        padding: '10px 20px',
-        position: 'relative',
-        zIndex: 1000,
-    },
-    menuButton: {
-        background: "none",
-        border: "none",
-        color: "white",
-        fontSize: "20px",
-        cursor: "pointer",
-    },
-    title: {
-        margin: 0,
-        fontSize: "18px",
-        color: "white",
-    },
-    signOut: {
-        display: "flex",
-        alignItems: "center",
-        color: "white",
-        textDecoration: "none",
-        padding: "5px 10px",
-        borderRadius: "5px",
-    },
-    signOutIcon: {
-        marginRight: "8px",
-        fontSize: "16px",
-    },
-};
-
 export default Header;
-``
