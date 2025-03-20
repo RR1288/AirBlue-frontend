@@ -258,31 +258,22 @@ const FinanceEventsPage = () => {
                                     <div className={styles.options}>
                                         <button
                                             className={styles.optionButton}
-                                            onClick={() =>
-                                                openBudgetModal(event)
-                                            }
+                                            onClick={() => openBudgetModal(event)}
+                                            disabled={loadingAssign}
                                         >
-                                            <FontAwesomeIcon
-                                                icon={faDollarSign}
-                                                className={styles.optionIcon}
-                                            />{" "}
+                                            <FontAwesomeIcon icon={faDollarSign} className={styles.optionIcon} />{" "}
                                             {event.financeUser === null
-                                                ? "Assign to me & Update Budget"
+                                                ? loadingAssign
+                                                    ? "Assigning..."
+                                                    : "Assign to me & Update Budget"
                                                 : "Update Budget"}
                                         </button>
                                         {event.financeUser !== null && (
                                             <button
                                                 className={styles.optionButton}
-                                                onClick={(e) =>
-                                                    openStatsModal(event, e)
-                                                }
+                                                onClick={(e) => openStatsModal(event, e)}
                                             >
-                                                <FontAwesomeIcon
-                                                    icon={faChartPie}
-                                                    className={
-                                                        styles.optionIcon
-                                                    }
-                                                />{" "}
+                                                <FontAwesomeIcon icon={faChartPie} className={styles.optionIcon} />{" "}
                                                 See Stats ({percentageUsed}%)
                                             </button>
                                         )}
