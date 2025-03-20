@@ -66,12 +66,14 @@ Header.propTypes = {
 // Styles for the header
 const styles = {
     header: {
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        backgroundColor: "#0A306E",
-        color: "white",
-        padding: "10px 20px",
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: '#0A306E', // Header background color
+        color: 'white',
+        padding: '10px 20px',
+        position: 'relative',
+        zIndex: 1000,
     },
     menuButton: {
         background: "none",
