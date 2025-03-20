@@ -49,52 +49,55 @@ function Header({title, userRole, hideSidebar = false, onRoleChange}) {
         );
     };
 
+    // Handle the sign-out process
+    const handleSignOut = () => {
+        // Clear localStorage or session data
+        localStorage.removeItem('user'); 
+        localStorage.removeItem('roles'); 
+    
+        // Redirect to the login page
+        window.location.href = '/login';  // Or use React Router's history.push('/login')
+    };
     return (
-        <>
-            {renderSidebar()}
-            <header className={styles.header}>
-                {!hideSidebar && (
-                    <button
-                        onClick={() => setSidebarOpen(!sidebarOpen)}
-                        className={styles.menuButton}
-                    >
-                        <FontAwesomeIcon icon={faBars} />
-                    </button>
-                )}
-                <a href="/home">
-                    <h1 className={styles.title}>{title}</h1>
-                </a>
-                {/* Render role switcher if more than one role is available */}
+        <div className={styles.headerContainer}>
+            {/* Sidebar toggle button */}
+            <div className={styles.sidebarToggle} onClick={() => setSidebarOpen(!sidebarOpen)}>
+                <FontAwesomeIcon icon={faBars} />
+            </div>
+
+            {/* Header title */}
+            <div className={styles.headerTitle}>
+                <h1>{title}</h1>
+            </div>
+
+            {/* Role selector */}
+            {/* // Only show the dropdown if there are multiple roles or if userRole isn't 'attendee' */}
+            <div className={styles.roleSelector}>
                 {availableRoles.length > 1 && (
-                    <select
-                        value={userRole}
-                        onChange={handleRoleChange}
-                        className={styles.roleSwitcher}
-                    >
+                    <select onChange={handleRoleChange} value={userRole}>
                         {availableRoles.map((role) => (
-                            <option
-                                key={role}
-                                value={role}
-                            >
-                                {role.charAt(0).toUpperCase() + role.slice(1)}
+                            <option key={role} value={role}>
+                                {role}
                             </option>
                         ))}
                     </select>
                 )}
-                <Link
-                    to="/login"
-                    className={styles.signOut}
-                >
-                    <FontAwesomeIcon
-                        icon={faSignOutAlt}
-                        className={styles.signOutIcon}
-                    />{" "}
-                    Sign Out
-                </Link>
-            </header>
-        </>
-    );
-}
+            </div>
+
+            {/* Logout button */}
+            return (
+                <div className={styles.logoutButton}>
+                    {/* Sign Out Icon */}
+                    <FontAwesomeIcon 
+                        icon={faSignOutAlt} 
+                        onClick={handleSignOut} 
+                    />
+                </div>
+            );
+                        {renderSidebar()}
+                    </div>
+                );
+            }
 
 Header.propTypes = {
     title: PropTypes.string.isRequired,
