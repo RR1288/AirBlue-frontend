@@ -78,6 +78,10 @@
     margin: 10px 0;
     display: block;
 }
+.button:hover{
+    color: white;
+    background-color: aqua;
+}
 
 .pinContainer {
     display: flex;
@@ -85,6 +89,7 @@
     justify-content: center;
     margin-bottom: 20px;
 }
+
 
 .forgotPasswordContainer {
     margin-top: 10px;
