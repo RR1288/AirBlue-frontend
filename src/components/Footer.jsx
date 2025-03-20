@@ -9,7 +9,7 @@ function Footer() {
             <div className={styles.container}>
                 <div className={styles.row}>
                     <div className={styles.column}>
-                        <h2>AirBlue</h2>
+                        <h2 className={styles.footerTitle}>AirBlue</h2>
                         <ul className={styles.list}>
                             <li>123-456-7890</li>
                             <li>Rochester, New York</li>
@@ -17,7 +17,7 @@ function Footer() {
                         </ul>
                     </div>
                     <div className={styles.column}>
-                        <h2>Pages</h2>
+                        <h2 className={styles.footerTitle}>Pages</h2>
                         <ul className={styles.list}>
                             <li>
                                 <Link to="/my-events" className={styles.pageLinks}>My Events</Link>
