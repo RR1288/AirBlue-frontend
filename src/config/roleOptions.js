@@ -16,14 +16,14 @@ import {
       { link: "/admin", icon: faUser, label: "Admin Panel" },
     ],
     eventPlanner: [
-      { link: "/create-event", icon: faCalendarPlus, label: "Create Event" },
+      { link: "/event-creation", icon: faCalendarPlus, label: "Create Event" },
       { link: "/manage-events", icon: faClipboardList, label: "Manage Events" },
       { link: "/manage-attendees", icon: faUsers, label: "Manage Attendees" },
-      { link: "/approve-flights", icon: faPlane, label: "Approve Flights" },
+      { link: "/approval", icon: faPlane, label: "Approve Flights" },
     ],
     financePlanner: [
-      { link: "/finance-events", icon: faMoneyBill, label: "Assign Budget" },
-      { link: "/event-stats", icon: faChartBar, label: "Event Statistics" },
+      { link: "/finance-details", icon: faMoneyBill, label: "Assign Budget" },
+      { link: "/finance-events", icon: faChartBar, label: "Event List" },
     ],
     attendee: [
       { link: "/my-events", icon: faGlobe, label: "My Events" },

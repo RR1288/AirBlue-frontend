@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faFilter } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
+// for event planners who can see the specific event
+
 const EventAttendeesPage = () => {
   // State for first and last name filters
   const [firstName, setFirstName] = useState('');
