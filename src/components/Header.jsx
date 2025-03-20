@@ -21,6 +21,7 @@ function Header({title, userRole, hideSidebar = false, onRoleChange}) {
             A: "admin",
             E: "eventPlanner",
             F: "financePlanner",
+            T: "attendee",
         };
         return stored
             .split("")
@@ -98,8 +99,7 @@ function Header({title, userRole, hideSidebar = false, onRoleChange}) {
 Header.propTypes = {
     title: PropTypes.string.isRequired,
     userRole: PropTypes.string.isRequired,
-    hideSidebar: PropTypes.bool,
-    onRoleChange: PropTypes.func,
+    hideSidebar: PropTypes.bool, // Added prop validation
 };
 
 export default Header;

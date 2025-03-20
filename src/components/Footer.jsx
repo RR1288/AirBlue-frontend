@@ -20,16 +20,13 @@ function Footer() {
                         <h2>Pages</h2>
                         <ul className={styles.list}>
                             <li>
-                                <Link to="/events" className={styles.pageLinks}>Events</Link>
+                                <Link to="/my-events" className={styles.pageLinks}>My Events</Link>
                             </li>
                             <li>
-                                <Link to="/attendees" className={styles.pageLinks}>Attendees</Link>
+                                <Link to="/user-info" className={styles.pageLinks}>My Info</Link>
                             </li>
                             <li>
-                                <Link to="/event-types" className={styles.pageLinks}>Event Types</Link>
-                            </li>
-                            <li>
-                                <Link to="/flights" className={styles.pageLinks}>Flights</Link>
+                                <Link to="/flight-search" className={styles.pageLinks}>Flights</Link>
                             </li>
                         </ul>
                     </div>

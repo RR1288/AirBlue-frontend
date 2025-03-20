@@ -20,7 +20,6 @@ import AttendeeRegister from './pages/AttendeeRegister';
 import PasswordResetPage from './pages/PasswordResetPage';
 import UserInfoPage from './pages/UserInfoPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
-import UserEventsPage from './pages/UserEventsPage';
 import MyEventsPage from './pages/MyEventsPage';
 import EventsFinanceUser from './pages/FinanceEventsPage';
 import { NotificationProvider } from './components/NotificationProvider';
@@ -52,7 +51,6 @@ function App() {
                     <Route path="/password-reset" element={<PasswordResetPage/>} />
                     <Route path="/user-info" element={<UserInfoPage/>} />
                     <Route path="/forgot-password" element={<ForgotPasswordPage/>} />
-                    <Route path="/user-events" element={<UserEventsPage/>} />
                     <Route path="/my-events" element={<MyEventsPage/>} />
                     <Route path="/finance-events" element={<EventsFinanceUser/>} />
                     <Route path="/enable-2fa" element={<Enable2FAPage/>} />

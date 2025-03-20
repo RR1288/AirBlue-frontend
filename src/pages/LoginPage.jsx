@@ -70,7 +70,7 @@ const LoginPage = () => {
                 addNotification({
                     type: "info",
                     title: "Two-Factor Authentication",
-                    message: "Please enter the PIN sent to your email.",
+                    message: "Please enter the PIN from your authentication app",
                 });
                 setShowPinModal(true);
             }
