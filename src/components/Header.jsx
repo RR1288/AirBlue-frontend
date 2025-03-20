@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, {useState, useMemo} from "react";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSignOutAlt, faBars} from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
@@ -21,7 +21,6 @@ function Header({title, userRole, hideSidebar = false, onRoleChange}) {
             A: "admin",
             E: "eventPlanner",
             F: "financePlanner",
-            T: "attendee",
         };
         return stored
             .split("")

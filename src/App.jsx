@@ -8,7 +8,6 @@ import EventDetailPage from './pages/EventDetailPage';
 import LoginPage from './pages/LoginPage';
 import UnderConstruction from './pages/UnderConstruction';
 import EventEditPage from './pages/EventEditPage';
-import FinancePermission from './pages/FinancePermission';
 import EventCreationPage from './pages/EventCreationPage';
 import FlightSearchPage from './pages/FlightSearchPage';
 import ApprovalPage from './pages/ApprovalPage';
@@ -39,7 +38,6 @@ function App() {
                     <Route path="/login" element={<LoginPage/>} />
                     <Route path="/event-edit" element={<EventEditPage/>} />
                     <Route path="/under-construction" element={<UnderConstruction/>} />
-                    <Route path="/finance-permission" element={<FinancePermission/>} />
                     <Route path="/event-creation" element={<EventCreationPage/>} />
                     <Route path="/flight-search" element={<FlightSearchPage/>} />
                     <Route path="/approval" element={<ApprovalPage/>} />
