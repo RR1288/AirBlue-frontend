@@ -122,12 +122,12 @@ const FinanceEventsPage = () => {
     const assignEventToMe = async (eventId, totalBudget, perAttendeeBudget) => {
         setLoadingAssign(true);
         try {
-            const res = await getData("POST", "/events/assign", {
-                userId,
-                eventId,
+            const res = await getData("POST", "/events/join-eventstaff-finance", {
+                userID: userId,
+                eventID: eventId,
             });
             if (!res.ok) throw new Error("Failed to assign event");
-            await updateBudget(eventId, totalBudget, perAttendeeBudget);
+
             addNotification({
                 title: "Success",
                 message: "Event assigned successfully!",
@@ -164,9 +164,8 @@ const FinanceEventsPage = () => {
                 event.eventBudget || 0,
                 event.flightBudgetPerAttendee || 0
             );
-        } else {
-            setSelectedEvent(event);
-        }
+        } 
+        setSelectedEvent(event);
     };
 
     const closeBudgetModal = () => {
