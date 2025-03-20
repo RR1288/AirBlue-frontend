@@ -44,9 +44,6 @@ const PinModal = ({ isOpen, onSubmit, onClose }) => {
             }
 
             if (data.success) {
-                const { token } = data.data;
-                localStorage.setItem('token', token);
-                alert('Verification Successful');
                 onSubmit(fullPin);
             } else {
                 throw new Error(data.error || 'Verification failed.');
