@@ -1,51 +1,60 @@
-/* Container for the entire header */
-.headerContainer {
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
   background-color: #0A306E;
-  box-shadow: 0 2px 5px 0A306E(0, 0, 0, 0.1);
-  position: relative; 
+  color: white;
+  padding: 10px 20px;
 }
 
-/* Sidebar toggle button (hamburger menu) */
-.sidebarToggle {
+.menuButton {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
   cursor: pointer;
-  font-size: 1.5rem;
 }
 
-/* Title in the header */
-.headerTitle {
-  position: absolute; /* Center the title */
-  left: 50%;
-  transform: translateX(-50%);
+.title {
+  margin: 0px;
+  align-items: center;
+  font-size: 18px;
+  color: white;
+  
 }
 
-.headerTitle h1 {
-  text-align: center;
-  font-size: 1.5rem;
+.roleSwitcher {
+  margin-left: 20px;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #0A306E;
+  color: #ffffff;
+  cursor: pointer;
   font-weight: bold;
-  color: white;
-}
-
-/* Dropdown for role selection */
-.roleSelector select {
-  padding: 5px 10px;
-  font-size: 1rem;
-  border: 1px solid white;
-  border-radius: 4px;
-}
-
-/* Logout button (sign-out icon) */
-.logoutButton {
   cursor: pointer;
-  font-size: 1.5rem;
-  color: white;
-  margin-left: auto;
+  outline: none;
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-.logoutButton:hover,
-.sidebarToggle:hover {
+.roleSwitcher:hover {
+  background-color: #0A306E;
+}
+
+.roleSwitcher:focus {
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
+.signOut {
+  display: flex;
+  align-items: center;
   color: white;
+  text-decoration: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.signOutIcon {
+  margin-right: 8px;
+  font-size: 16px;
 }
