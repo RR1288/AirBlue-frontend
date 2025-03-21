@@ -54,7 +54,9 @@ const ManageAttendees = () => {
             <Link to="/home" style={styles.backButton}>
               <FontAwesomeIcon icon={faArrowLeft} />
             </Link>
-            <h2 style={styles.title1}>IEEE Board Meeting 2024</h2>
+              <div style={styles.titleContainer}>
+                 <h2 style={styles.title1}>IEEE Board Meeting 2024</h2>
+              </div>
           </div>
           <h3 style={styles.title2}>Attendees</h3>
 
@@ -155,6 +157,11 @@ const styles = {
     fontWeight: '600',
     marginTop: '0', 
     marginBottom: '10px',
+  },
+  titleContainer: {
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
   },
   title2: {
     fontSize: '24px',
