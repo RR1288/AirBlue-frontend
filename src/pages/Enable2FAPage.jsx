@@ -94,6 +94,7 @@ const Enable2FAPage = () => {
                 title="AirBlue System"
                 hideSidebar={true}
             />
+            <main className={styles.mainContent}>    
       <h1>Enable Two-Factor Authentication</h1>
 
       {/* If the QR code is available, show it along with a button to verify.
@@ -113,6 +114,7 @@ const Enable2FAPage = () => {
           Enable 2FA
         </button>
       )}
+      </main>  
 
       {/* PinModal for entering the verification code */}
       <PinModal
