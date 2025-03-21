@@ -6,6 +6,7 @@ import Header from "../components/Header";
 import styles from "./LoginPage.module.css";
 import {useNotifications} from "../components/NotificationProvider";
 import Footer from "../components/Footer";
+import FooterNoLink from "../components/FooterNoLink";
 
 const LoginPage = () => {
     const {addNotification} = useNotifications();
@@ -211,7 +212,7 @@ const LoginPage = () => {
                 onSubmit={handlePinSubmit}
                 onClose={() => setShowPinModal(false)}
             />
-            <Footer/>
+            <FooterNoLink/>
         </div>
     );
 };
