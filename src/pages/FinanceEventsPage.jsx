@@ -27,81 +27,32 @@ const FinanceEventsPage = () => {
     const [events, setEvents] = useState([]);
     const [loadingAssign, setLoadingAssign] = useState(false);
 
-    const testData = [
-        {
-            id: 1,
-            title: "Company Financial Review",
-            startDate: "2025-04-20",
-            endDate: "2025-04-22",
-            location: "Headquarters",
-            description:
-                "Annual financial review for shareholders and stakeholders.",
-            eventBudget: 10000,
-            flightBudgetPerAttendee: 500,
-            totalAmountSpent: 4000, // from system
-            maxAttendees: 100,
-            bookedAttendees: 40,
-            financeUser: "FinanceUser1",
-        },
-        {
-            id: 2,
-            title: "Budget Allocation Meeting",
-            startDate: "2025-05-13",
-            endDate: "2025-05-15",
-            location: "Finance Boardroom",
-            description:
-                "Meeting to discuss and allocate budgets for upcoming projects.",
-            eventBudget: 20000,
-            flightBudgetPerAttendee: 700,
-            totalAmountSpent: 5000, // from system
-            maxAttendees: 150,
-            bookedAttendees: 60,
-            financeUser: "FinanceUser1",
-        },
-        {
-            id: 3,
-            title: "Orphan Event Example",
-            startDate: "2025-06-01",
-            endDate: "2025-06-02",
-            location: "TBD",
-            description:
-                "This is an orphan event with no finance user assigned yet.",
-            eventBudget: null,
-            flightBudgetPerAttendee: null,
-            totalAmountSpent: 0,
-            maxAttendees: 0,
-            bookedAttendees: 0,
-            financeUser: null,
-        },
-    ];
-
     useEffect(() => {
         fetchEvents();
     }, []);
 
     const fetchEvents = async () => {
         try {
-            const res = await getData("GET", `/events?userId=${userId}`);
+            const res = await getData("GET", `/events/getAllEventsFinanceView`);
             if (!res.ok) throw new Error("Failed to fetch events");
             const data = await res.json();
-            setEvents(data);
+            setEvents(data.data);
         } catch (error) {
             addNotification({
                 title: "Error",
                 message: error.message,
                 type: "error",
             });
-            setEvents(testData);
         }
     };
 
-    const updateBudget = async (eventId, totalBudget, perAttendeeBudget) => {
+    const updateBudget = async (eventId, totalBudget, flightBudget) => {
         try {
             const res = await getData("POST", "/events/set-budget", {
                 userId,
                 eventID: eventId,
                 totalBudget,
-                flightBudget: perAttendeeBudget,
+                flightBudget,
             });
             if (!res.ok) throw new Error("Failed to update budget");
             addNotification({
@@ -156,13 +107,13 @@ const FinanceEventsPage = () => {
         setSearchTerm(e.target.value);
     };
 
-    const openBudgetModal = (event) => {
-        if (event.financeUser === null) {
+    const openBudgetModal = async (event) => {
+        if (event.EventStaffs.financeUser === null) {
             // Assign orphan event before opening budget modal
-            assignEventToMe(
+            await assignEventToMe(
                 event.id,
                 event.eventBudget || 0,
-                event.flightBudgetPerAttendee || 0
+                event.flightBudget || 0
             );
         } 
         setSelectedEvent(event);
@@ -183,19 +134,11 @@ const FinanceEventsPage = () => {
     };
 
     const handleUpdateBudget = async (updatedEvent) => {
-        // If testData
-        // setEvents((prevEvents) =>
-        //     prevEvents.map((event) =>
-        //         event.id === updatedEvent.id ? updatedEvent : event
-        //     )
-        // );
-
-        // DB
-
+        // Update Budget handles its own notifications
         await updateBudget(
             updatedEvent.id,
             updatedEvent.eventBudget,
-            updatedEvent.flightBudgetPerAttendee
+            updatedEvent.flightBudget
         );
     };
 
@@ -232,7 +175,7 @@ const FinanceEventsPage = () => {
                                     key={event.id}
                                     className={styles.eventCard}
                                 >
-                                    {event.financeUser === null && (
+                                    {event.EventStaffs.financeUser === null && (
                                         <span className={styles.orphanLabel}>
                                             Orphan Event
                                         </span>
@@ -261,13 +204,13 @@ const FinanceEventsPage = () => {
                                             disabled={loadingAssign}
                                         >
                                             <FontAwesomeIcon icon={faDollarSign} className={styles.optionIcon} />{" "}
-                                            {event.financeUser === null
+                                            {event.EventStaffs.financeUser === null
                                                 ? loadingAssign
                                                     ? "Assigning..."
                                                     : "Assign to me & Update Budget"
                                                 : "Update Budget"}
                                         </button>
-                                        {event.financeUser !== null && (
+                                        {event.EventStaffs.financeUser !== null && (
                                             <button
                                                 className={styles.optionButton}
                                                 onClick={(e) => openStatsModal(event, e)}

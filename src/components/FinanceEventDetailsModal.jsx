@@ -3,41 +3,28 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { useNotifications } from "./NotificationProvider";
 import styles from "./FinanceEventDetailsModal.module.css";
 
 const FinanceEventDetailsModal = ({ event, onClose, onUpdateBudget }) => {
-  const [eventBudget, setEventBudget] = useState(event.eventBudget || 0);
-  const [flightBudgetPerAttendee, setFlightBudgetPerAttendee] = useState(
-    event.flightBudgetPerAttendee || 0
+  const [eventBudget, setEventBudget] = useState(parseFloat(event.eventBudget) || 0);
+  const [flightBudget, setFlightBudget] = useState(
+    parseFloat(event.flightBudget) || 0
   );
-  const { addNotification } = useNotifications();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // If event is orphan, assign it to the current finance user (hardcoded here)
-    const assignedFinanceUser = event.financeUser || "FinanceUser1";
+    const assignedFinanceUser = event.financeUser;
     const updatedEvent = {
       ...event,
       eventBudget,
-      flightBudgetPerAttendee,
+      flightBudget: flightBudget,
       financeUser: assignedFinanceUser,
-      // For an orphan event, you might want to initialize other fields as needed:
       totalAmountSpent: event.totalAmountSpent || 0,
       maxAttendees: event.maxAttendees || 0,
       bookedAttendees: event.bookedAttendees || 0,
     };
     onUpdateBudget(updatedEvent);
-
-    addNotification({
-      title: "Success",
-      message: "Budget updated successfully!",
-      type: "success",
-    });
-
-    setTimeout(() => {
-      onClose();
-    }, 1500);
   };
 
 
@@ -64,12 +51,12 @@ const FinanceEventDetailsModal = ({ event, onClose, onUpdateBudget }) => {
             required
             min="0"
           />
-          <label htmlFor="flightBudgetPerAttendee">Flight Budget Per Attendee</label>
+          <label htmlFor="flightBudget">Flight Budget</label>
           <input
-            id="flightBudgetPerAttendee"
+            id="flightBudget"
             type="number"
-            value={flightBudgetPerAttendee}
-            onChange={(e) => setFlightBudgetPerAttendee(Number(e.target.value))}
+            value={flightBudget}
+            onChange={(e) => setFlightBudget(Number(e.target.value))}
             required
             min="0"
           />
@@ -91,7 +78,7 @@ FinanceEventDetailsModal.propTypes = {
     location: PropTypes.string.isRequired,
     description: PropTypes.string,
     eventBudget: PropTypes.number,
-    flightBudgetPerAttendee: PropTypes.number,
+    flightBudget: PropTypes.number,
     totalAmountSpent: PropTypes.number,
     maxAttendees: PropTypes.number,
     bookedAttendees: PropTypes.number,
