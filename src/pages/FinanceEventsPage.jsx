@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faSearch,
     faCalendarAlt,
@@ -14,11 +14,11 @@ import FinanceEventStatsModal from "../components/FinanceEventStatsModal";
 import styles from "./FinanceEventsPage.module.css";
 
 import getData from "../utils/getData";
-import {useNotifications} from "../components/NotificationProvider";
+import { useNotifications } from "../components/NotificationProvider";
 
 const FinanceEventsPage = () => {
-    const userId = parseInt(localStorage.getItem("userId"));
-    const {addNotification} = useNotifications();
+    const userId = Number(localStorage.getItem("userId")) || null;
+    const { addNotification } = useNotifications();
 
     const [searchTerm, setSearchTerm] = useState("");
     const [filteredEvents, setFilteredEvents] = useState([]);
@@ -33,7 +33,7 @@ const FinanceEventsPage = () => {
 
     const fetchEvents = async () => {
         try {
-            const res = await getData("GET", `/events/getAllEventsFinanceView`);
+            const res = await getData("GET", "/events/getAllEventsFinanceView");
             if (!res.ok) throw new Error("Failed to fetch events");
             const data = await res.json();
             setEvents(data.data);
@@ -108,24 +108,25 @@ const FinanceEventsPage = () => {
     };
 
     const openBudgetModal = async (event) => {
-        if (event.EventStaffs.financeUser === null) {
-            // Assign orphan event before opening budget modal
-            await assignEventToMe(
-                event.id,
-                event.eventBudget || 0,
-                event.flightBudget || 0
-            );
-        } 
+        if (!event.EventStaffs || event.EventStaffs[0]?.financeUser === null) {
+            try {
+                await assignEventToMe(event.id);
+            } catch (error) {
+                console.error(error);
+                return; // Prevent opening the modal if assignment fails
+            }
+        }
         setSelectedEvent(event);
     };
+
+
 
     const closeBudgetModal = () => {
         setSelectedEvent(null);
     };
 
     const openStatsModal = (event, e) => {
-        // Prevent the card click event from triggering the budget modal.
-        e.stopPropagation();
+        e.stopPropagation(); // Prevent triggering budget modal
         setSelectedStatsEvent(event);
     };
 
@@ -134,7 +135,6 @@ const FinanceEventsPage = () => {
     };
 
     const handleUpdateBudget = async (updatedEvent) => {
-        // Update Budget handles its own notifications
         await updateBudget(
             updatedEvent.id,
             updatedEvent.eventBudget,
@@ -162,20 +162,22 @@ const FinanceEventsPage = () => {
                 <section className={styles.eventsSection}>
                     {filteredEvents.length > 0 ? (
                         filteredEvents.map((event) => {
-                            // Calculate percentage used from event budget.
+                            console.log(event);
+                            
                             const percentageUsed = event.eventBudget
                                 ? Math.round(
-                                      (event.totalAmountSpent /
-                                          event.eventBudget) *
+                                      (Number(event.totalAmountSpent) /
+                                          Number(event.eventBudget)) *
                                           100
                                   )
                                 : 0;
+
                             return (
                                 <div
                                     key={event.id}
                                     className={styles.eventCard}
                                 >
-                                    {event.EventStaffs.financeUser === null && (
+                                    {(!event.EventStaffs?.length || event.EventStaffs[0]?.financeUser === null) && (
                                         <span className={styles.orphanLabel}>
                                             Orphan Event
                                         </span>
@@ -204,13 +206,13 @@ const FinanceEventsPage = () => {
                                             disabled={loadingAssign}
                                         >
                                             <FontAwesomeIcon icon={faDollarSign} className={styles.optionIcon} />{" "}
-                                            {event.EventStaffs.financeUser === null
+                                            {(!event.EventStaffs?.length || event.EventStaffs[0]?.financeUser === null)
                                                 ? loadingAssign
                                                     ? "Assigning..."
                                                     : "Assign to me & Update Budget"
                                                 : "Update Budget"}
                                         </button>
-                                        {event.EventStaffs.financeUser !== null && (
+                                        {event.EventStaffs?.length > 0 && event.EventStaffs[0]?.financeUser !== null && (
                                             <button
                                                 className={styles.optionButton}
                                                 onClick={(e) => openStatsModal(event, e)}

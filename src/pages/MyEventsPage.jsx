@@ -15,11 +15,11 @@ const MyEventsPage = () => {
         setLoading(true);
         setTimeout(() => {
             const mockEvents = [
-                { id: 1, name: 'Tech Conference 2025', startDate: '2025-05-10', location: 'New York', description: 'Tech networking and keynotes.', status: 'pending' },
-                { id: 2, name: 'AI & ML Workshop', startDate: '2025-06-15', location: 'San Francisco', description: 'Deep dive into AI advancements.', status: 'select' },
-                { id: 3, name: 'Startup Pitch Night', startDate: '2025-07-20', location: 'Chicago', description: 'Founders pitch to investors.', status: 'approved' },
-                { id: 4, name: 'Startup Pitch Night', startDate: '2025-04-20', location: 'Rochester', description: 'Founders pitch to investors.', status: 'denied' },
-                { id: 5, name: 'Project Presentation', startDate: '2024-12-20', location: 'Chicago', description: 'Founders pitch to investors.', status: 'past' },
+                { id: 1, name: 'Tech Conference 2025', startDate: '2025-05-10', endDate: '2025-05-11', location: 'New York', description: 'Tech networking and keynotes.', status: 'pending' },
+                { id: 2, name: 'AI & ML Workshop', startDate: '2025-06-15', endDate: '2025-06-17',location: 'San Francisco', description: 'Deep dive into AI advancements.', status: 'select' },
+                { id: 3, name: 'Startup Pitch Night', startDate: '2025-07-20', endDate: '2025-07-25',location: 'Chicago', description: 'Founders pitch to investors.', status: 'approved' },
+                { id: 4, name: 'Startup Pitch Night', startDate: '2025-04-20', endDate: '2025-04-27',location: 'Rochester', description: 'Founders pitch to investors.', status: 'denied' },
+                { id: 5, name: 'Project Presentation', startDate: '2024-12-20', endDate: '2024-12-31',location: 'Chicago', description: 'Founders pitch to investors.', status: 'past' },
             ];
             setEvents(mockEvents);
             setLoading(false);
@@ -69,7 +69,8 @@ const MyEventsPage = () => {
                                     <div key={event.id} className={styles.eventCard}>
                                         {renderStatusChip(event.status)}
                                         <h3 className={styles.eventTitle}>{event.name}</h3>
-                                        <p className={styles.eventDetails}>{new Date(event.startDate).toLocaleDateString()} - {event.location}</p>
+                                        <p className={styles.eventDetails}>{new Date(event.startDate).toLocaleDateString()} - {new Date(event.endDate).toLocaleDateString()}</p>
+                                        <p className={styles.eventDetails}>{event.location}</p>
                                         <p className={styles.eventDescription}>{event.description}</p>
 
                                         {event.status === 'select' && (
