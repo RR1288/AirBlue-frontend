@@ -21,7 +21,6 @@ function Header({title, userRole, hideSidebar = false, onRoleChange}) {
             A: "admin",
             E: "eventPlanner",
             F: "financePlanner",
-            T: "attendee",
         };
         return stored
             .split("")
