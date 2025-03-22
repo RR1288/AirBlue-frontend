@@ -31,14 +31,14 @@ function App() {
                 <Routes>
                     <Route path="/home" element={<HomePage />} />
                     <Route path="/manage-events" element={<ManageEventsPage />} />
-                    <Route path="/manage-attendees" element={<ManageAttendeesPage />} />
+                    <Route path="/manage-attendees/:eventId" element={<ManageAttendeesPage />} />
                     <Route path="/event-details" element={<FinanceEventDetailsModal/>} />
                     <Route path="/" element={<LoginPage/>} />
                     <Route path="/login" element={<LoginPage/>} />
                     <Route path="/event-edit" element={<EventEditPage/>} />
                     <Route path="/under-construction" element={<UnderConstruction/>} />
                     <Route path="/event-creation" element={<EventCreationPage/>} />
-                    <Route path="/flight-search" element={<FlightSearchPage/>} />
+                    <Route path="//flight-search/:eventId" element={<FlightSearchPage/>} />
                     <Route path="/approval" element={<ApprovalPage/>} />
                     <Route path="/admin" element={<AdminPage/>} />
                     <Route path="/setuser-info" element={<SetUserInfoPage/>} />

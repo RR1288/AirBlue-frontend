@@ -12,8 +12,8 @@ const EventCreationPage = () => {
     const { addNotification } = useNotifications();
     const [formData, setFormData] = useState({
         title: "",
-        startDate: new Date(),
-        endDate: new Date(),
+        startDate: new Date().toJSON().slice(0, 10),
+        endDate: new Date().toJSON().slice(0, 10),
         eventType: "",
         location: "",
         attendeeLimit: "",
@@ -119,9 +119,9 @@ const EventCreationPage = () => {
                         <label className={styles.label}>Start Date:</label>
                         <input
                             type="date"
-                            name="dateStart"
+                            name="startDate"
                             className={styles.input}
-                            value={formData.dateStart}
+                            value={formData.startDate}
                             onChange={handleChange}
                             required
                         />
@@ -130,9 +130,9 @@ const EventCreationPage = () => {
                         <label className={styles.label}>End Date:</label>
                         <input
                             type="date"
-                            name="dateEnd"
+                            name="endDate"
                             className={styles.input}
-                            value={formData.dateEnd}
+                            value={formData.endDate}
                             onChange={handleChange}
                             required
                         />
