@@ -36,7 +36,12 @@ const FinanceEventsPage = () => {
             const res = await getData("GET", "/events/getAllEventsFinanceView");
             if (!res.ok) throw new Error("Failed to fetch events");
             const data = await res.json();
-            setEvents(data.data);
+
+            const sortedEvents = data.data.sort(
+                (a, b) => new Date(a.startDate) - new Date(b.startDate)
+            );
+
+            setEvents(sortedEvents);
         } catch (error) {
             addNotification({
                 title: "Error",
@@ -47,6 +52,15 @@ const FinanceEventsPage = () => {
     };
 
     const updateBudget = async (eventId, totalBudget, flightBudget) => {
+        if (totalBudget <= 0 || flightBudget <= 0) {
+            addNotification({
+                title: "Warning",
+                message: "Budgets must be greater than 0!",
+                type: "warning",
+            });
+            return;
+        }
+
         try {
             const res = await getData("POST", "/events/set-budget", {
                 userId,
@@ -118,8 +132,6 @@ const FinanceEventsPage = () => {
         }
         setSelectedEvent(event);
     };
-
-
 
     const closeBudgetModal = () => {
         setSelectedEvent(null);
