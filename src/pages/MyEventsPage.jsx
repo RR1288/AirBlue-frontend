@@ -73,7 +73,7 @@ const MyEventsPage = () => {
                                         <p className={styles.eventDescription}>{event.description}</p>
 
                                         {event.status === 'select' && (
-                                            <button className={styles.detailsButton} onClick={() => navigate(`/book-flight/${event.id}`)}>
+                                            <button className={styles.detailsButton} onClick={() => navigate(`/flight-search/${event.id}`)}>
                                                 <FontAwesomeIcon icon={faPlane} /> Book Flight
                                             </button>
                                         )}
@@ -93,7 +93,7 @@ const MyEventsPage = () => {
                                             </button>
                                         )}
                                         {event.status === 'denied' && (
-                                            <button className={styles.detailsButton} onClick={() => navigate(`/book-flight/${event.id}`)}>
+                                            <button className={styles.detailsButton} onClick={() => navigate(`/flight-search/${event.id}`)}>
                                                 <FontAwesomeIcon icon={faPlane} /> Request Flight
                                             </button>
                                         )}

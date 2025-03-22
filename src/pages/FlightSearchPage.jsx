@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import Header from '../components/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faFilter, faArrowLeft, faPlaneDeparture } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 const FlightSearchPage = () => {
+
+    const { eventId } = useParams(); 
+
     const [searchQuery, setSearchQuery] = useState('');
     const [flights, setFlights] = useState([]);
     const [loading, setLoading] = useState(true);
