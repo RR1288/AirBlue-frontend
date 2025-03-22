@@ -1,250 +1,272 @@
-import React, { useState } from 'react';
-import Header from '../components/Header';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faFilter } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import Header from "../components/Header";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faArrowLeft,
+  faFilter,
+  faUpload,
+  faSort,
+} from "@fortawesome/free-solid-svg-icons";
+import getData from "../utils/getData";
+import { useNotifications } from "../components/NotificationProvider";
+import styles from "./ManageAttendees.module.css";
 
-const ManageAttendees = () => {
-  // State for first and last name filters
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-
-  // Sample list of attendees
-  const [attendees, setAttendees] = useState([
-    'Smith, John',
-    'Smith, Jane',
-    'Smith, Jazmin',
-    'Smith, Joseph',
-    'Smith, Louise'
-  ]);
-
-  // State for selected attendees to remove
-  const [selectedAttendees, setSelectedAttendees] = useState([]);
-
-  // Handle checkbox change for selecting attendees
-  const handleCheckboxChange = (attendee) => {
-    setSelectedAttendees(prevSelected =>
-      prevSelected.includes(attendee)
-        ? prevSelected.filter(name => name !== attendee)
-        : [...prevSelected, attendee]
-    );
-  };
-
-  // Function to remove selected attendees
-  const removeAttendees = () => {
-    setAttendees(prevAttendees =>
-      prevAttendees.filter(attendee => !selectedAttendees.includes(attendee))
-    );
-    setSelectedAttendees([]); // Clear selected attendees after removal
-  };
-
-  // Function to clear filters
-  const clearFilters = () => {
-    setFirstName('');
-    setLastName('');
-  };
-
+// A stub for the bulk invitation modal
+const BulkInvitationModal = ({ onClose }) => {
   return (
-    <div style={styles.container}>
-      <Header title="AirBlue System" />
-      <main style={styles.main}>
-        <section style={styles.attendees}>
-          {/* Container for back button and title */}
-          <div style={styles.headerRow}>
-            <Link to="/home" style={styles.backButton}>
-              <FontAwesomeIcon icon={faArrowLeft} />
-            </Link>
-              <div style={styles.titleContainer}>
-                 <h2 style={styles.title1}>IEEE Board Meeting 2024</h2>
-              </div>
-          </div>
-          <h3 style={styles.title2}>Attendees</h3>
-
-          {/* Filter Section */}
-          <div style={styles.filterContainer}>
-            <input
-              type="text"
-              placeholder="First name"
-              style={styles.filterInput}
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="Last name"
-              style={styles.filterInput}
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-            />
-            <FontAwesomeIcon icon={faFilter} style={styles.icon} />
-            <button onClick={clearFilters} style={styles.clearButton}>Clear Filters</button>
-            <button style={styles.searchButton}>Search</button>
-          </div>
-
-          {/* List of attendees */}
-          <div style={styles.attendeeList}>
-            {attendees.map((attendee, index) => (
-              <div key={index} style={styles.attendeeItem}>
-                <input
-                  type="checkbox"
-                  checked={selectedAttendees.includes(attendee)}
-                  onChange={() => handleCheckboxChange(attendee)}
-                  style={styles.checkbox}
-                />
-                <span>{attendee}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Remove selected attendees button */}
-          <button onClick={removeAttendees} style={styles.removeButton}>
-            Remove Attendee(s)
-          </button>
-
-          {/* Remove selected attendees button */}
-          <button onClick={removeAttendees} style={styles.removeButton}>
-            Add Attendee(s)
-          </button>
-
-          {/* Remove selected attendees button */}
-          <button onClick={removeAttendees} style={styles.removeButton}>
-            Add from file
-          </button>
-        </section>
-      </main>
+    <div className={styles.modalOverlay}>
+      <div className={styles.modalContent}>
+        <h2>Send Bulk Invitations</h2>
+        <p>Upload your .csv or .txt file here.</p>
+        <button onClick={onClose} className={styles.closeModalButton}>
+          Close
+        </button>
+      </div>
     </div>
   );
 };
 
-const styles = {
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    minHeight: '100vh',
-    backgroundColor: '#ffffff',
-    boxSizing: 'border-box',
-  },
-  main: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '5% 10px',  
-    marginTop: '20px',
-  },
-  headerRow: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-    maxWidth: '100%',  
-    marginBottom: '20px',
-    flexDirection: 'row',  
-    //justifyContent: 'center'
-  },
-  backButton: {
-    display: 'flex',
-    alignItems: 'center',
-    color: '#0B2853',
-    fontSize: '16px',
-    fontWeight: '600',
-    marginRight: 'auto', 
-    //marginLeft: 'auto',
-  },
-  title1: {
-    fontSize: '24px',
-    color: '#0B2853',
-    fontWeight: '600',
-    marginTop: '0', 
-    marginBottom: '10px',
-  },
-  titleContainer: {
-    flex: 1,
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  title2: {
-    fontSize: '24px',
-    color: '#0B2853',
-    fontWeight: '600',
-    marginTop: '10px',
-  },
-  filterContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    marginBottom: '20px',
-    width: '100%',
-    flexWrap: 'wrap', 
-  },
-  filterInput: {
-    padding: '8px',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-    backgroundColor: 'white',
-    color: 'black',
-    flex: '1',
-  },
-  icon: {
-    color: '#0A306E',
-    fontSize: '20px',
-  },
-  clearButton: {
-    backgroundColor: '#fff',
-    color: '#0B2853',
-    border: '1px solid #0B2853',
-    borderRadius: '5px',
-    padding: '5px 10px',
-    cursor: 'pointer',
-  },
-  searchButton: {
-    backgroundColor: '#0A306E',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '5px',
-    padding: '5px 10px',
-    cursor: 'pointer',
-  },
-  attendeeList: {
-    maxHeight: '300px',
-    overflowY: 'auto',
-    width: '100%',
-    color: 'black',
-    maxWidth: '100%',  
-    marginBottom: '20px',
-  },
-  attendeeItem: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '10px',
-    backgroundColor: 'lightgray',
-    marginBottom: '5px',
-    borderRadius: '4px',
-  },
-  checkbox: {
-    marginRight: '10px',
-  },
-  removeButton: {
-    padding: '5px 10px',
-    color: 'white',
-    backgroundColor: '#0A306E',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    marginRight: '10px',
-  },
-  '@media (max-width: 600px)': {
-    backButton: {
-      marginLeft: '10px',
-    },
-    headerRow: {
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-    },
-    filterContainer: {
-      flexDirection: 'column',
-    },
-  },
+const ManageAttendees = () => {
+  const { eventId } = useParams();
+  const { addNotification } = useNotifications();
+
+  // Data returned from the API: two lists for accepted attendees and pending invitations.
+  const [data, setData] = useState({ attendees: [], pending: [] });
+  const [loading, setLoading] = useState(false);
+  const [selectedTab, setSelectedTab] = useState("attendees"); // "attendees" or "pending"
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortColumn, setSortColumn] = useState(null);
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [showBulkModal, setShowBulkModal] = useState(false);
+
+  useEffect(() => {
+    fetchAttendeesData();
+  }, [eventId]);
+
+  const fetchAttendeesData = async () => {
+    setLoading(true);
+    try {
+      // Expected API endpoint returns { attendees: [...], pending: [...] }
+      const response = await getData("GET", `/attendees/${eventId}`);
+      if (!response.ok) throw new Error("Failed to fetch attendees data");
+      const res = await response.json();
+      const result = res.data;
+      setData({
+        attendees: result.attendees, // Accepted attendees with attributes: name, email, expectedAttendees, maxAttendees, etc.
+        pending: result.pendingInvitations, // Pending invitations with attributes: email, status ("sent", "expired", "declined")
+      });
+    } catch (error) {
+      addNotification({
+        title: "Error",
+        message: error.message,
+        type: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Filter and sort the list based on the current tab
+  const getFilteredAndSortedData = () => {
+    console.log(data);
+    
+    const list = selectedTab === "attendees" ? data.attendees : data.pending;
+    let filtered = list.filter((item) => {
+      // For attendees, filter on name or email; for pending, filter on email.
+      if (selectedTab === "attendees") {
+        return (
+          item.User.FName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.User.Email?.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      } else {
+        return item.invitedEmail?.toLowerCase().includes(searchQuery.toLowerCase());
+      }
+    });
+    if (sortColumn) {
+      filtered.sort((a, b) => {
+        const aVal = a[sortColumn] ? a[sortColumn].toString().toLowerCase() : "";
+        const bVal = b[sortColumn] ? b[sortColumn].toString().toLowerCase() : "";
+        if (aVal < bVal) return sortOrder === "asc" ? -1 : 1;
+        if (aVal > bVal) return sortOrder === "asc" ? 1 : -1;
+        return 0;
+      });
+    }
+    return filtered;
+  };
+
+  const handleSort = (column) => {
+    if (sortColumn === column) {
+      // Toggle sort order if the same column is clicked
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortColumn(column);
+      setSortOrder("asc");
+    }
+  };
+
+  const handleRemove = async (emailOrId) => {
+    // Stub: Remove the attendee/invitation (using email for pending, id for attendee)
+    addNotification({
+      title: "Success",
+      message: "Removed successfully!",
+      type: "success",
+    });
+    fetchAttendeesData();
+  };
+
+  const handleResendInvitation = async (email) => {
+    // Stub: Resend invitation for the given email
+    addNotification({
+      title: "Success",
+      message: "Invitation resent!",
+      type: "success",
+    });
+    fetchAttendeesData();
+  };
+
+  return (
+    <div className={styles.container}>
+      <Header title="AirBlue System" />
+          <main className={styles.main}>
+    
+        {/* Header with back button and event title */}
+        <div className={styles.headerRow}>
+          <Link to={`/manage-events`} className={styles.backButton}>
+            <FontAwesomeIcon icon={faArrowLeft} />
+          </Link>
+          <h2 className={styles.pageTitle}>Manage Attendees</h2>
+        </div>
+
+        {/* Tabs for Attendees and Pending */}
+        <div className={styles.tabs}>
+          <button
+            className={`${styles.tabButton} ${
+              selectedTab === "attendees" && styles.activeTab
+            }`}
+            onClick={() => setSelectedTab("attendees")}
+          >
+            Attendees
+          </button>
+          <button
+            className={`${styles.tabButton} ${
+              selectedTab === "pending" && styles.activeTab
+            }`}
+            onClick={() => setSelectedTab("pending")}
+          >
+            Pending Invitations
+          </button>
+        </div>
+
+        {/* Search input */}
+        <div className={styles.searchContainer}>
+          <input
+            type="text"
+            placeholder="Search..."
+            className={styles.searchInput}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <FontAwesomeIcon icon={faFilter} className={styles.filterIcon} />
+        </div>
+
+        {/* Bulk Invitations Button */}
+        <div className={styles.bulkContainer}>
+          <button
+            className={styles.bulkButton}
+            onClick={() => setShowBulkModal(true)}
+          >
+            <FontAwesomeIcon icon={faUpload} className={styles.bulkIcon} /> Send
+            Bulk Invitations
+          </button>
+        </div>
+
+        {/* Data Table */}
+        {loading ? (
+          <p className={styles.loading}>Loading...</p>
+        ) : (
+          <table className={styles.dataTable}>
+            <thead>
+              <tr>
+                {selectedTab === "attendees" ? (
+                  <>
+                    <th onClick={() => handleSort("name")}>
+                      Name <FontAwesomeIcon icon={faSort} />
+                    </th>
+                    <th onClick={() => handleSort("email")}>
+                      Email <FontAwesomeIcon icon={faSort} />
+                    </th>
+                    <th>Actions</th>
+                  </>
+                ) : (
+                  <>
+                    <th onClick={() => handleSort("email")}>
+                      Email <FontAwesomeIcon icon={faSort} />
+                    </th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </>
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {getFilteredAndSortedData().map((item, index) => (
+                <tr key={index}>
+                  {console.log(item)}
+                  {selectedTab === "attendees" ? (
+                    <>
+                      <td>{item.User.FName + " " + item.User.LName}</td>
+                      <td>{item.User.Email}</td>
+                      <td>
+                        <button
+                          className={styles.actionButton}
+                          onClick={() => handleRemove(item.id)}
+                        >
+                          Remove
+                        </button>
+                      </td>
+                    </>
+                  ) : (
+                    <>
+                      <td>{item.invitedEmail}</td>
+                      <td>
+                        <span
+                          className={`${styles.chip} ${
+                            styles[item.status] || ""
+                          }`}
+                        >
+                          {item.status}
+                        </span>
+                      </td>
+                      <td>
+                        {item.status === "expired" && (
+                          <button
+                            className={styles.actionButton}
+                            onClick={() => handleResendInvitation(item.email)}
+                          >
+                            Resend
+                          </button>
+                        )}
+                        <button
+                          className={styles.actionButton}
+                          onClick={() => handleRemove(item.email)}
+                        >
+                          Remove
+                        </button>
+                      </td>
+                    </>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </main>
+      {showBulkModal && (
+        <BulkInvitationModal onClose={() => setShowBulkModal(false)} />
+      )}
+    </div>
+  );
 };
 
 export default ManageAttendees;
