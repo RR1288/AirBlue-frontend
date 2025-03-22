@@ -7,7 +7,7 @@ import styles from "./Header.module.css";
 import Sidebar from "./Sidebar";
 import {Link} from "react-router-dom";
 
-function Header({title, userRole, hideSidebar = false, onRoleChange}) {
+function Header({ title, userRole, hideSidebar = false, onRoleChange }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     // Retrieve and map roles from localStorage.
@@ -73,18 +73,15 @@ function Header({title, userRole, hideSidebar = false, onRoleChange}) {
                 <a href="/home">
                     <h1 className={styles.title}>{title}</h1>
                 </a>
-                {/* Render role switcher if more than one role is available */}
-                {availableRoles.length > 1 && (
+                {/* Render role switcher if more than one role is available and remove switcher from unneccessary pages*/}
+                {availableRoles.length > 1 && !["/", "/register"].some(path => location.pathname.startsWith(path)) && (
                     <select
                         value={userRole}
                         onChange={handleRoleChange}
                         className={styles.roleSwitcher}
                     >
                         {availableRoles.map((role) => (
-                            <option
-                                key={role}
-                                value={role}
-                            >
+                            <option key={role} value={role}>
                                 {role.charAt(0).toUpperCase() + role.slice(1)}
                             </option>
                         ))}
