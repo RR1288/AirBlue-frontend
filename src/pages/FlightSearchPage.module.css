@@ -1,0 +1,160 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #ffffff;
+}
+
+.mainContent {
+  flex: 1;
+  max-width: 800px;
+  margin: 0 auto;
+  margin-top: 10px;
+  padding: 20px;
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.backButton {
+  text-decoration: none;
+  color: #0b2853;
+  margin-right: 20px;
+}
+
+.icon {
+  font-size: 20px;
+  margin-right: 10px;
+  color: #ffffff;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #0b2853;
+}
+
+.description {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.searchContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.searchButton {
+  background-color: #0b2853;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.errorMessage {
+  color: red;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.flightsContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 40px;
+  color: #333;
+}
+
+.card {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+.cardIcon {
+  font-size: 24px;
+  color: #0a306e;
+  margin-bottom: 10px;
+}
+
+.cardTitle {
+  font-size: 18px;
+  font-weight: bold;
+  color: #0b2853;
+}
+
+.cardText {
+  font-size: 14px;
+  color: #333;
+}
+
+.detailsButton {
+  margin-top: 10px;
+  background-color: #0b2853;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.holdButton {
+  margin-top: 10px;
+  background-color: green;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.closeButton {
+  margin-top: 10px;
+  background-color: #ccc;
+  color: black;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}

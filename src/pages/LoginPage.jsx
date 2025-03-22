@@ -5,7 +5,6 @@ import PinModal from "../components/PinModal";
 import Header from "../components/Header";
 import styles from "./LoginPage.module.css";
 import {useNotifications} from "../components/NotificationProvider";
-import Footer from "../components/Footer";
 import FooterNoLink from "../components/FooterNoLink";
 
 const LoginPage = () => {

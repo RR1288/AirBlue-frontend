@@ -1,7 +1,8 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
 import Header from "../components/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faTrash, faArrowLeft, faFilter } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare, faTrash, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 
 const ManageEventsPage = () => {

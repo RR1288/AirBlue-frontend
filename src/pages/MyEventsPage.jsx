@@ -1,95 +1,122 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
-
-// FOR ATTENDEES REGISTERED EVENTS
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlane, faInfoCircle, faCheck, faTimes, faPencil, faClock } from '@fortawesome/free-solid-svg-icons';
+import styles from './MyEventsPage.module.css';
 
 const MyEventsPage = () => {
-    const [events, setEvents] = useState([]); // Stores attendee's registered events
-    const [loading, setLoading] = useState(true); // Loading state
+    const [events, setEvents] = useState([]);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
-    // Fetch Attendee's Registered Events (Backend Logic to be Implemented)
     useEffect(() => {
         setLoading(true);
-
-        // TODO: Backend Devs - Implement API call to fetch attendee's registered events
-        /*
-        fetch('https://your-backend-api.com/api/my-events', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('token')}`, // If authentication is required
-            },
-        })
-            .then(response => response.json())
-            .then(data => {
-                setEvents(data); // Ensure data matches expected event structure
-                setLoading(false);
-            })
-            .catch(error => {
-                console.error('Error fetching events:', error);
-                setLoading(false);
-            });
-        */
-
-        // Mocked data for frontend testing (Remove once backend is integrated)
         setTimeout(() => {
             const mockEvents = [
-                { id: 1, title: 'Tech Conference 2025', date: '2025-05-10', location: 'New York', description: 'Tech networking and keynotes.' },
-                { id: 2, title: 'AI & ML Workshop', date: '2025-06-15', location: 'San Francisco', description: 'Deep dive into AI advancements.' },
-                { id: 3, title: 'Startup Pitch Night', date: '2024-12-20', location: 'Chicago', description: 'Founders pitch to investors.' },
+                { id: 1, name: 'Tech Conference 2025', startDate: '2025-05-10', location: 'New York', description: 'Tech networking and keynotes.', status: 'pending' },
+                { id: 2, name: 'AI & ML Workshop', startDate: '2025-06-15', location: 'San Francisco', description: 'Deep dive into AI advancements.', status: 'select' },
+                { id: 3, name: 'Startup Pitch Night', startDate: '2025-07-20', location: 'Chicago', description: 'Founders pitch to investors.', status: 'approved' },
+                { id: 4, name: 'Startup Pitch Night', startDate: '2025-04-20', location: 'Rochester', description: 'Founders pitch to investors.', status: 'denied' },
+                { id: 5, name: 'Project Presentation', startDate: '2024-12-20', location: 'Chicago', description: 'Founders pitch to investors.', status: 'past' },
             ];
             setEvents(mockEvents);
             setLoading(false);
         }, 1000);
     }, []);
 
-    // Separate upcoming and past events
     const today = new Date();
-    const upcomingEvents = events.filter(event => new Date(event.date) >= today);
-    const pastEvents = events.filter(event => new Date(event.date) < today);
+    const upcomingEvents = events.filter(event => new Date(event.startDate) >= today);
+    const pastEvents = events.filter(event => new Date(event.startDate) < today);
+
+    const renderStatusChip = (status) => {
+        const statusIcons = {
+            select: faPlane,
+            pending: faClock,
+            approved: faCheck,
+            denied: faTimes,
+            past: faClock
+        };
+        const statusLabels = {
+            select: 'Select Flight',
+            pending: 'Pending Approval',
+            approved: 'Approved',
+            denied: 'Denied',
+            past: 'Past'
+        };
+        return (
+            <div className={`${styles.statusChip} ${styles[status]}`}>
+                <FontAwesomeIcon icon={statusIcons[status]} /> {statusLabels[status]}
+            </div>
+        );
+    };
 
     return (
-        <div style={styles.page}>
+        <div className={styles.page}>
             <Header title="AirBlue System" />
-            <div style={styles.mainContent}>
-                <h1 style={styles.h1}>My Events</h1>
+            <div className={styles.mainContent}>
+                <h1 className={styles.h1}>My Events</h1>
 
                 {loading ? (
-                    <p style={styles.loading}>Loading your events...</p>
+                    <p className={styles.loading}>Loading your events...</p>
                 ) : (
                     <>
-                        {/* Upcoming Events Section */}
-                        <section style={styles.section}>
-                            <h2 style={styles.sectionTitle}>Upcoming Events</h2>
+                        <section className={styles.section}>
+                            <h2 className={styles.sectionTitle}>Upcoming Events</h2>
                             {upcomingEvents.length > 0 ? (
                                 upcomingEvents.map(event => (
-                                    <div key={event.id} style={styles.eventCard}>
-                                        <h3 style={styles.eventTitle}>{event.title}</h3>
-                                        <p style={styles.eventDetails}>{new Date(event.date).toLocaleDateString()} - {event.location}</p>
-                                        <p style={styles.eventDescription}>{event.description}</p>
-                                        <button onClick={() => navigate(`/event-details`)} style={styles.detailsButton}>View Details</button>
+                                    <div key={event.id} className={styles.eventCard}>
+                                        {renderStatusChip(event.status)}
+                                        <h3 className={styles.eventTitle}>{event.name}</h3>
+                                        <p className={styles.eventDetails}>{new Date(event.startDate).toLocaleDateString()} - {event.location}</p>
+                                        <p className={styles.eventDescription}>{event.description}</p>
+
+                                        {event.status === 'select' && (
+                                            <button className={styles.detailsButton} onClick={() => navigate(`/book-flight/${event.id}`)}>
+                                                <FontAwesomeIcon icon={faPlane} /> Book Flight
+                                            </button>
+                                        )}
+                                        {event.status === 'pending' && (
+                                            <>
+                                                <button className={styles.detailsButton} onClick={() => navigate(`/flight-details/${event.id}`)}>
+                                                    <FontAwesomeIcon icon={faInfoCircle} /> Flight Details
+                                                </button>
+                                                <button className={styles.detailsButton} onClick={() => navigate(`/edit-flight/${event.id}`)}>
+                                                    <FontAwesomeIcon icon={faPencil} /> Change Flight
+                                                </button>
+                                            </>
+                                        )}
+                                        {event.status === 'approved' && (
+                                            <button className={styles.detailsButton}>
+                                                <FontAwesomeIcon icon={faInfoCircle} /> Flight Details
+                                            </button>
+                                        )}
+                                        {event.status === 'denied' && (
+                                            <button className={styles.detailsButton} onClick={() => navigate(`/book-flight/${event.id}`)}>
+                                                <FontAwesomeIcon icon={faPlane} /> Request Flight
+                                            </button>
+                                        )}
                                     </div>
                                 ))
                             ) : (
-                                <p style={styles.noEvents}>No upcoming events found.</p>
+                                <p className={styles.noEvents}>No upcoming events found.</p>
                             )}
                         </section>
 
-                        {/* Past Events Section */}
-                        <section style={styles.section}>
-                            <h2 style={styles.sectionTitle}>Past Events</h2>
+                        <section className={styles.section}>
+                            <h2 className={styles.sectionTitle}>Past Events</h2>
                             {pastEvents.length > 0 ? (
                                 pastEvents.map(event => (
-                                    <div key={event.id} style={styles.eventCard}>
-                                        <h3 style={styles.eventTitle}>{event.title}</h3>
-                                        <p style={styles.eventDetails}>{new Date(event.date).toLocaleDateString()} - {event.location}</p>
-                                        <p style={styles.eventDescription}>{event.description}</p>
+                                    <div key={event.id} className={styles.eventCard}>
+                                        {renderStatusChip('past')}
+                                        <h3 className={styles.eventTitle}>{event.name}</h3>
+                                        <p className={styles.eventDetails}>{new Date(event.startDate).toLocaleDateString()} - {event.location}</p>
+                                        <p className={styles.eventDescription}>{event.description}</p>
                                     </div>
                                 ))
                             ) : (
-                                <p style={styles.noEvents}>No past events found.</p>
+                                <p className={styles.noEvents}>No past events found.</p>
                             )}
                         </section>
                     </>
@@ -97,84 +124,6 @@ const MyEventsPage = () => {
             </div>
         </div>
     );
-};
-
-const styles = {
-    page: {
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-        width: '100vw',
-        backgroundColor: '#f9f9f9',
-        boxSizing: 'border-box',
-    },
-    mainContent: {
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: '20px',
-    },
-    h1: {
-        textAlign: 'center',
-        color: '#0B2853',
-        fontSize: '24px',
-        fontWeight: '600',
-        marginBottom: '20px',
-    },
-    section: {
-        width: '100%',
-        maxWidth: '800px',
-        marginBottom: '30px',
-    },
-    sectionTitle: {
-        fontSize: '20px',
-        color: '#0B2853',
-        borderBottom: '2px solid #0B2853',
-        paddingBottom: '5px',
-        marginBottom: '15px',
-    },
-    eventCard: {
-        backgroundColor: '#fff',
-        padding: '15px',
-        borderRadius: '8px',
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-        marginBottom: '15px',
-    },
-    eventTitle: {
-        fontSize: '18px',
-        color: '#333',
-        marginBottom: '5px',
-    },
-    eventDetails: {
-        fontSize: '14px',
-        color: '#555',
-        marginBottom: '5px',
-    },
-    eventDescription: {
-        fontSize: '16px',
-        color: '#666',
-    },
-    detailsButton: {
-        marginTop: '10px',
-        padding: '8px 12px',
-        backgroundColor: '#0B2853',
-        color: 'white',
-        border: 'none',
-        borderRadius: '4px',
-        cursor: 'pointer',
-        fontSize: '14px',
-    },
-    noEvents: {
-        fontSize: '16px',
-        color: '#777',
-        textAlign: 'center',
-    },
-    loading: {
-        fontSize: '16px',
-        color: '#0B2853',
-        textAlign: 'center',
-    },
 };
 
 export default MyEventsPage;
