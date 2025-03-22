@@ -54,7 +54,9 @@ const ManageAttendees = () => {
             <Link to="/home" style={styles.backButton}>
               <FontAwesomeIcon icon={faArrowLeft} />
             </Link>
-            <h2 style={styles.title1}>IEEE Board Meeting 2024</h2>
+              <div style={styles.titleContainer}>
+                 <h2 style={styles.title1}>IEEE Board Meeting 2024</h2>
+              </div>
           </div>
           <h3 style={styles.title2}>Attendees</h3>
 
@@ -119,7 +121,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     minHeight: '100vh',
-    width: '100vw',
     backgroundColor: '#ffffff',
     boxSizing: 'border-box',
   },
@@ -129,44 +130,52 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '20px',
+    padding: '5% 10px',  
     marginTop: '20px',
   },
   headerRow: {
     display: 'flex',
     alignItems: 'center',
     width: '100%',
-    maxWidth: '800px',
+    maxWidth: '100%',  
     marginBottom: '20px',
+    flexDirection: 'row',  
+    //justifyContent: 'center'
   },
   backButton: {
     display: 'flex',
-    alignItems: 'left',
-    marginTop: '-170px',
+    alignItems: 'center',
     color: '#0B2853',
     fontSize: '16px',
     fontWeight: '600',
-    marginRight: '425px',
-    marginLeft: '-443px' // Adjusts spacing between back button and title
+    marginRight: 'auto', 
+    //marginLeft: 'auto',
   },
   title1: {
     fontSize: '24px',
     color: '#0B2853',
     fontWeight: '600',
-    marginTop: '-170px',
+    marginTop: '0', 
     marginBottom: '10px',
+  },
+  titleContainer: {
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
   },
   title2: {
     fontSize: '24px',
     color: '#0B2853',
     fontWeight: '600',
-    marginTop: '-65px',
+    marginTop: '10px',
   },
   filterContainer: {
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
     marginBottom: '20px',
+    width: '100%',
+    flexWrap: 'wrap', 
   },
   filterInput: {
     padding: '8px',
@@ -201,7 +210,7 @@ const styles = {
     overflowY: 'auto',
     width: '100%',
     color: 'black',
-    maxWidth: '800px',
+    maxWidth: '100%',  
     marginBottom: '20px',
   },
   attendeeItem: {
@@ -223,6 +232,18 @@ const styles = {
     borderRadius: '4px',
     cursor: 'pointer',
     marginRight: '10px',
+  },
+  '@media (max-width: 600px)': {
+    backButton: {
+      marginLeft: '10px',
+    },
+    headerRow: {
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+    },
+    filterContainer: {
+      flexDirection: 'column',
+    },
   },
 };
 

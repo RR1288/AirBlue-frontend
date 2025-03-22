@@ -1,61 +1,60 @@
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #0A306E;
-    color: white;
-    padding: 10px 20px;
-  }
-  
-  .menuButton {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 20px;
-    cursor: pointer;
-  }
-  
-  .title {
-    margin: 0px;
-    align-items: center;
-    font-size: 18px;
-    color: white;
-    
-  }
-  
-  .roleSwitcher {
-    margin-left: 20px;
-    padding: 5px;
-    border-radius: 5px;
-    font-size: 16px;
-    background-color: #0A306E;
-    color: #ffffff;
-    cursor: pointer;
-    font-weight: bold;
-    cursor: pointer;
-    outline: none;
-    transition: background-color 0.3s, box-shadow 0.3s;
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #0A306E;
+  color: white;
+  padding: 10px 20px;
+}
 
-  .roleSwitcher:hover {
-    background-color: #0A306E;
-  }
+.menuButton {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
 
-  .roleSwitcher:focus {
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
-  }
+.title {
+  margin: 0px;
+  align-items: center;
+  font-size: 18px;
+  color: white;
   
-  .signOut {
-    display: flex;
-    align-items: center;
-    color: white;
-    text-decoration: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-  }
-  
-  .signOutIcon {
-    margin-right: 8px;
-    font-size: 16px;
-  }
-  
+}
+
+.roleSwitcher {
+  margin-left: 20px;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #0A306E;
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: bold;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.roleSwitcher:hover {
+  background-color: #0A306E;
+}
+
+.roleSwitcher:focus {
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
+.signOut {
+  display: flex;
+  align-items: center;
+  color: white;
+  text-decoration: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.signOutIcon {
+  margin-right: 8px;
+  font-size: 16px;
+}
