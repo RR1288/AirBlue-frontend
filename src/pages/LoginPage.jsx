@@ -40,16 +40,6 @@ const LoginPage = () => {
             return;
         }
 
-        // validate password strength
-        if (!validator.isLength(password, { min: 6 })) {
-            addNotification({
-                type: "error",
-                title: "Weak Password",
-                message: "Password must be at least 6 characters long",
-            });
-            return;
-        }
-
         try {
             const response = await fetch(
                 `${import.meta.env.VITE_API_URL}/auth/login`,
@@ -185,8 +175,6 @@ const LoginPage = () => {
                                 value={credentials.password}
                                 onChange={handleChange}
                                 className={styles.input}
-                                pattern=".{6,}"
-                                title="Password must be at least 6 characters long"
                             />
                         </div>
                         <button
