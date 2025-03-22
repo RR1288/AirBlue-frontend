@@ -7,7 +7,7 @@ import {
     faCalendarAlt,
     faMapMarkerAlt,
     faDollarSign,
-    faChartPie,
+    // faChartPie,
 } from "@fortawesome/free-solid-svg-icons";
 import FinanceEventDetailsModal from "../components/FinanceEventDetailsModal";
 import FinanceEventStatsModal from "../components/FinanceEventStatsModal";
@@ -138,10 +138,10 @@ const FinanceEventsPage = () => {
         setSelectedEvent(null);
     };
 
-    const openStatsModal = (event, e) => {
-        e.stopPropagation(); // Prevent triggering budget modal
-        setSelectedStatsEvent(event);
-    };
+    // const openStatsModal = (event, e) => {
+    //     e.stopPropagation(); // Prevent triggering budget modal
+    //     setSelectedStatsEvent(event);
+    // };
 
     const closeStatsModal = () => {
         setSelectedStatsEvent(null);
@@ -177,13 +177,13 @@ const FinanceEventsPage = () => {
                         filteredEvents.map((event) => {
                             console.log(event);
                             
-                            const percentageUsed = event.eventBudget
-                                ? Math.round(
-                                      (Number(event.totalAmountSpent) /
-                                          Number(event.eventBudget)) *
-                                          100
-                                  )
-                                : 0;
+                            // const percentageUsed = event.eventBudget
+                            //     ? Math.round(
+                            //           (Number(event.totalAmountSpent) /
+                            //               Number(event.eventBudget)) *
+                            //               100
+                            //       )
+                            //     : 0;
 
                             return (
                                 <div
