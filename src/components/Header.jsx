@@ -1,11 +1,11 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOutAlt, faBars } from "@fortawesome/free-solid-svg-icons";
+import React, {useState, useMemo} from "react";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faSignOutAlt, faBars} from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 import styles from "./Header.module.css";
 import Sidebar from "./Sidebar";
+import {Link} from "react-router-dom";
 
 function Header({ title, userRole, hideSidebar = false, onRoleChange }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -21,7 +21,6 @@ function Header({ title, userRole, hideSidebar = false, onRoleChange }) {
             A: "admin",
             E: "eventPlanner",
             F: "financePlanner",
-            T: "attendee",
         };
         return stored
             .split("")
@@ -47,6 +46,16 @@ function Header({ title, userRole, hideSidebar = false, onRoleChange }) {
                 setIsOpen={setSidebarOpen}
             />
         );
+    };
+
+    // Handle the sign-out process
+    const handleSignOut = () => {
+        // Clear localStorage or session data
+        localStorage.removeItem("user");
+        localStorage.removeItem("roles");
+
+        // Redirect to the login page
+        window.location.href = "/login"; // Or use React Router's history.push('/login')
     };
 
     return (
@@ -85,6 +94,7 @@ function Header({ title, userRole, hideSidebar = false, onRoleChange }) {
                     <FontAwesomeIcon
                         icon={faSignOutAlt}
                         className={styles.signOutIcon}
+                        onClick={handleSignOut}
                     />{" "}
                     Sign Out
                 </Link>
@@ -97,6 +107,7 @@ Header.propTypes = {
     title: PropTypes.string.isRequired,
     userRole: PropTypes.string.isRequired,
     hideSidebar: PropTypes.bool, // Added prop validation
+    onRoleChange: PropTypes.func.isRequired,
 };
 
 export default Header;

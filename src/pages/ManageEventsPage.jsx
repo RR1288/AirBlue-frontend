@@ -38,11 +38,6 @@ const ManageEventsPage = () => {
 
           {/* Filter Section */}
           <div style={styles.filterContainer}>
-            <input type="text" placeholder="Event Title" style={styles.filterInput} />
-            <input type="text" placeholder="Event Type" style={styles.filterInput} />
-            <FontAwesomeIcon icon={faFilter} style={styles.icon} />
-            <button style={styles.clearButton}>Clear Filters</button>
-            <button style={styles.searchButton}>Search</button>
             <Link to="/event-creation">
               <button style={styles.searchButton}>Create Event</button>
             </Link>
@@ -104,20 +99,19 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: '20px',
+    padding: '10px',
   },
   headerRow: {
     display: "flex",
     alignItems: "center",
     width: "100%",
     maxWidth: "800px",
-    marginBottom: "20px",
   },
   backButton: {
     display: "flex",
     alignItems: "left",
     textDecoration: "none",
-    marginTop: "160px",
+    marginTop: "20px",
     color: "#0B2853",
     fontSize: "16px",
     fontWeight: "600",
@@ -126,7 +120,7 @@ const styles = {
   },
   title: {
     fontSize: "24px",
-    marginTop: "160px",
+    marginTop: "20px",
     marginBottom: "5px",
     color: "#0B2853",
     fontWeight: "600",

@@ -6,6 +6,7 @@ import Header from "../components/Header";
 import styles from "./LoginPage.module.css";
 import { useNotifications } from "../components/NotificationProvider";
 import Footer from "../components/Footer";
+import FooterNoLink from "../components/FooterNoLink";
 import validator from "validator";
 
 const LoginPage = () => {
@@ -70,7 +71,8 @@ const LoginPage = () => {
                     data?.message || "Login failed. Please try again."
                 );
             }
-
+            console.log(data);
+            
             if (data.data?.token) {
                 localStorage.setItem("token", data.data.token);
                 localStorage.setItem("username", data.data.username);
@@ -78,7 +80,7 @@ const LoginPage = () => {
                 localStorage.setItem("userId", data.data.userId);
 
                 navigate("/enable-2fa");
-            } else if (data.message === "2FA required") {
+            } else if (data?.data?.two_fa_required) {
                 localStorage.setItem("username", data.data.username);
                 localStorage.setItem("roles", data.data.roles);
                 localStorage.setItem("userId", data.data.userId);
@@ -122,7 +124,7 @@ const LoginPage = () => {
                 throw new Error(data?.message || "PIN verification failed.");
             }
 
-            localStorage.setItem("token", data.token);
+            localStorage.setItem("token", data.data.token);
             addNotification({
                 type: "success",
                 title: "Success!",
@@ -230,7 +232,7 @@ const LoginPage = () => {
                 onSubmit={handlePinSubmit}
                 onClose={() => setShowPinModal(false)}
             />
-            <Footer />
+            <FooterNoLink/>
         </div>
     );
 };
