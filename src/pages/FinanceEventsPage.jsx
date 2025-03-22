@@ -15,6 +15,7 @@ import styles from "./FinanceEventsPage.module.css";
 
 import getData from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
+import { formatDate } from "../utils/formatUtils";
 
 const FinanceEventsPage = () => {
     const userId = Number(localStorage.getItem("userId")) || null;
@@ -199,7 +200,7 @@ const FinanceEventsPage = () => {
                                     </h3>
                                     <p className={styles.eventDate}>
                                         <FontAwesomeIcon icon={faCalendarAlt} />{" "}
-                                        {event.startDate} - {event.endDate}
+                                        {formatDate(event.startDate)} - {formatDate(event.endDate)}
                                     </p>
                                     <p className={styles.eventLocation}>
                                         <FontAwesomeIcon
@@ -224,7 +225,7 @@ const FinanceEventsPage = () => {
                                                     : "Assign to me & Update Budget"
                                                 : "Update Budget"}
                                         </button>
-                                        {event.EventStaffs?.length > 0 && event.EventStaffs[0]?.financeUser !== null && (
+                                        {/* {event.EventStaffs?.length > 0 && event.EventStaffs[0]?.financeUser !== null && (
                                             <button
                                                 className={styles.optionButton}
                                                 onClick={(e) => openStatsModal(event, e)}
@@ -232,7 +233,7 @@ const FinanceEventsPage = () => {
                                                 <FontAwesomeIcon icon={faChartPie} className={styles.optionIcon} />{" "}
                                                 See Stats ({percentageUsed}%)
                                             </button>
-                                        )}
+                                        )} */}
                                     </div>
                                 </div>
                             );
