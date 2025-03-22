@@ -2,27 +2,32 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { sendError } from '../utils/response';
+import getData from "../utils/getData";
+import { useNotifications } from "../components/NotificationProvider";
 
-const Notification = ({ message, onClose }) => {
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            onClose();
-        }, 2000);
-        return () => clearTimeout(timer);
-    }, [onClose]);
+// const Notification = ({ message, onClose }) => {
+//     useEffect(() => {
+//         const timer = setTimeout(() => {
+//             onClose();
+//         }, 2000);
+//         return () => clearTimeout(timer);
+//     }, [onClose]);
 
-    return <div style={styles.notification}>{message}</div>;
-};
+//     return <div style={styles.notification}>{message}</div>;
+// };
 
 const RegisterAttendeePage = () => {
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
         email: '',
+        country: '',
+        city: '',
+        state: '',
         password: '',
         confirmPassword: '',
     });
-    const [notification, setNotification] = useState('');
+    const { addNotification } = useNotifications();
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -33,30 +38,36 @@ const RegisterAttendeePage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        //This is what the endpoint will accept
+        const body = {
+            fname: formData.firstName,
+            lname: formData.lastName,
+            email: formData.email,
+            country: formData.country,
+            city: formData.city,
+            state: formData.state,
+            password: formData.password
+        };
+
         if (formData.password !== formData.confirmPassword) {
             sendError('Passwords do not match.');
             return;
         }
 
         try {
-            const response = await fetch("https://airblue-backend-staging-eac124cc32ab.herokuapp.com/auth/register", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-
-            const data = await response.json();
-
+            const response = await getData("POST", "/users/create-end-user", body); 
             if (response.ok) {
-                setNotification('Registration Successful! Redirecting to login page...');
-                setTimeout(() => {
-                    navigate('/');
-                }, 2000);
+                const data = await response.json();
+                console.log(data);
+
+                addNotification({
+                    type: 'success',
+                    title: 'Registration Successful! Redirecting to login page...',
+                    message: data.message,
+                });
+                navigate("/"); //Redirect to login page
             } else {
-                sendError(data.error || 'Registration failed. Please try again.');
+                alert("Could not register, try again");
             }
         } catch (error) {
             console.error(error);
@@ -108,6 +119,42 @@ const RegisterAttendeePage = () => {
                             />
                         </div>
                         <div style={styles.formGroup}>
+                            <label htmlFor="country" style={styles.label}>Country:</label>
+                            <input
+                                id="country"
+                                name="country"
+                                type="country"
+                                value={formData.country}
+                                onChange={handleChange}
+                                style={styles.input}
+                                required
+                            />
+                        </div>
+                        <div style={styles.formGroup}>
+                            <label htmlFor="city" style={styles.label}>City:</label>
+                            <input
+                                id="city"
+                                name="city"
+                                type="city"
+                                value={formData.city}
+                                onChange={handleChange}
+                                style={styles.input}
+                                required
+                            />
+                        </div>
+                        <div style={styles.formGroup}>
+                            <label htmlFor="state" style={styles.label}>State:</label>
+                            <input
+                                id="state"
+                                name="state"
+                                type="state"
+                                value={formData.state}
+                                onChange={handleChange}
+                                style={styles.input}
+                                required
+                            />
+                        </div>
+                        <div style={styles.formGroup}>
                             <label htmlFor="password" style={styles.label}>Password:</label>
                             <input
                                 id="password"
@@ -135,7 +182,6 @@ const RegisterAttendeePage = () => {
                     </form>
                 </div>
             </div>
-            {notification && <Notification message={notification} onClose={() => setNotification('')} />}
         </div>
     );
 };
