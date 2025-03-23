@@ -4,8 +4,8 @@ import { useLocation, Link } from "react-router-dom";
 import Header from "../components/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faPlaneDeparture,
   faArrowLeft,
+  faArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
 import getData from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
@@ -198,20 +198,28 @@ const FlightSearchPage = () => {
         <div className={styles.flightsContainer}>
           {flights.length > 0 ? (
             flights.map((flight) => (
-              <div key={flight.id} className={styles.card}>
-                <FontAwesomeIcon
-                  icon={faPlaneDeparture}
-                  className={styles.cardIcon}
-                />
-                <h3 className={styles.cardTitle}>{flight.destination}</h3>
+                <div key={flight.id} className={styles.card}>
+                <img width={50} height={50} src={flight.owner.logo_symbol_url} alt="Airline Logo" />
+              
+                <h3 className={styles.cardTitle}>{flight.owner.name}</h3>
                 <p className={styles.cardText}>Price: ${flight.total_amount}</p>
                 <p className={styles.cardText}>Tax: ${flight.tax_amount}</p>
-                <p className={styles.cardText}>
-                  Origin: {flight.slices[0].origin.city_name}
-                </p>
-                <p className={styles.cardText}>
-                  Departure: {flight.slices[0].destination.city_name}
-                </p>
+              
+                {/* Outbound Flight */}
+                <div className={styles.flightSegment}>
+                  <h4 className={styles.segmentTitle}>Outbound Flight</h4>
+                  <p className={styles.cardText}>{flight.slices[0].origin.iata_code} <FontAwesomeIcon icon={faArrowRight} className={styles.icon} /> {flight.slices[0].destination.iata_code}</p>
+                  <p className={styles.cardText}>Duration: {flight.slices[0].duration}</p>
+                </div>
+              
+                {/* Return Flight (if available) */}
+                {flight.slices.length > 1 && (
+                  <div className={styles.flightSegment}>
+                    <h4 className={styles.segmentTitle}>Return Flight</h4>
+                    <p className={styles.cardText}>{flight.slices[1].origin.iata_code} <FontAwesomeIcon icon={faArrowRight} className={styles.icon} />{flight.slices[1].destination.iata_code}</p>
+                    <p className={styles.cardText}>Duration: {flight.slices[1].duration}</p>
+                    </div>
+                )}
               </div>
             ))
           ) : (
