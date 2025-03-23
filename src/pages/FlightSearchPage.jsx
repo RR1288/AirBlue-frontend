@@ -8,10 +8,62 @@ const FlightSearchPage = () => {
 
     const { eventId } = useParams(); 
 
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState({
+        origin: "",
+        destination: "",
+        departureDate: new Date().toJSON().slice(0, 10),
+        returnDate: new Date ().toJSON().slice(0, 10),
+        class: ""
+    });
     const [flights, setFlights] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const handleChange = (e) => {
+        const {name, value} = e.target;
+        setSearchQuery({...searchQuery, [name]: value});
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // Convert string to Date objects
+        const start = new Date(formData.startDate);
+        const end = new Date(formData.endDate);
+        
+        // TODO: check that start date is a future date
+        if (start > end) {
+            alert("Start date must be before the end date.");
+            return;
+        }
+
+        // Convert to yyyy-mm-dd format
+        const formattedDepartureDate = new Date(searchQuery.departureDate).toISOString().split('T')[0];
+        const formattedReturnDate = new Date(searchQuery.returnDate).toISOString().split('T')[0];
+
+        // This is what the endpoint will accept
+        const body = {
+            origin: searchQuery.origin,
+            destination: searchQuery.destination,
+            departureDate: formattedDepartureDate,
+            returnDate: formattedReturnDate,
+            class: formData.description,
+        };
+        
+        // TODO: Validate data before submitting
+
+        try {
+            const response = await getData("GET", "/flights/create-request", body);
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data)
+            } else {
+                alert("Flight fetching failed. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error fetching flights:", error);
+        }
+    };
     // Default flights
     // const flights = [
     //     { id: 1, destination: "Tirana, Albania", price: "$120", time: "10:30 AM" },
@@ -35,24 +87,66 @@ const FlightSearchPage = () => {
                 </div>
 
                 <p style={styles.description}>
-                    Explore flights! Search for flights or select from popular destinations below.
+                    Explore flights! Search for flights to visit the event.
                 </p>
 
                 {/* _Search Bar_ */}
-                <div style={styles.searchContainer}>
+                <form style={styles.searchContainer}>
                     <div style={styles.inputContainer}>
-                        <FontAwesomeIcon icon={faSearch} style={styles.icon} />
+                        <label className={styles.label}>Origin:</label>
                         <input
                             type="text"
-                            placeholder="Search flights..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
+                            name="origin"
+                            placeholder="Airport code"
+                            value={searchQuery.origin}
+                            onChange={handleChange}
                             style={styles.input}
                         />
                     </div>
-                    <button style={styles.searchButton}>Search</button>
+                    <div style={styles.inputContainer}>
+                        <label className={styles.label}>Destination:</label>
+                        <input
+                            type="text"
+                            name="destination"
+                            placeholder="Airport code"
+                            value={searchQuery.destination}
+                            onChange={handleChange}
+                            style={styles.input}
+                        />
+                    </div>
+                    <div style={styles.inputContainer}>
+                        <label className={styles.label}>Departure Date:</label>
+                        <input
+                            type="date"
+                            name="departure"
+                            value={searchQuery.depatureDate}
+                            onChange={handleChange}
+                            style={styles.input}
+                        />
+                    </div>
+                    <div style={styles.inputContainer}>
+                        <label className={styles.label}>Return Date:</label>
+                        <input
+                            type="date"
+                            name="return"
+                            value={searchQuery.returnDate}
+                            onChange={handleChange}
+                            style={styles.input}
+                        />
+                    </div>
+                    <div style={styles.inputContainer}>
+                        <label className={styles.label}>Class:</label>
+                        <select name="class" id="class" value={searchQuery.class} onChange={handleChange}>
+                            <optgroup label="Seat Class">
+                                <option value="economy">Economy</option>
+                                <option value="premium_economy">Premium Economy</option>
+                                <option value="business">Business</option>
+                                <option value="first">First</option>
+                            </optgroup>
+                        </select>
+                    <button style={styles.searchButton} type="submit">Search</button>
                 </div>
-
+                </form>
                 {/* _Flight Cards_
                 <div style={styles.flightsContainer}>
                     {flights.map((flight) => (
