@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import Header from "../components/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -12,8 +12,12 @@ import { useNotifications } from "../components/NotificationProvider";
 import styles from "./FlightSearchPage.module.css";
 
 const FlightSearchPage = () => {
-  const navigate = useNavigate();
+  const location = useLocation();
   const { addNotification } = useNotifications();
+
+  // Retrieve the event from location state
+  const event = location.state?.event;
+  const flightBudget = event ? event.flightBudget : "N/A";
 
   const [searchQuery, setSearchQuery] = useState({
     origin: "",
@@ -41,12 +45,11 @@ const FlightSearchPage = () => {
       return;
     }
 
-    // Convert dates to yyyy-mm-dd format
     const formattedDepartureDate = departure.toISOString().split("T")[0];
     const formattedReturnDate = retDate.toISOString().split("T")[0];
 
-    // Construct the endpoint URL with query parameters
-    const endpoint = `/flights/create-request?origin=${encodeURIComponent(
+    // Construct the flight search endpoint URL with query parameters
+    const searchEndpoint = `/flights/create-request?origin=${encodeURIComponent(
       searchQuery.origin
     )}&destination=${encodeURIComponent(
       searchQuery.destination
@@ -56,18 +59,44 @@ const FlightSearchPage = () => {
 
     try {
       setLoading(true);
-      const response = await getData("GET", endpoint);
-      if (response.ok) {
-        const data = await response.json();
-        setFlights(data.flights || []); // Adjust based on your API response structure
-        addNotification({
-          title: "Success",
-          message: "Flights fetched successfully!",
-          type: "success",
-        });
-      } else {
-        alert("Flight fetching failed. Please try again.");
+      // First, create the flight request
+      const searchResponse = await getData("GET", searchEndpoint);
+      if (!searchResponse.ok) {
+        alert("Flight request creation failed. Please try again.");
+        return;
       }
+      const searchData = await searchResponse.json();
+      const requestId = searchData.data.request_id;
+      addNotification({
+        title: "Success",
+        message: "Request created successfully!",
+        type: "success",
+      });
+
+      // Now, query the flight offers using the request_id.
+      // Adjust limit, after, and before as needed.
+      const limit = 10;
+      const offersEndpoint = `/flights/offers?offer_request_id=${encodeURIComponent(
+        requestId
+      )}&limit=${limit}`;
+      const offersResponse = await getData("GET", offersEndpoint);
+      if (!offersResponse.ok) {
+        alert("Failed to fetch flight offers. Please try again.");
+        return;
+      }
+      const response = await offersResponse.json(); 
+      const offersData = response.data.offers;
+      const flights = offersData.data;
+      if(flights.length > 0){
+          console.log(flights);
+      }
+      
+      setFlights(flights || []);
+      addNotification({
+        title: "Success",
+        message: "Flights fetched successfully!",
+        type: "success",
+      });
     } catch (err) {
       console.error("Error fetching flights:", err);
       setError(err.message);
@@ -84,19 +113,20 @@ const FlightSearchPage = () => {
   return (
     <div className={styles.page}>
       <Header title="AirBlue System" />
-
       <div className={styles.mainContent}>
-      <div className={styles.headerRow}>
-          <Link to={`/my-events`} className={styles.backButton}>
-            <FontAwesomeIcon icon={faArrowLeft} />
+        <div className={styles.headerRow}>
+          <Link to="/home" className={styles.backButton}>
+            <FontAwesomeIcon icon={faArrowLeft} className={styles.icon} />
+            Back
           </Link>
-          <h2 className={styles.pageTitle}>Manage Attendees</h2>
+          <h1 className={styles.title}>Flight Search</h1>
         </div>
-
+        {event && (
+          <p className={styles.budgetText}>Flight Budget: ${flightBudget}</p>
+        )}
         <p className={styles.description}>
           Explore flights! Search for flights to visit the event.
         </p>
-
         <form className={styles.searchContainer} onSubmit={handleSubmit}>
           <div className={styles.inputContainer}>
             <label className={styles.label}>Origin:</label>
@@ -159,14 +189,12 @@ const FlightSearchPage = () => {
             Search
           </button>
         </form>
-
         {loading && <p className={styles.loading}>Loading flights...</p>}
         {error && (
           <p className={styles.error} style={{ color: "red" }}>
             Error: {error}
           </p>
         )}
-
         <div className={styles.flightsContainer}>
           {flights.length > 0 ? (
             flights.map((flight) => (
@@ -176,14 +204,20 @@ const FlightSearchPage = () => {
                   className={styles.cardIcon}
                 />
                 <h3 className={styles.cardTitle}>{flight.destination}</h3>
-                <p className={styles.cardText}>Price: ${flight.cost}</p>
+                <p className={styles.cardText}>Price: ${flight.total_amount}</p>
+                <p className={styles.cardText}>Tax: ${flight.tax_amount}</p>
                 <p className={styles.cardText}>
-                  Departure: {flight.departure_time}
+                  Origin: {flight.slices[0].origin.city_name}
+                </p>
+                <p className={styles.cardText}>
+                  Departure: {flight.slices[0].destination.city_name}
                 </p>
               </div>
             ))
           ) : (
-            !loading && <p className={styles.noFlights}>No flights available</p>
+            !loading && (
+              <p className={styles.noFlights}>No flights available</p>
+            )
           )}
         </div>
       </div>
