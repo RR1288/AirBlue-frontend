@@ -3,32 +3,80 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlane, faInfoCircle, faCheck, faTimes, faPencil, faClock } from '@fortawesome/free-solid-svg-icons';
+import { faPlane, faInfoCircle, faCheck, faTimes, faPencil, faClock} from '@fortawesome/free-solid-svg-icons';
 import styles from './MyEventsPage.module.css';
+import getData from '../utils/getData';
+import { useNotifications } from '../components/NotificationProvider';
+import { formatDate } from '../utils/formatUtils';
+
 
 const MyEventsPage = () => {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [filterStatus, setFilterStatus] = useState("");
     const navigate = useNavigate();
+    const { addNotification } = useNotifications();
 
+    // Fetch events from API
     useEffect(() => {
-        setLoading(true);
-        setTimeout(() => {
-            const mockEvents = [
-                { id: 1, name: 'Tech Conference 2025', startDate: '2025-05-10', endDate: '2025-05-11', location: 'New York', description: 'Tech networking and keynotes.', status: 'pending' },
-                { id: 2, name: 'AI & ML Workshop', startDate: '2025-06-15', endDate: '2025-06-17',location: 'San Francisco', description: 'Deep dive into AI advancements.', status: 'select' },
-                { id: 3, name: 'Startup Pitch Night', startDate: '2025-07-20', endDate: '2025-07-25',location: 'Chicago', description: 'Founders pitch to investors.', status: 'approved' },
-                { id: 4, name: 'Startup Pitch Night', startDate: '2025-04-20', endDate: '2025-04-27',location: 'Rochester', description: 'Founders pitch to investors.', status: 'denied' },
-                { id: 5, name: 'Project Presentation', startDate: '2024-12-20', endDate: '2024-12-31',location: 'Chicago', description: 'Founders pitch to investors.', status: 'past' },
-            ];
-            setEvents(mockEvents);
+        const fetchEvents = async () => {
+            setLoading(true);
+            try {
+              const response = await getData('GET', '/attendees/view/getAllEventsAttendeeView');
+              const data = await response.json();
+              if (data.success) {
+                setEvents(data.data);
+                addNotification({
+                  title: "Success",
+                  message: "Events fetched successfully!",
+                  type: "success",
+                });
+              } else {
+                console.error('Failed to fetch events');
+                addNotification({
+                  title: "Error",
+                  message: "Failed to fetch events",
+                  type: "error",
+                });
+              }
+            } catch (error) {
+              console.error('Error fetching events:', error);
+              addNotification({
+                title: "Error",
+                message: error.message,
+                type: "error",
+              });
+            }
             setLoading(false);
-        }, 1000);
+          };
+
+        fetchEvents();
     }, []);
 
+    // Filter & sort events
+    const getFilteredAndSortedData = () => {
+        let filtered = events;
+
+        // Filter by name or description
+        if (searchQuery) {
+            const query = searchQuery.toLowerCase();
+            filtered = filtered.filter(event =>
+                event.name.toLowerCase().includes(query) || event.description.toLowerCase().includes(query)
+            );
+        }
+
+        // Filter by status
+        if (filterStatus) {
+            filtered = filtered.filter(event => event.status === filterStatus);
+        }
+
+        return filtered;
+    };
+
+    const sortedFilteredEvents = getFilteredAndSortedData();
     const today = new Date();
-    const upcomingEvents = events.filter(event => new Date(event.startDate) >= today);
-    const pastEvents = events.filter(event => new Date(event.startDate) < today);
+    const upcomingEvents = sortedFilteredEvents.filter(event => new Date(event.startDate) >= today);
 
     const renderStatusChip = (status) => {
         const statusIcons = {
@@ -58,10 +106,33 @@ const MyEventsPage = () => {
             <div className={styles.mainContent}>
                 <h1 className={styles.h1}>My Events</h1>
 
+                {/* Search & Filters */}
+                <div className={styles.filters}>
+                    <input
+                        type="text"
+                        placeholder="Search by name or description..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className={styles.searchInput}
+                    />
+                    <select
+                        value={filterStatus}
+                        onChange={(e) => setFilterStatus(e.target.value)}
+                        className={styles.filterSelect}
+                    >
+                        <option value="">All Status</option>
+                        <option value="select">Select Flight</option>
+                        <option value="pending">Pending Approval</option>
+                        <option value="approved">Approved</option>
+                        <option value="denied">Denied</option>
+                    </select>
+                </div>
+
                 {loading ? (
                     <p className={styles.loading}>Loading your events...</p>
                 ) : (
                     <>
+                        {/* Upcoming Events */}
                         <section className={styles.section}>
                             <h2 className={styles.sectionTitle}>Upcoming Events</h2>
                             {upcomingEvents.length > 0 ? (
@@ -69,7 +140,9 @@ const MyEventsPage = () => {
                                     <div key={event.id} className={styles.eventCard}>
                                         {renderStatusChip(event.status)}
                                         <h3 className={styles.eventTitle}>{event.name}</h3>
-                                        <p className={styles.eventDetails}>{new Date(event.startDate).toLocaleDateString()} - {new Date(event.endDate).toLocaleDateString()}</p>
+                                        <p className={styles.eventDetails}>
+                                            {formatDate(event.startDate)} - {formatDate(event.endDate)}
+                                        </p>
                                         <p className={styles.eventDetails}>{event.location}</p>
                                         <p className={styles.eventDescription}>{event.description}</p>
 
@@ -88,36 +161,10 @@ const MyEventsPage = () => {
                                                 </button>
                                             </>
                                         )}
-                                        {event.status === 'approved' && (
-                                            <button className={styles.detailsButton}>
-                                                <FontAwesomeIcon icon={faInfoCircle} /> Flight Details
-                                            </button>
-                                        )}
-                                        {event.status === 'denied' && (
-                                            <button className={styles.detailsButton} onClick={() => navigate(`/flight-search/${event.id}`)}>
-                                                <FontAwesomeIcon icon={faPlane} /> Request Flight
-                                            </button>
-                                        )}
                                     </div>
                                 ))
                             ) : (
                                 <p className={styles.noEvents}>No upcoming events found.</p>
-                            )}
-                        </section>
-
-                        <section className={styles.section}>
-                            <h2 className={styles.sectionTitle}>Past Events</h2>
-                            {pastEvents.length > 0 ? (
-                                pastEvents.map(event => (
-                                    <div key={event.id} className={styles.eventCard}>
-                                        {renderStatusChip('past')}
-                                        <h3 className={styles.eventTitle}>{event.name}</h3>
-                                        <p className={styles.eventDetails}>{new Date(event.startDate).toLocaleDateString()} - {event.location}</p>
-                                        <p className={styles.eventDescription}>{event.description}</p>
-                                    </div>
-                                ))
-                            ) : (
-                                <p className={styles.noEvents}>No past events found.</p>
                             )}
                         </section>
                     </>
