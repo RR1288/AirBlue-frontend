@@ -16,6 +16,24 @@ import { useNotifications } from "../components/NotificationProvider";
 //     return <div style={styles.notification}>{message}</div>;
 // };
 
+//sanitization
+const sanitizeData = (input) => {
+    return input.replace(/<[^>]*>/g, '');
+};
+
+const isValidEmail = (email) => {
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailPattern.test(email);
+};
+
+const isValidPassword = (password) => {
+    // 8 chars, 1 upper, 1 lower, and special char
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z@$!%*?&]{8,}$/;
+    return passwordPattern.test(password);
+};
+
+
+
 const RegisterAttendeePage = () => {
     const [formData, setFormData] = useState({
         firstName: '',
@@ -38,21 +56,51 @@ const RegisterAttendeePage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        //This is what the endpoint will accept
-        const body = {
-            fname: formData.firstName,
-            lname: formData.lastName,
-            email: formData.email,
-            country: formData.country,
-            city: formData.city,
-            state: formData.state,
-            password: formData.password
-        };
+        const sanitizedFirstName = sanitizeInput(formData.firstName);
+        const sanitizedLastName = sanitizeInput(formData.lastName);
+        const sanitizedEmail = sanitizeInput(formData.email);
+        const sanitizedCountry = sanitizeInput(formData.country);
+        const sanitizedCity = sanitizeInput(formData.city);
+        const sanitizedState = sanitizeInput(formData.state);
+        const sanitizedPassword = sanitizeInput(formData.password);
+        const sanitizedConfirmPassword = sanitizeInput(formData.confirmPassword);
+
+        //validations
+        if (!sanitizedFirstName || !sanitizedLastName || !sanitizedEmail || !sanitizedCountry || !sanitizedCity || !sanitizedState || !sanitizedPassword || !sanitizedConfirmPassword) {
+            sendError('All fields are required.');
+            return;
+        }
+
+        if (!isValidEmail(sanitizedEmail)) {
+            sendError('Please enter a valid email address.');
+            return;
+        }
+
+        if (!isValidPassword(sanitizedPassword)) {
+            sendError('Password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, and a special character.');
+            return;
+        }
+
+        if (sanitizedPassword !== sanitizedConfirmPassword) {
+            sendError('Passwords do not match.');
+            return;
+        }
 
         if (formData.password !== formData.confirmPassword) {
             sendError('Passwords do not match.');
             return;
         }
+
+        //This is what the endpoint will accept
+        const body = {
+            fname: sanitizedFirstName,
+            lname: sanitizedLastName,
+            email: sanitizedEmail,
+            country: sanitizedCountry,
+            city: sanitizedCity,
+            state: sanitizedState,
+            password: sanitizedPassword
+        };
 
         try {
             const response = await getData("POST", "/users/create-end-user", body); 
