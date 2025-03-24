@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 
+const sanitizeData = (input) => {
+    return input.replace(/<[^>]*>/g, '');
+};
+
 const RegisterPage = () => {
     const [formData, setFormData] = useState({
         name: '',
@@ -21,24 +25,28 @@ const RegisterPage = () => {
     const handleRegisterSubmit = (event) => {
         event.preventDefault();
 
+        const sanitizedName = sanitizeData(formData.name);
+        const sanitizedEmail = sanitizeData(formData.email);
+        const sanitizedPassword = sanitizeData(formData.password);
+
          // email validation
         const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-        if (!emailPattern.test(formData.email)) {
+        if (!emailPattern.test(formData.sanitizedEmail)) {
         setNotification("Please enter a valid email address.");
         return;
     }
 
         // password validation
         const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z@$!%*?&]{8,}$/;
-        if (!passwordPattern.test(formData.password)) {
+        if (!passwordPattern.test(formData.sanitizedPassword)) {
         setNotification("Password must be at least 8 characters long, contain uppercase, and a special character.");
         return;
     }
 
         // Store user info locally (optional)
         localStorage.setItem('userInfo', JSON.stringify({ 
-            name: formData.name, 
-            email: formData.email 
+            name: formData.sanitizedName, 
+            email: formData.sanitizedEmail 
         }));
 
         setNotification('Registration Successful! Redirecting...');
