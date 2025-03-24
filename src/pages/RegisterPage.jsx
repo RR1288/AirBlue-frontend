@@ -21,6 +21,20 @@ const RegisterPage = () => {
     const handleRegisterSubmit = (event) => {
         event.preventDefault();
 
+         // email validation
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        if (!emailPattern.test(formData.email)) {
+        setNotification("Please enter a valid email address.");
+        return;
+    }
+
+        // password validation
+        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z@$!%*?&]{8,}$/;
+        if (!passwordPattern.test(formData.password)) {
+        setNotification("Password must be at least 8 characters long, contain uppercase, and a special character.");
+        return;
+    }
+
         // Store user info locally (optional)
         localStorage.setItem('userInfo', JSON.stringify({ 
             name: formData.name, 
