@@ -22,6 +22,7 @@ import MyEventsPage from './pages/MyEventsPage';
 import EventsFinanceUser from './pages/FinanceEventsPage';
 import { NotificationProvider } from './components/NotificationProvider';
 import Enable2FAPage from './pages/Enable2FAPage';
+import AcceptEventInvitePage from './pages/AcceptEventInvite';
 
 
 function App() {
@@ -50,7 +51,7 @@ function App() {
                     <Route path="/my-events" element={<MyEventsPage/>} />
                     <Route path="/finance-events" element={<EventsFinanceUser/>} />
                     <Route path="/enable-2fa" element={<Enable2FAPage/>} />
-                
+                    <Route path="/accept-invite" element={<AcceptEventInvitePage/>} />
                 </Routes>
             </Router>
         </NotificationProvider>
