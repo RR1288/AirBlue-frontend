@@ -12,14 +12,51 @@ const AcceptEventInvitePage = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const inviteToken = searchParams.get("invitation");
+    
+    async function sendData(method, endpoint) {
+        const apiUrl = `${import.meta.env.VITE_API_URL}${endpoint}?invitation=${inviteToken}`; // Pass token as query parameter
+
+        const tokenFromLocalStorage = localStorage.getItem("token"); // Get token from localStorage
+        try {
+            const response = await fetch(apiUrl, {
+                method,
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                    Authorization: `Bearer ${tokenFromLocalStorage}`, // Attach token to request
+                },
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Error ${response.status}: ${errorText}`);
+            }
+
+            return await response.json(); // Return parsed JSON if successful
+        } catch (error) {
+            console.error("Error sending data:", error);
+            throw error;
+        }
+    }
 
     useEffect(() => {
         if (inviteToken) {
-            setAccepted(true);
-            getData("POST", "/events/invitations/accept",inviteToken)
-            setTimeout(() => navigate("/my-events"), 1000);
+            const acceptEndpoint = `/events/invitations/accept?invitation=${inviteToken}`; 
+            console.log(acceptEndpoint)
+            sendData("POST", "/events/invitations/accept")
+                .then(() => {
+                    setAccepted(true);
+                    setTimeout(() => {
+                        navigate("/my-events"); // Redirect after accepting the invite
+                    }, 1000);
+                })
+                .catch((error) => {
+                    // Handle error (you can show an error message here)
+                    console.error("Failed to accept invite:", error);
+                    // Optionally set a state to display error UI
+                });
         }
-    }, [inviteToken]);
+    }, [inviteToken, navigate]);
 
 
 return (
