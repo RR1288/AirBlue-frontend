@@ -252,7 +252,7 @@ const FlightSearchPage = () => {
                     <p className={styles.cardText}>Duration: {flight.slices[1].duration}</p>
                     </div>
                 )}
-                <button onClick={handleHold(flight.id)}>Hold</button>
+                <button onClick={() => handleHold(flight.id)}>Hold</button>
               </div>
             ))
           ) : (
