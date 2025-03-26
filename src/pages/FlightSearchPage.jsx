@@ -1,172 +1,236 @@
-import React, { useState } from 'react';
-import Header from '../components/Header';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faFilter, faArrowLeft, faPlaneDeparture } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+// eslint-disable-next-line no-unused-vars
+import React, { useState } from "react";
+import { useLocation, Link } from "react-router-dom";
+import Header from "../components/Header";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faArrowLeft,
+  faArrowRight,
+} from "@fortawesome/free-solid-svg-icons";
+import getData from "../utils/getData";
+import { useNotifications } from "../components/NotificationProvider";
+import styles from "./FlightSearchPage.module.css";
 
 const FlightSearchPage = () => {
-    const [searchQuery, setSearchQuery] = useState('');
+  const location = useLocation();
+  const { addNotification } = useNotifications();
 
-    // Default flights
-    const flights = [
-        { id: 1, destination: "Tirana, Albania", price: "$120", time: "10:30 AM" },
-        { id: 2, destination: "Pristina, Kosovo", price: "$90", time: "12:00 PM" },
-        { id: 3, destination: "Skopje, North Macedonia", price: "$100", time: "2:45 PM" },
-        { id: 4, destination: "Shkodër, Albania", price: "$80", time: "4:00 PM" },
-    ];
+  // Retrieve the event from location state
+  const event = location.state?.event;
+  const flightBudget = event ? event.flightBudget : "N/A";
 
-    return (
-        <div style={styles.page}>
-            {/* _Header_Component_ */}
-            <Header title="AirBlue System" />
+  const [searchQuery, setSearchQuery] = useState({
+    origin: "",
+    destination: "",
+    departureDate: new Date().toISOString().slice(0, 10),
+    returnDate: new Date().toISOString().slice(0, 10),
+    class: "",
+  });
+  const [flights, setFlights] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-            <div style={styles.mainContent}>
-                {/* _Back_Button_and_Title_ */}
-                <div style={styles.headerRow}>
-                    <Link to="/home" style={styles.backButton}>
-                        <FontAwesomeIcon icon={faArrowLeft} style={styles.icon} />
-                    </Link>
-                    <h1 style={styles.title}>Flight Search</h1>
-                </div>
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSearchQuery({ ...searchQuery, [name]: value });
+  };
 
-                <p style={styles.description}>
-                    Explore flights! Search for flights or select from popular destinations below.
-                </p>
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-                {/* _Search Bar_ */}
-                <div style={styles.searchContainer}>
-                    <div style={styles.inputContainer}>
-                        <FontAwesomeIcon icon={faSearch} style={styles.icon} />
-                        <input
-                            type="text"
-                            placeholder="Search flights..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            style={styles.input}
-                        />
-                    </div>
-                    <button style={styles.searchButton}>Search</button>
-                </div>
-
-                {/* _Flight Cards_ */}
-                <div style={styles.flightsContainer}>
-                    {flights.map((flight) => (
-                        <div key={flight.id} style={styles.card}>
-                            <FontAwesomeIcon icon={faPlaneDeparture} style={styles.cardIcon} />
-                            <h3 style={styles.cardTitle}>{flight.destination}</h3>
-                            <p style={styles.cardText}>Price: {flight.price}</p>
-                            <p style={styles.cardText}>Departure: {flight.time}</p>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </div>
-    );
-};
-
-// _STYLES_OBJECT_
-const styles = {
-    page: {
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-        width: '100vw',
-        backgroundColor: '#FFFFFF',
-    },
-    mainContent: {
-        flex: 1,
-        maxWidth: '1000px',
-        margin: '0 auto',
-        padding: '20px'
-    },
-    headerRow: {
-        display: 'flex',
-        alignItems: 'center',
-        marginBottom: '20px'
-    },
-    backButton: {
-        textDecoration: 'none',
-        color: '#0B2853',
-        marginRight: '20px'
-    },
-    icon: {
-        fontSize: '20px',
-        marginRight: '10px',
-        color: '#0B2853',
-    },
-    title: {
-        fontSize: '24px',
-        fontWeight: 'bold',
-        color: '#0B2853'
-    },
-    description: {
-        fontSize: '16px',
-        color: '#333',
-        marginBottom: '20px',
-        textAlign: 'center'
-    },
-    searchContainer: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '10px',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-        marginBottom: '20px'
-    },
-    inputContainer: {
-        display: 'flex',
-        alignItems: 'center',
-        flex: 1,
-        border: '1px solid #ccc',
-        borderRadius: '4px',
-        padding: '5px',
-        backgroundColor: '#F9F9F9',
-        maxWidth: '300px'
-    },
-    input: {
-        flex: 1,
-        border: 'none',
-        padding: '10px',
-        outline: 'none',
-        backgroundColor: '#F9F9F9'
-    },
-    searchButton: {
-        backgroundColor: '#0B2853',
-        color: 'white',
-        marginTop: '0px',
-        padding: '10px 15px',
-        borderRadius: '4px',
-        cursor: 'pointer',
-        border: 'none'
-    },
-    flightsContainer: {
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: '15px',
-        marginTop: '40px'
-    },
-    card: {
-        backgroundColor: '#F9F9F9',
-        padding: '15px',
-        borderRadius: '8px',
-        textAlign: 'center',
-        boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
-        transition: '0.3s',
-    },
-    cardIcon: {
-        fontSize: '24px',
-        color: '#0A306E',
-        marginBottom: '10px'
-    },
-    cardTitle: {
-        fontSize: '18px',
-        fontWeight: 'bold',
-        color: '#0B2853'
-    },
-    cardText: {
-        fontSize: '14px',
-        color: '#333'
+    const departure = new Date(searchQuery.departureDate);
+    const retDate = new Date(searchQuery.returnDate);
+    if (departure > retDate) {
+      alert("Departure date must be before the return date.");
+      return;
     }
+
+    const formattedDepartureDate = departure.toISOString().split("T")[0];
+    const formattedReturnDate = retDate.toISOString().split("T")[0];
+
+    // Construct the flight search endpoint URL with query parameters
+    const searchEndpoint = `/flights/create-request?origin=${encodeURIComponent(
+      searchQuery.origin
+    )}&destination=${encodeURIComponent(
+      searchQuery.destination
+    )}&departureDate=${formattedDepartureDate}&returnDate=${formattedReturnDate}&class=${encodeURIComponent(
+      searchQuery.class
+    )}`;
+
+    try {
+      setLoading(true);
+      // First, create the flight request
+      const searchResponse = await getData("GET", searchEndpoint);
+      if (!searchResponse.ok) {
+        alert("Flight request creation failed. Please try again.");
+        return;
+      }
+      const searchData = await searchResponse.json();
+      const requestId = searchData.data.request_id;
+      addNotification({
+        title: "Success",
+        message: "Request created successfully!",
+        type: "success",
+      });
+
+      // Now, query the flight offers using the request_id.
+      // Adjust limit, after, and before as needed.
+      const limit = 10;
+      const offersEndpoint = `/flights/offers?offer_request_id=${encodeURIComponent(
+        requestId
+      )}&limit=${limit}`;
+      const offersResponse = await getData("GET", offersEndpoint);
+      if (!offersResponse.ok) {
+        alert("Failed to fetch flight offers. Please try again.");
+        return;
+      }
+      const response = await offersResponse.json(); 
+      const offersData = response.data.offers;
+      const flights = offersData.data;
+      if(flights.length > 0){
+          console.log(flights);
+      }
+      
+      setFlights(flights || []);
+      addNotification({
+        title: "Success",
+        message: "Flights fetched successfully!",
+        type: "success",
+      });
+    } catch (err) {
+      console.error("Error fetching flights:", err);
+      setError(err.message);
+      addNotification({
+        title: "Error",
+        message: err.message,
+        type: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className={styles.page}>
+      <Header title="AirBlue System" />
+      <div className={styles.mainContent}>
+        <div className={styles.headerRow}>
+          <Link to="/home" className={styles.backButton}>
+            <FontAwesomeIcon icon={faArrowLeft} className={styles.icon} />
+            Back
+          </Link>
+          <h1 className={styles.title}>Flight Search</h1>
+        </div>
+        {event && (
+          <p className={styles.budgetText}>Flight Budget: ${flightBudget}</p>
+        )}
+        <p className={styles.description}>
+          Explore flights! Search for flights to visit the event.
+        </p>
+        <form className={styles.searchContainer} onSubmit={handleSubmit}>
+          <div className={styles.inputContainer}>
+            <label className={styles.label}>Origin:</label>
+            <input
+              type="text"
+              name="origin"
+              placeholder="Airport code"
+              value={searchQuery.origin}
+              onChange={handleChange}
+              className={styles.input}
+            />
+          </div>
+          <div className={styles.inputContainer}>
+            <label className={styles.label}>Destination:</label>
+            <input
+              type="text"
+              name="destination"
+              placeholder="Airport code"
+              value={searchQuery.destination}
+              onChange={handleChange}
+              className={styles.input}
+            />
+          </div>
+          <div className={styles.inputContainer}>
+            <label className={styles.label}>Departure Date:</label>
+            <input
+              type="date"
+              name="departureDate"
+              value={searchQuery.departureDate}
+              onChange={handleChange}
+              className={styles.input}
+            />
+          </div>
+          <div className={styles.inputContainer}>
+            <label className={styles.label}>Return Date:</label>
+            <input
+              type="date"
+              name="returnDate"
+              value={searchQuery.returnDate}
+              onChange={handleChange}
+              className={styles.input}
+            />
+          </div>
+          <div className={styles.inputContainer}>
+            <label className={styles.label}>Class:</label>
+            <select
+              name="class"
+              value={searchQuery.class}
+              onChange={handleChange}
+              className={styles.input}
+            >
+              <option value="">Select Class</option>
+              <option value="economy">Economy</option>
+              <option value="premium_economy">Premium Economy</option>
+              <option value="business">Business</option>
+              <option value="first">First</option>
+            </select>
+          </div>
+          <button type="submit" className={styles.searchButton}>
+            Search
+          </button>
+        </form>
+        {loading && <p className={styles.loading}>Loading flights...</p>}
+        {error && (
+          <p className={styles.error} style={{ color: "red" }}>
+            Error: {error}
+          </p>
+        )}
+        <div className={styles.flightsContainer}>
+          {flights.length > 0 ? (
+            flights.map((flight) => (
+                <div key={flight.id} className={styles.card}>
+                <img width={50} height={50} src={flight.owner.logo_symbol_url} alt="Airline Logo" />
+              
+                <h3 className={styles.cardTitle}>{flight.owner.name}</h3>
+                <p className={styles.cardText}>Price: ${flight.total_amount}</p>
+                <p className={styles.cardText}>Tax: ${flight.tax_amount}</p>
+              
+                {/* Outbound Flight */}
+                <div className={styles.flightSegment}>
+                  <h4 className={styles.segmentTitle}>Outbound Flight</h4>
+                  <p className={styles.cardText}>{flight.slices[0].origin.iata_code} <FontAwesomeIcon icon={faArrowRight} className={styles.icon} /> {flight.slices[0].destination.iata_code}</p>
+                  <p className={styles.cardText}>Duration: {flight.slices[0].duration}</p>
+                </div>
+              
+                {/* Return Flight (if available) */}
+                {flight.slices.length > 1 && (
+                  <div className={styles.flightSegment}>
+                    <h4 className={styles.segmentTitle}>Return Flight</h4>
+                    <p className={styles.cardText}>{flight.slices[1].origin.iata_code} <FontAwesomeIcon icon={faArrowRight} className={styles.icon} />{flight.slices[1].destination.iata_code}</p>
+                    <p className={styles.cardText}>Duration: {flight.slices[1].duration}</p>
+                    </div>
+                )}
+              </div>
+            ))
+          ) : (
+            !loading && (
+              <p className={styles.noFlights}>No flights available</p>
+            )
+          )}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default FlightSearchPage;

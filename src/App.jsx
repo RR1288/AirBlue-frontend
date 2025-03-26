@@ -22,6 +22,7 @@ import MyEventsPage from './pages/MyEventsPage';
 import EventsFinanceUser from './pages/FinanceEventsPage';
 import { NotificationProvider } from './components/NotificationProvider';
 import Enable2FAPage from './pages/Enable2FAPage';
+import AcceptEventInvitePage from './pages/AcceptEventInvite';
 
 
 function App() {
@@ -31,14 +32,14 @@ function App() {
                 <Routes>
                     <Route path="/home" element={<HomePage />} />
                     <Route path="/manage-events" element={<ManageEventsPage />} />
-                    <Route path="/manage-attendees" element={<ManageAttendeesPage />} />
+                    <Route path="/manage-attendees/:eventId" element={<ManageAttendeesPage />} />
                     <Route path="/event-details" element={<FinanceEventDetailsModal/>} />
                     <Route path="/" element={<LoginPage/>} />
                     <Route path="/login" element={<LoginPage/>} />
                     <Route path="/event-edit" element={<EventEditPage/>} />
                     <Route path="/under-construction" element={<UnderConstruction/>} />
                     <Route path="/event-creation" element={<EventCreationPage/>} />
-                    <Route path="/flight-search" element={<FlightSearchPage/>} />
+                    <Route path="//flight-search/:eventId" element={<FlightSearchPage/>} />
                     <Route path="/approval" element={<ApprovalPage/>} />
                     <Route path="/admin" element={<AdminPage/>} />
                     <Route path="/setuser-info" element={<SetUserInfoPage/>} />
@@ -50,7 +51,7 @@ function App() {
                     <Route path="/my-events" element={<MyEventsPage/>} />
                     <Route path="/finance-events" element={<EventsFinanceUser/>} />
                     <Route path="/enable-2fa" element={<Enable2FAPage/>} />
-                
+                    <Route path="/accept-invite" element={<AcceptEventInvitePage/>} />
                 </Routes>
             </Router>
         </NotificationProvider>
