@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { data, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
-import { sendError } from '../utils/response';
 import getData from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
 
