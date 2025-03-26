@@ -110,6 +110,38 @@ const FlightSearchPage = () => {
     }
   };
 
+  const handleHold = async (flightId) => {
+    try{
+        const holdEndpoint = `/flights/?offer_id=${encodeURIComponent(
+            flightId)}/hold`;
+        console.log(holdEndpoint);
+        body = {
+            // id: pasId,
+        };
+        const response = await getData("POST", holdEndpoint, body);
+    
+        if (!response.ok) {
+          throw new Error("Failed to hold the flight. Please try again.");
+      }
+    
+      addNotification({
+        title: "Flight Held",
+        message: "Your flight has been held succcessfully.",
+        type: "success",
+      });
+    
+    }
+    catch (err) {
+        console.error("Error holding flight", err);
+        addNotification({
+            title: "Error",
+            message: err.message,
+            type: "error",
+        });
+    }
+    
+}
+    
   return (
     <div className={styles.page}>
       <Header title="AirBlue System" />
@@ -220,6 +252,7 @@ const FlightSearchPage = () => {
                     <p className={styles.cardText}>Duration: {flight.slices[1].duration}</p>
                     </div>
                 )}
+                <button onClick={handleHold(flight.id)}>Hold</button>
               </div>
             ))
           ) : (
