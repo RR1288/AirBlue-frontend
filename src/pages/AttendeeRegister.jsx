@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { data, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { sendError } from '../utils/response';
 import getData from "../utils/getData";
@@ -32,8 +32,6 @@ const isValidPassword = (password) => {
     return passwordPattern.test(password);
 };
 
-
-
 const RegisterAttendeePage = () => {
     const [formData, setFormData] = useState({
         firstName: '',
@@ -56,38 +54,45 @@ const RegisterAttendeePage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const sanitizedFirstName = sanitizeInput(formData.firstName);
-        const sanitizedLastName = sanitizeInput(formData.lastName);
-        const sanitizedEmail = sanitizeInput(formData.email);
-        const sanitizedCountry = sanitizeInput(formData.country);
-        const sanitizedCity = sanitizeInput(formData.city);
-        const sanitizedState = sanitizeInput(formData.state);
-        const sanitizedPassword = sanitizeInput(formData.password);
-        const sanitizedConfirmPassword = sanitizeInput(formData.confirmPassword);
+        const sanitizedFirstName = sanitizeData(formData.firstName);
+        const sanitizedLastName = sanitizeData(formData.lastName);
+        const sanitizedEmail = sanitizeData(formData.email);
+        const sanitizedCountry = sanitizeData(formData.country);
+        const sanitizedCity = sanitizeData(formData.city);
+        const sanitizedState = sanitizeData(formData.state);
+        const sanitizedPassword = sanitizeData(formData.password);
+        const sanitizedConfirmPassword = sanitizeData(formData.confirmPassword);
 
         //validations
         if (!sanitizedFirstName || !sanitizedLastName || !sanitizedEmail || !sanitizedCountry || !sanitizedCity || !sanitizedState || !sanitizedPassword || !sanitizedConfirmPassword) {
-            sendError('All fields are required.');
+            addNotification({
+                type: 'failure',
+                title: 'All fields are required.'
+            });
             return;
         }
 
         if (!isValidEmail(sanitizedEmail)) {
-            sendError('Please enter a valid email address.');
+            addNotification({
+                type: 'failure',
+                title: 'Please enter a valid email address.'
+            });
             return;
         }
 
         if (!isValidPassword(sanitizedPassword)) {
-            sendError('Password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, and a special character.');
+            addNotification({
+                type: 'failure',
+                title: 'Password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, and a special character.'
+            });
             return;
         }
 
         if (sanitizedPassword !== sanitizedConfirmPassword) {
-            sendError('Passwords do not match.');
-            return;
-        }
-
-        if (formData.password !== formData.confirmPassword) {
-            sendError('Passwords do not match.');
+            addNotification({
+                type: 'failure',
+                title: 'Passwords do not match.'
+            });
             return;
         }
 
@@ -103,23 +108,27 @@ const RegisterAttendeePage = () => {
         };
 
         try {
-            const response = await getData("POST", "/users/create-end-user", body); 
+            const response = await getData("POST", "/users/create-end-user", body);
+        
+            // Check if the response was successful
             if (response.ok) {
-                const data = await response.json();
-                console.log(data);
-
-                addNotification({
-                    type: 'success',
-                    title: 'Registration Successful! Redirecting to login page...',
-                    message: data.message,
-                });
-                navigate("/"); //Redirect to login page
+              const data = await response.json(); // Parse the JSON response
+              console.log(data); // Log the successful response
+        
+              addNotification({
+                type: 'success',
+                title: 'Registration Successful! Redirecting to login page...',
+                message: data.message, // Assume `message` is part of the response body
+              });
+              navigate("/"); // Redirect to login page
             } else {
-                alert("Could not register, try again");
+              // Handle any failed responses
+              sendError("Could not register, try again");
             }
-        } catch (error) {
-            console.error(error);
-        }
+          } catch (error) {
+            console.error(error); // Log the error
+            sendError("An error occurred. Please try again later.");
+          }
     };
 
     return (
