@@ -67,7 +67,11 @@ const RegisterAttendeePage = () => {
                 });
                 navigate("/"); //Redirect to login page
             } else {
-                alert("Could not register, try again");
+                addNotification({
+                    type: 'error',
+                    title: 'Registration Failed',
+                    message: "Could not register, try again.",
+                  });                  
             }
         } catch (error) {
             console.error(error);
