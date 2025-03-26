@@ -3,7 +3,7 @@ import {useNavigate, Link, useSearchParams} from "react-router-dom";
 import Header from "../components/Header";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
-import styles from "./EventCreationPage.module.css";
+import styles from "./AcceptEventInvite.module.css";
 import getData from "../utils/getData";
 import FooterNoLink from "../components/FooterNoLink";
 
@@ -70,14 +70,17 @@ return (
                 <div>
                     {accepted ? (
                         <div>
-                            <h2>Invite Accepted</h2>
+                            <h2 className="title">Invite Accepted</h2>
                             <p>Redirecting to events page...</p>
+                            <div className={styles.loader}></div>
                         </div>
                     ) : (
                         <div>
-                            <h2>Processing Invite...</h2>
-                            <p>Please wait...</p>
+                            <h2 className="title">Processing Invite...</h2>
+                            <p>Please Wait</p>
+                            <div className={styles.loader}></div>
                         </div>
+                        
                     )}
                 </div>
             </div>
