@@ -52,10 +52,15 @@ const FinanceEventsPage = () => {
         }
     };
 
+    const sanitizeBudget = (value) => {
+        return value.replace(/[^0-9.]/g, "");
+    };
+
     const updateBudget = async (eventId, totalBudget, flightBudget) => {
         const total = parseFloat(totalBudget);
         const flight = parseFloat(flightBudget);
 
+        //validation
         if (isNaN(total) || isNaN(flight) || total <= 0 || flight <= 0) {
             addNotification({
                 title: "Warning",
@@ -65,12 +70,14 @@ const FinanceEventsPage = () => {
             return;
         }
 
+
+
         try {
             const res = await getData("POST", "/events/set-budget", {
                 userId,
                 eventID: eventId,
-                totalBudget: total,
-                flightBudget: flight,
+                totalBudget: sanitizeBudget(total),
+                flightBudget: sanitizeBudget(flight),
             });
             if (!res.ok) throw new Error("Failed to update budget");
             addNotification({
@@ -113,10 +120,14 @@ const FinanceEventsPage = () => {
         }
     };
 
+    const sanitizeSearch = (term) => {
+        return term.replace(/[^a-zA-Z0-9 ]/g, "").trim();
+    };
+
     useEffect(() => {
         setFilteredEvents(
             events.filter((event) =>
-                event.title.toLowerCase().includes(searchTerm.toLowerCase())
+                event.title.toLowerCase().includes(sanitizeSearch(searchTerm).toLowerCase())
             )
         );
     }, [searchTerm, events]);
