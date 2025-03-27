@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,15 +8,15 @@ import {
   faEdit,
   faTimes,
   faUsers,
-  // faPieChart,
 } from "@fortawesome/free-solid-svg-icons";
-//import ManageEventDetailsModal from "../components/ManageEventDetailsModal";
 import styles from "./ManageEventsPage.module.css";
 import getData from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
 import { formatDate } from "../utils/formatUtils";
+import { useNavigate } from "react-router-dom";
 
 const ManageEventsPage = () => {
+  const navigate = useNavigate();
   const userId = Number(localStorage.getItem("userId")) || null;
   const { addNotification } = useNotifications();
 
@@ -65,6 +64,13 @@ const ManageEventsPage = () => {
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
+  };
+
+  // Navigate to the Manage Attendees page, sending both event ID and groupEventID
+  const handleManageAttendees = (event) => {
+    navigate(`/manage-attendees/${event.id}`, {
+      state: { groupEventID: event.groupEventID },
+    });
   };
 
   const openEventDetailsModal = (event) => {
@@ -123,54 +129,33 @@ const ManageEventsPage = () => {
                 <p className={styles.eventLocation}>
                   <FontAwesomeIcon icon={faMapMarkerAlt} /> {event.location}
                 </p>
-                <p className={styles.eventDescription}>{event.description}</p>
+                <p className={styles.eventDescription}>
+                  {event.description}
+                </p>
+                <p className={styles.eventAttendees}>
+                  Expected Attendees: {event.expectedAttendees} | Max Attendees:{" "}
+                  {event.maxAttendees}
+                </p>
                 <div className={styles.options}>
-                  {/* Manage Attendees */}
                   <button
                     className={styles.optionButton}
-                    onClick={() => openEventDetailsModal(event)}
+                    onClick={() => handleManageAttendees(event)}
                   >
-                    <FontAwesomeIcon
-                      icon={faUsers}
-                      className={styles.optionIcon}
-                    />{" "}
+                    <FontAwesomeIcon icon={faUsers} className={styles.optionIcon} />{" "}
                     Manage Attendees
                   </button>
-                  
-                  {/* See Stats
-                  <button
-                    className={styles.optionButton}
-                    // TODO: Change Modal to Open
-                    onClick={() => openEventDetailsModal(event)}
-                  >
-                    <FontAwesomeIcon
-                      icon={faPieChart}
-                      className={styles.optionIcon}
-                    />{" "}
-                    See Stats
-                  </button> */}
-
-                  {/* Edit Event */}
                   <button
                     className={styles.optionButton}
                     onClick={() => handleUpdateEvent(event)}
                   >
-                    <FontAwesomeIcon
-                      icon={faEdit}
-                      className={styles.optionIcon}
-                    />{" "}
+                    <FontAwesomeIcon icon={faEdit} className={styles.optionIcon} />{" "}
                     Edit Event
                   </button>
-                  
-                  {/* Delete Event */}
                   <button
                     className={styles.optionButton}
                     onClick={() => handleDeleteEvent(event.id)}
                   >
-                    <FontAwesomeIcon
-                      icon={faTimes}
-                      className={styles.optionIcon}
-                    />{" "}
+                    <FontAwesomeIcon icon={faTimes} className={styles.optionIcon} />{" "}
                     Delete Event
                   </button>
                 </div>
@@ -181,6 +166,7 @@ const ManageEventsPage = () => {
           )}
         </section>
       </main>
+      {/* Uncomment and implement the modal as needed */}
       {/* {selectedEvent && (
         <ManageEventDetailsModal
           event={selectedEvent}

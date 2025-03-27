@@ -7,54 +7,122 @@ import {
   faFilter,
   faUpload,
   faSort,
+  faUserPlus,
+  faTimes,
+  faPaperPlane,
 } from "@fortawesome/free-solid-svg-icons";
 import getData from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
 import styles from "./ManageAttendees.module.css";
 
-// A stub for the bulk invitation modal
-const BulkInvitationModal = ({ onClose }) => {
+// Single Invitation Modal with Event Group dropdown
+const SingleInvitationModal = ({ eventId, eventGroups, onClose, onSend }) => {
+  const [email, setEmail] = useState("");
+  const [selectedGroup, setSelectedGroup] = useState("");
+  const [error, setError] = useState("");
+
+  const validateEmail = (email) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const handleSend = () => {
+    if (!email.trim()) {
+      setError("Email is required.");
+      return;
+    }
+    if (!validateEmail(email)) {
+      setError("Invalid email format.");
+      return;
+    }
+    if (!selectedGroup) {
+      setError("Please select an event group.");
+      return;
+    }
+    setError("");
+    onSend(email, selectedGroup);
+  };
+
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
-        <h2>Send Bulk Invitations</h2>
-        <p>Upload your .csv or .txt file here.</p>
-        <button onClick={onClose} className={styles.closeModalButton}>
-          Close
-        </button>
+        <h2>Send Single Invitation</h2>
+        <input
+          type="email"
+          placeholder="Enter email..."
+          className={styles.inputField}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <select
+          className={styles.inputField}
+          value={selectedGroup}
+          onChange={(e) => setSelectedGroup(e.target.value)}
+        >
+          <option value="">Select Event Group</option>
+          {eventGroups.map((group) => (
+            <option key={group.id} value={group.id}>
+              {group.name}
+            </option>
+          ))}
+        </select>
+        {error && <p className={styles.errorText}>{error}</p>}
+        <div className={styles.modalActions}>
+          <button onClick={handleSend} className={styles.sendButton}>
+            <FontAwesomeIcon icon={faPaperPlane} /> Send Invitation
+          </button>
+          <button onClick={onClose} className={styles.closeModalButton}>
+            <FontAwesomeIcon icon={faTimes} /> Close
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
+// Bulk Invitation Modal (unchanged)
+const BulkInvitationModal = ({ onClose }) => (
+  <div className={styles.modalOverlay}>
+    <div className={styles.modalContent}>
+      <h2>Send Bulk Invitations</h2>
+      <p>Upload your .csv or .txt file here.</p>
+      <button onClick={onClose} className={styles.closeModalButton}>
+        Close
+      </button>
+    </div>
+  </div>
+);
+
 const ManageAttendees = () => {
   const { eventId } = useParams();
   const { addNotification } = useNotifications();
 
-  // Data returned from the API: two lists for accepted attendees and pending invitations.
+  // State for attendees and pending invitations
   const [data, setData] = useState({ attendees: [], pending: [] });
   const [loading, setLoading] = useState(false);
   const [selectedTab, setSelectedTab] = useState("attendees"); // "attendees" or "pending"
   const [searchQuery, setSearchQuery] = useState("");
   const [sortColumn, setSortColumn] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
+
+  // State for modals
   const [showBulkModal, setShowBulkModal] = useState(false);
+  const [showSingleModal, setShowSingleModal] = useState(false);
+  // State for event groups (for single invitation)
+  const [eventGroups, setEventGroups] = useState([]);
 
   useEffect(() => {
     fetchAttendeesData();
   }, [eventId]);
 
+  // Fetch attendees and pending invitations
   const fetchAttendeesData = async () => {
     setLoading(true);
     try {
-      // Expected API endpoint returns { attendees: [...], pending: [...] }
       const response = await getData("GET", `/attendees/${eventId}`);
       if (!response.ok) throw new Error("Failed to fetch attendees data");
       const res = await response.json();
-      const result = res.data;
       setData({
-        attendees: result.attendees, // Accepted attendees with attributes: name, email, expectedAttendees, maxAttendees, etc.
-        pending: result.pendingInvitations, // Pending invitations with attributes: email, status ("sent", "expired", "declined")
+        attendees: res.data.attendees,
+        pending: res.data.pendingInvitations,
       });
     } catch (error) {
       addNotification({
@@ -67,29 +135,65 @@ const ManageAttendees = () => {
     }
   };
 
-  // Filter and sort the list based on the current tab
-  const getFilteredAndSortedData = () => {
-    console.log(data);
-    
-    const list = selectedTab === "attendees" ? data.attendees : data.pending;
-    let filtered = list.filter((item) => {
-      // For attendees, filter on name or email; for pending, filter on email.
-      if (selectedTab === "attendees") {
-        return (
-          item.User.FName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.User.Email?.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-      } else {
-        return item.invitedEmail?.toLowerCase().includes(searchQuery.toLowerCase());
+  // Fetch event groups for invitation dropdown
+  useEffect(() => {
+    const fetchEventGroups = async () => {
+      try {
+        const response = await getData("GET", `/event-groups/${eventId}`);
+        if (!response.ok) throw new Error("Failed to fetch event groups");
+        const res = await response.json();
+        setEventGroups(res.data);
+      } catch (error) {
+        // test data for now
+        setEventGroups([{'id':1, name: 'VIP'}, {'id':2, name: 'Basic'}] );
+        // addNotification({
+        //   title: "Error",
+        //   message: error.message,
+        //   type: "error",
+        // });
       }
-    });
+    };
+
+    fetchEventGroups();
+  }, [eventId]);
+
+  const handleSendInvitation = async (email, eventGroupId) => {
+    try {
+      const response = await getData("POST", `/attendees/invite/${eventId}`, {
+        email: email,
+        eventGroupId: eventGroupId,
+      });
+      if (!response.ok) throw new Error("Failed to send invitation");
+      addNotification({
+        title: "Success",
+        message: "Invitation sent successfully!",
+        type: "success",
+      });
+      setShowSingleModal(false);
+      fetchAttendeesData();
+    } catch (error) {
+      addNotification({
+        title: "Error",
+        message: error.message,
+        type: "error",
+      });
+    }
+  };
+
+  const getFilteredAndSortedData = () => {
+    const list = selectedTab === "attendees" ? data.attendees : data.pending;
+    let filtered = list.filter((item) =>
+      selectedTab === "attendees"
+        ? item.User.FName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.User.Email?.toLowerCase().includes(searchQuery.toLowerCase())
+        : item.invitedEmail?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     if (sortColumn) {
       filtered.sort((a, b) => {
-        const aVal = a[sortColumn] ? a[sortColumn].toString().toLowerCase() : "";
-        const bVal = b[sortColumn] ? b[sortColumn].toString().toLowerCase() : "";
-        if (aVal < bVal) return sortOrder === "asc" ? -1 : 1;
-        if (aVal > bVal) return sortOrder === "asc" ? 1 : -1;
-        return 0;
+        const aVal = a[sortColumn]?.toString().toLowerCase() || "";
+        const bVal = b[sortColumn]?.toString().toLowerCase() || "";
+        return aVal.localeCompare(bVal) * (sortOrder === "asc" ? 1 : -1);
       });
     }
     return filtered;
@@ -97,7 +201,6 @@ const ManageAttendees = () => {
 
   const handleSort = (column) => {
     if (sortColumn === column) {
-      // Toggle sort order if the same column is clicked
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
       setSortColumn(column);
@@ -105,32 +208,10 @@ const ManageAttendees = () => {
     }
   };
 
-  const handleRemove = async (emailOrId) => {
-    // Stub: Remove the attendee/invitation (using email for pending, id for attendee)
-    addNotification({
-      title: "Success",
-      message: "Removed successfully!",
-      type: "success",
-    });
-    fetchAttendeesData();
-  };
-
-  const handleResendInvitation = async (email) => {
-    // Stub: Resend invitation for the given email
-    addNotification({
-      title: "Success",
-      message: "Invitation resent!",
-      type: "success",
-    });
-    fetchAttendeesData();
-  };
-
   return (
     <div className={styles.container}>
       <Header title="AirBlue System" />
-          <main className={styles.main}>
-    
-        {/* Header with back button and event title */}
+      <main className={styles.main}>
         <div className={styles.headerRow}>
           <Link to={`/manage-events`} className={styles.backButton}>
             <FontAwesomeIcon icon={faArrowLeft} />
@@ -138,7 +219,23 @@ const ManageAttendees = () => {
           <h2 className={styles.pageTitle}>Manage Attendees</h2>
         </div>
 
-        {/* Tabs for Attendees and Pending */}
+        <div className={styles.sendButtonsContainer}>
+          <button
+            className={styles.bulkButton}
+            onClick={() => setShowSingleModal(true)}
+          >
+            <FontAwesomeIcon icon={faUserPlus} className={styles.bulkIcon} />{" "}
+            Send Single Invitation
+          </button>
+          <button
+            className={styles.bulkButton}
+            onClick={() => setShowBulkModal(true)}
+          >
+            <FontAwesomeIcon icon={faUpload} className={styles.bulkIcon} /> Send
+            Bulk Invitations
+          </button>
+        </div>
+
         <div className={styles.tabs}>
           <button
             className={`${styles.tabButton} ${
@@ -158,7 +255,6 @@ const ManageAttendees = () => {
           </button>
         </div>
 
-        {/* Search input */}
         <div className={styles.searchContainer}>
           <input
             type="text"
@@ -170,92 +266,37 @@ const ManageAttendees = () => {
           <FontAwesomeIcon icon={faFilter} className={styles.filterIcon} />
         </div>
 
-        {/* Bulk Invitations Button */}
-        <div className={styles.bulkContainer}>
-          <button
-            className={styles.bulkButton}
-            onClick={() => setShowBulkModal(true)}
-          >
-            <FontAwesomeIcon icon={faUpload} className={styles.bulkIcon} /> Send
-            Bulk Invitations
-          </button>
-        </div>
-
-        {/* Data Table */}
         {loading ? (
           <p className={styles.loading}>Loading...</p>
         ) : (
           <table className={styles.dataTable}>
             <thead>
               <tr>
-                {selectedTab === "attendees" ? (
-                  <>
-                    <th onClick={() => handleSort("name")}>
-                      Name <FontAwesomeIcon icon={faSort} />
-                    </th>
-                    <th onClick={() => handleSort("email")}>
-                      Email <FontAwesomeIcon icon={faSort} />
-                    </th>
-                    <th>Actions</th>
-                  </>
-                ) : (
-                  <>
-                    <th onClick={() => handleSort("email")}>
-                      Email <FontAwesomeIcon icon={faSort} />
-                    </th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </>
-                )}
+                <th onClick={() => handleSort("name")}>
+                  Name <FontAwesomeIcon icon={faSort} />
+                </th>
+                <th onClick={() => handleSort("email")}>
+                  Email <FontAwesomeIcon icon={faSort} />
+                </th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {getFilteredAndSortedData().map((item, index) => (
                 <tr key={index}>
-                  {console.log(item)}
-                  {selectedTab === "attendees" ? (
-                    <>
-                      <td>{item.User.FName + " " + item.User.LName}</td>
-                      <td>{item.User.Email}</td>
-                      <td>
-                        <button
-                          className={styles.actionButton}
-                          onClick={() => handleRemove(item.id)}
-                        >
-                          Remove
-                        </button>
-                      </td>
-                    </>
-                  ) : (
-                    <>
-                      <td>{item.invitedEmail}</td>
-                      <td>
-                        <span
-                          className={`${styles.chip} ${
-                            styles[item.status] || ""
-                          }`}
-                        >
-                          {item.status}
-                        </span>
-                      </td>
-                      <td>
-                        {item.status === "expired" && (
-                          <button
-                            className={styles.actionButton}
-                            onClick={() => handleResendInvitation(item.email)}
-                          >
-                            Resend
-                          </button>
-                        )}
-                        <button
-                          className={styles.actionButton}
-                          onClick={() => handleRemove(item.email)}
-                        >
-                          Remove
-                        </button>
-                      </td>
-                    </>
-                  )}
+                  <td>
+                    {selectedTab === "attendees"
+                      ? `${item.User.FName} ${item.User.LName}`
+                      : item.invitedEmail}
+                  </td>
+                  <td>
+                    {selectedTab === "attendees"
+                      ? item.User.Email
+                      : item.invitedEmail}
+                  </td>
+                  <td>
+                    <button className={styles.actionButton}>Remove</button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -264,6 +305,14 @@ const ManageAttendees = () => {
       </main>
       {showBulkModal && (
         <BulkInvitationModal onClose={() => setShowBulkModal(false)} />
+      )}
+      {showSingleModal && (
+        <SingleInvitationModal
+          eventId={eventId}
+          eventGroups={eventGroups}
+          onClose={() => setShowSingleModal(false)}
+          onSend={handleSendInvitation}
+        />
       )}
     </div>
   );
