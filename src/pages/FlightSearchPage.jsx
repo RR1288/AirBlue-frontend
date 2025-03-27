@@ -110,15 +110,16 @@ const FlightSearchPage = () => {
     }
   };
 
-  const handleHold = async (flightId) => {
+  const handleHold = async (flightId, passengersList) => {
     try{
-        const holdEndpoint = `/flights/?offer_id=${encodeURIComponent(
+        const holdEndpoint = `/flights/offers?offer_id=${encodeURIComponent(
             flightId)}/hold`;
         console.log(holdEndpoint);
-        body = {
-            // id: pasId,
-        };
-        const response = await getData("POST", holdEndpoint, body);
+        //body = {
+            // event_id: 
+            //passengers: passengersList,
+        //};
+        const response = await getData("POST", holdEndpoint );
     
         if (!response.ok) {
           throw new Error("Failed to hold the flight. Please try again.");
@@ -252,7 +253,7 @@ const FlightSearchPage = () => {
                     <p className={styles.cardText}>Duration: {flight.slices[1].duration}</p>
                     </div>
                 )}
-                <button onClick={() => handleHold(flight.id)}>Hold</button>
+                <button onClick={() => handleHold(flight.id, flight.passengers)}>Hold</button>
               </div>
             ))
           ) : (
