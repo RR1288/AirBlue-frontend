@@ -4,8 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import PinModal from "../components/PinModal";
 import Header from "../components/Header";
 import styles from "./LoginPage.module.css";
-import { useNotifications } from "../components/NotificationProvider";
-import Footer from "../components/Footer";
+import {useNotifications} from "../components/NotificationProvider";
 import FooterNoLink from "../components/FooterNoLink";
 import validator from "validator";
 

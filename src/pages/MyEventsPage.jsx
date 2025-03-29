@@ -1,180 +1,255 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
-
-// FOR ATTENDEES REGISTERED EVENTS
+// eslint-disable-next-line no-unused-vars
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPlane,
+  faInfoCircle,
+  faCheck,
+  faTimes,
+  faPencil,
+  faClock,
+} from "@fortawesome/free-solid-svg-icons";
+import styles from "./MyEventsPage.module.css";
+import getData from "../utils/getData";
+import { useNotifications } from "../components/NotificationProvider";
+import { formatDate } from "../utils/formatUtils";
 
 const MyEventsPage = () => {
-    const [events, setEvents] = useState([]); // Stores attendee's registered events
-    const [loading, setLoading] = useState(true); // Loading state
-    const navigate = useNavigate();
+  const [upcomingEventsList, setUpcomingEventsList] = useState([]);
+  const [pastEventsList, setPastEventsList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterStatus, setFilterStatus] = useState("");
+  const [selectedTab, setSelectedTab] = useState("upcoming"); // "upcoming" or "past"
+  const navigate = useNavigate();
+  const { addNotification } = useNotifications();
 
-    // Fetch Attendee's Registered Events (Backend Logic to be Implemented)
-    useEffect(() => {
-        setLoading(true);
+  // Fetch upcoming events from API
+  useEffect(() => {
+    const fetchUpcomingEvents = async () => {
+      setLoading(true);
+      try {
+        const response = await getData('GET', '/attendees/view/getAllEventsAttendeeView');
+        const data = await response.json();
+        if (data.success) {
+          setUpcomingEventsList(data.data);
+          addNotification({
+            title: "Success",
+            message: "Events fetched successfully!",
+            type: "success",
+          });
+        } else {
+          addNotification({
+            title: "Error",
+            message: "Failed to fetch events",
+            type: "error",
+          });
+        }
+      } catch (error) {
+        addNotification({
+          title: "Error",
+          message: error.message,
+          type: "error",
+        });
+      }
+      setLoading(false);
+    };
 
-        // TODO: Backend Devs - Implement API call to fetch attendee's registered events
-        /*
-        fetch('https://your-backend-api.com/api/my-events', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('token')}`, // If authentication is required
-            },
-        })
-            .then(response => response.json())
-            .then(data => {
-                setEvents(data); // Ensure data matches expected event structure
-                setLoading(false);
-            })
-            .catch(error => {
-                console.error('Error fetching events:', error);
-                setLoading(false);
-            });
-        */
+    fetchUpcomingEvents();
+  }, [addNotification]);
 
-        // Mocked data for frontend testing (Remove once backend is integrated)
-        setTimeout(() => {
-            const mockEvents = [
-                { id: 1, title: 'Tech Conference 2025', date: '2025-05-10', location: 'New York', description: 'Tech networking and keynotes.' },
-                { id: 2, title: 'AI & ML Workshop', date: '2025-06-15', location: 'San Francisco', description: 'Deep dive into AI advancements.' },
-                { id: 3, title: 'Startup Pitch Night', date: '2024-12-20', location: 'Chicago', description: 'Founders pitch to investors.' },
-            ];
-            setEvents(mockEvents);
-            setLoading(false);
-        }, 1000);
-    }, []);
+  // Fetch past events (currently mocked; replace with API call if available)
+  useEffect(() => {
+    const fetchPastEvents = async () => {
+      setLoading(true);
+      // Example mock for past events
+      setPastEventsList([
+        {
+          id: "1",
+          name: "Past Event Sample 2025",
+          startDate: "2024-04-15T09:00:00.000Z",
+          endDate: "2024-04-17T17:00:00.000Z",
+          location: "Ithaca NY",
+          description: "A past event to mock past data.",
+          status: "past",
+          cost: 500,
+          groupName: "VIP Group",
+          flightBudget: "5000.00",
+        },
+      ]);
+      setLoading(false);
+    };
 
-    // Separate upcoming and past events
-    const today = new Date();
-    const upcomingEvents = events.filter(event => new Date(event.date) >= today);
-    const pastEvents = events.filter(event => new Date(event.date) < today);
+    fetchPastEvents();
+  }, [addNotification]);
 
+  // Function to filter events based on search query and status
+  const getFilteredData = (list) => {
+    let filtered = list;
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (event) =>
+          event.name.toLowerCase().includes(query) ||
+          event.description.toLowerCase().includes(query)
+      );
+    }
+    if (filterStatus) {
+      filtered = filtered.filter((event) => event.status === filterStatus);
+    }
+    return filtered;
+  };
+
+  // Depending on the selected tab, use the corresponding list
+  const displayedEvents =
+    selectedTab === "upcoming"
+      ? getFilteredData(upcomingEventsList)
+      : getFilteredData(pastEventsList);
+
+  // Render a chip for flight status
+  const renderStatusChip = (status) => {
+    const statusIcons = {
+      select: faPlane,
+      pending: faClock,
+      approved: faCheck,
+      denied: faTimes,
+      past: faTimes,
+    };
+    const statusLabels = {
+      select: "Select Flight",
+      pending: "Pending Approval",
+      approved: "Approved",
+      denied: "Denied",
+      past: "Past",
+    };
     return (
-        <div style={styles.page}>
-            <Header title="AirBlue System" />
-            <div style={styles.mainContent}>
-                <h1 style={styles.h1}>My Events</h1>
-
-                {loading ? (
-                    <p style={styles.loading}>Loading your events...</p>
-                ) : (
-                    <>
-                        {/* Upcoming Events Section */}
-                        <section style={styles.section}>
-                            <h2 style={styles.sectionTitle}>Upcoming Events</h2>
-                            {upcomingEvents.length > 0 ? (
-                                upcomingEvents.map(event => (
-                                    <div key={event.id} style={styles.eventCard}>
-                                        <h3 style={styles.eventTitle}>{event.title}</h3>
-                                        <p style={styles.eventDetails}>{new Date(event.date).toLocaleDateString()} - {event.location}</p>
-                                        <p style={styles.eventDescription}>{event.description}</p>
-                                        <button onClick={() => navigate(`/event-details`)} style={styles.detailsButton}>View Details</button>
-                                    </div>
-                                ))
-                            ) : (
-                                <p style={styles.noEvents}>No upcoming events found.</p>
-                            )}
-                        </section>
-
-                        {/* Past Events Section */}
-                        <section style={styles.section}>
-                            <h2 style={styles.sectionTitle}>Past Events</h2>
-                            {pastEvents.length > 0 ? (
-                                pastEvents.map(event => (
-                                    <div key={event.id} style={styles.eventCard}>
-                                        <h3 style={styles.eventTitle}>{event.title}</h3>
-                                        <p style={styles.eventDetails}>{new Date(event.date).toLocaleDateString()} - {event.location}</p>
-                                        <p style={styles.eventDescription}>{event.description}</p>
-                                    </div>
-                                ))
-                            ) : (
-                                <p style={styles.noEvents}>No past events found.</p>
-                            )}
-                        </section>
-                    </>
-                )}
-            </div>
-        </div>
+      <div className={`${styles.statusChip} ${styles[status]}`}>
+        <FontAwesomeIcon icon={statusIcons[status]} /> {statusLabels[status]}
+      </div>
     );
-};
+  };
 
-const styles = {
-    page: {
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-        width: '100vw',
-        backgroundColor: '#f9f9f9',
-        boxSizing: 'border-box',
-    },
-    mainContent: {
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: '20px',
-    },
-    h1: {
-        textAlign: 'center',
-        color: '#0B2853',
-        fontSize: '24px',
-        fontWeight: '600',
-        marginBottom: '20px',
-    },
-    section: {
-        width: '100%',
-        maxWidth: '800px',
-        marginBottom: '30px',
-    },
-    sectionTitle: {
-        fontSize: '20px',
-        color: '#0B2853',
-        borderBottom: '2px solid #0B2853',
-        paddingBottom: '5px',
-        marginBottom: '15px',
-    },
-    eventCard: {
-        backgroundColor: '#fff',
-        padding: '15px',
-        borderRadius: '8px',
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-        marginBottom: '15px',
-    },
-    eventTitle: {
-        fontSize: '18px',
-        color: '#333',
-        marginBottom: '5px',
-    },
-    eventDetails: {
-        fontSize: '14px',
-        color: '#555',
-        marginBottom: '5px',
-    },
-    eventDescription: {
-        fontSize: '16px',
-        color: '#666',
-    },
-    detailsButton: {
-        marginTop: '10px',
-        padding: '8px 12px',
-        backgroundColor: '#0B2853',
-        color: 'white',
-        border: 'none',
-        borderRadius: '4px',
-        cursor: 'pointer',
-        fontSize: '14px',
-    },
-    noEvents: {
-        fontSize: '16px',
-        color: '#777',
-        textAlign: 'center',
-    },
-    loading: {
-        fontSize: '16px',
-        color: '#0B2853',
-        textAlign: 'center',
-    },
+  return (
+    <div className={styles.page}>
+      <Header title="AirBlue System" />
+      <div className={styles.mainContent}>
+        <h1 className={styles.h1}>My Events</h1>
+
+        {/* Search & Filter Controls */}
+        <div className={styles.filters}>
+          <input
+            type="text"
+            placeholder="Search by name or description..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className={styles.searchInput}
+          />
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className={styles.filterSelect}
+          >
+            <option value="">All Status</option>
+            <option value="select">Select Flight</option>
+            <option value="pending">Pending Approval</option>
+            <option value="approved">Approved</option>
+            <option value="denied">Denied</option>
+          </select>
+        </div>
+
+        {/* Tabs for Upcoming and Past Events */}
+        <div className={styles.tabs}>
+          <button
+            className={`${styles.tabButton} ${
+              selectedTab === "upcoming" ? styles.activeTab : ""
+            }`}
+            onClick={() => setSelectedTab("upcoming")}
+          >
+            Upcoming Events
+          </button>
+          <button
+            className={`${styles.tabButton} ${
+              selectedTab === "past" ? styles.activeTab : ""
+            }`}
+            onClick={() => setSelectedTab("past")}
+          >
+            Past Events
+          </button>
+        </div>
+
+        {loading ? (
+          <p className={styles.loading}>Loading your events...</p>
+        ) : (
+          <>
+            {selectedTab === "upcoming" && displayedEvents.length > 0 && (
+              <section className={styles.section}>
+                {displayedEvents.map((event) => (
+                  <div key={event.id} className={styles.eventCard}>
+                    {renderStatusChip(event.status)}
+                    <h3 className={styles.eventTitle}>{event.name}</h3>
+                    <p className={styles.eventDetails}>
+                      {formatDate(event.startDate)} - {formatDate(event.endDate)}
+                    </p>
+                    <p className={styles.eventDetails}>{event.location}</p>
+                    <p className={styles.eventDescription}>{event.description}</p>
+                    {event.status === "select" && (
+                      <button
+                        className={styles.detailsButton}
+                        onClick={() =>
+                          navigate(`/flight-search/${event.id}`, { state: { event } })
+                        }
+                      >
+                        <FontAwesomeIcon icon={faPlane} /> Book Flight
+                      </button>
+                    )}
+                    {event.status === "pending" && (
+                      <>
+                        <button
+                          className={styles.detailsButton}
+                          onClick={() => navigate(`/flight-details/${event.id}`)}
+                        >
+                          <FontAwesomeIcon icon={faInfoCircle} /> Flight Details
+                        </button>
+                        <button
+                          className={styles.detailsButton}
+                          onClick={() => navigate(`/edit-flight/${event.id}`)}
+                        >
+                          <FontAwesomeIcon icon={faPencil} /> Change Flight
+                        </button>
+                      </>
+                    )}
+                  </div>
+                ))}
+              </section>
+            )}
+            {selectedTab === "upcoming" && displayedEvents.length === 0 && (
+              <p className={styles.noEvents}>No upcoming events found.</p>
+            )}
+            {selectedTab === "past" && displayedEvents.length > 0 && (
+              <section className={styles.section}>
+                {displayedEvents.map((event) => (
+                  <div key={event.id} className={styles.eventCard}>
+                    {renderStatusChip("past")}
+                    <h3 className={styles.eventTitle}>{event.name}</h3>
+                    <p className={styles.eventDetails}>
+                      {formatDate(event.startDate)} - {formatDate(event.endDate)}
+                    </p>
+                    <p className={styles.eventDetails}>{event.location}</p>
+                    <p className={styles.eventDescription}>{event.description}</p>
+                  </div>
+                ))}
+              </section>
+            )}
+            {selectedTab === "past" && displayedEvents.length === 0 && (
+              <p className={styles.noEvents}>No past events found.</p>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default MyEventsPage;

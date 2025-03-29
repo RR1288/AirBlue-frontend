@@ -28,6 +28,13 @@
     border: none;
     font-size: 20px;
     cursor: pointer;
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+  }
+
+  .closeButton:hover {
+    opacity: 1;
   }
   
   .modalContent h2 {

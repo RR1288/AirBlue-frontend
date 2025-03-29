@@ -1,24 +1,25 @@
 // eslint-disable-next-line no-unused-vars
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faSearch,
     faCalendarAlt,
     faMapMarkerAlt,
     faDollarSign,
-    faChartPie,
+    // faChartPie,
 } from "@fortawesome/free-solid-svg-icons";
 import FinanceEventDetailsModal from "../components/FinanceEventDetailsModal";
 import FinanceEventStatsModal from "../components/FinanceEventStatsModal";
 import styles from "./FinanceEventsPage.module.css";
 
 import getData from "../utils/getData";
-import {useNotifications} from "../components/NotificationProvider";
+import { useNotifications } from "../components/NotificationProvider";
+import { formatDate } from "../utils/formatUtils";
 
 const FinanceEventsPage = () => {
-    const userId = parseInt(localStorage.getItem("userId"));
-    const {addNotification} = useNotifications();
+    const userId = Number(localStorage.getItem("userId")) || null;
+    const { addNotification } = useNotifications();
 
     const [searchTerm, setSearchTerm] = useState("");
     const [filteredEvents, setFilteredEvents] = useState([]);
@@ -33,10 +34,15 @@ const FinanceEventsPage = () => {
 
     const fetchEvents = async () => {
         try {
-            const res = await getData("GET", `/events/getAllEventsFinanceView`);
+            const res = await getData("GET", "/events/getAllEventsFinanceView");
             if (!res.ok) throw new Error("Failed to fetch events");
             const data = await res.json();
-            setEvents(data.data);
+
+            const sortedEvents = data.data.sort(
+                (a, b) => new Date(a.startDate) - new Date(b.startDate)
+            );
+
+            setEvents(sortedEvents);
         } catch (error) {
             addNotification({
                 title: "Error",
@@ -46,13 +52,32 @@ const FinanceEventsPage = () => {
         }
     };
 
+    const sanitizeBudget = (value) => {
+        return value.replace(/[^0-9.]/g, "");
+    };
+
     const updateBudget = async (eventId, totalBudget, flightBudget) => {
+        const total = parseFloat(totalBudget);
+        const flight = parseFloat(flightBudget);
+
+        //validation
+        if (isNaN(total) || isNaN(flight) || total <= 0 || flight <= 0) {
+            addNotification({
+                title: "Warning",
+                message: "Budgets must be valid numbers greater than 0!",
+                type: "warning",
+            });
+            return;
+        }
+
+
+
         try {
             const res = await getData("POST", "/events/set-budget", {
                 userId,
                 eventID: eventId,
-                totalBudget,
-                flightBudget,
+                totalBudget: sanitizeBudget(total),
+                flightBudget: sanitizeBudget(flight),
             });
             if (!res.ok) throw new Error("Failed to update budget");
             addNotification({
@@ -95,10 +120,14 @@ const FinanceEventsPage = () => {
         }
     };
 
+    const sanitizeSearch = (term) => {
+        return term.replace(/[^a-zA-Z0-9 ]/g, "").trim();
+    };
+
     useEffect(() => {
         setFilteredEvents(
             events.filter((event) =>
-                event.title.toLowerCase().includes(searchTerm.toLowerCase())
+                event.title.toLowerCase().includes(sanitizeSearch(searchTerm).toLowerCase())
             )
         );
     }, [searchTerm, events]);
@@ -108,14 +137,14 @@ const FinanceEventsPage = () => {
     };
 
     const openBudgetModal = async (event) => {
-        if (event.EventStaffs.financeUser === null) {
-            // Assign orphan event before opening budget modal
-            await assignEventToMe(
-                event.id,
-                event.eventBudget || 0,
-                event.flightBudget || 0
-            );
-        } 
+        if (!event.EventStaffs || event.EventStaffs[0]?.financeUser === null) {
+            try {
+                await assignEventToMe(event.id);
+            } catch (error) {
+                console.error(error);
+                return; // Prevent opening the modal if assignment fails
+            }
+        }
         setSelectedEvent(event);
     };
 
@@ -123,18 +152,11 @@ const FinanceEventsPage = () => {
         setSelectedEvent(null);
     };
 
-    const openStatsModal = (event, e) => {
-        // Prevent the card click event from triggering the budget modal.
-        e.stopPropagation();
-        setSelectedStatsEvent(event);
-    };
-
     const closeStatsModal = () => {
         setSelectedStatsEvent(null);
     };
 
     const handleUpdateBudget = async (updatedEvent) => {
-        // Update Budget handles its own notifications
         await updateBudget(
             updatedEvent.id,
             updatedEvent.eventBudget,
@@ -161,68 +183,35 @@ const FinanceEventsPage = () => {
                 </section>
                 <section className={styles.eventsSection}>
                     {filteredEvents.length > 0 ? (
-                        filteredEvents.map((event) => {
-                            // Calculate percentage used from event budget.
-                            const percentageUsed = event.eventBudget
-                                ? Math.round(
-                                      (event.totalAmountSpent /
-                                          event.eventBudget) *
-                                          100
-                                  )
-                                : 0;
-                            return (
-                                <div
-                                    key={event.id}
-                                    className={styles.eventCard}
-                                >
-                                    {event.EventStaffs.financeUser === null && (
-                                        <span className={styles.orphanLabel}>
-                                            Orphan Event
-                                        </span>
-                                    )}
-                                    <h3 className={styles.eventTitle}>
-                                        {event.title}
-                                    </h3>
-                                    <p className={styles.eventDate}>
-                                        <FontAwesomeIcon icon={faCalendarAlt} />{" "}
-                                        {event.startDate} - {event.endDate}
-                                    </p>
-                                    <p className={styles.eventLocation}>
-                                        <FontAwesomeIcon
-                                            icon={faMapMarkerAlt}
-                                        />{" "}
-                                        {event.location}
-                                    </p>
-                                    <p className={styles.eventDescription}>
-                                        {event.description}
-                                    </p>
+                        filteredEvents.map((event) => (
+                            <div key={event.id} className={styles.eventCard}>
+                                {(!event.EventStaffs?.length || event.EventStaffs[0]?.financeUser === null) && (
+                                    <span className={styles.orphanLabel}>Orphan Event</span>
+                                )}
+                                <h3 className={styles.eventTitle}>{event.title}</h3>
+                                <p className={styles.eventDate}>
+                                    <FontAwesomeIcon icon={faCalendarAlt} /> {formatDate(event.startDate)} - {formatDate(event.endDate)}
+                                </p>
+                                <p className={styles.eventLocation}>
+                                    <FontAwesomeIcon icon={faMapMarkerAlt} /> {event.location}
+                                </p>
+                                <p className={styles.eventDescription}>{event.description}</p>
 
-                                    <div className={styles.options}>
-                                        <button
-                                            className={styles.optionButton}
-                                            onClick={() => openBudgetModal(event)}
-                                            disabled={loadingAssign}
-                                        >
-                                            <FontAwesomeIcon icon={faDollarSign} className={styles.optionIcon} />{" "}
-                                            {event.EventStaffs.financeUser === null
-                                                ? loadingAssign
-                                                    ? "Assigning..."
-                                                    : "Assign to me & Update Budget"
-                                                : "Update Budget"}
-                                        </button>
-                                        {event.EventStaffs.financeUser !== null && (
-                                            <button
-                                                className={styles.optionButton}
-                                                onClick={(e) => openStatsModal(event, e)}
-                                            >
-                                                <FontAwesomeIcon icon={faChartPie} className={styles.optionIcon} />{" "}
-                                                See Stats ({percentageUsed}%)
-                                            </button>
-                                        )}
-                                    </div>
+                                <div className={styles.options}>
+                                    <button
+                                        className={styles.optionButton}
+                                        onClick={() => openBudgetModal(event)}
+                                        disabled={loadingAssign}
+                                    >
+                                        <FontAwesomeIcon icon={faDollarSign} className={styles.optionIcon} /> {(!event.EventStaffs?.length || event.EventStaffs[0]?.financeUser === null)
+                                            ? loadingAssign
+                                                ? "Assigning..."
+                                                : "Assign to me & Update Budget"
+                                            : "Update Budget"}
+                                    </button>
                                 </div>
-                            );
-                        })
+                            </div>
+                        ))
                     ) : (
                         <p className={styles.noEventsMessage}>
                             No finance events found.
