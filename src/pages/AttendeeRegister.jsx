@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { data, useNavigate } from 'react-router-dom';
+// eslint-disable-next-line no-unused-vars
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import getData from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
@@ -121,12 +122,19 @@ const RegisterAttendeePage = () => {
               });
               navigate("/"); // Redirect to login page
             } else {
-              // Handle any failed responses
-              sendError("Could not register, try again");
+                addNotification({
+                    type: 'error',
+                    title: 'Registration Failed',
+                    message: "Could not register, try again.",
+                  });                  
             }
           } catch (error) {
             console.error(error); // Log the error
-            sendError("An error occurred. Please try again later.");
+            addNotification({
+                type: 'error',
+                title: 'Registration Failed',
+                message: "An error occurred. Please try again later.",
+              }); 
           }
     };
 
