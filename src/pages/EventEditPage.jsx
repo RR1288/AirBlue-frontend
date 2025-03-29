@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
+import { width } from '@fortawesome/free-solid-svg-icons/fa0';
 
 const EventsEditPage = () => {
     const [eventDetails, setEventDetails] = useState({
@@ -123,20 +124,25 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
-        width: '100vw',
+        width: '100%',
         backgroundColor: '#FFFFFF',
     },
     mainContent: {
         flex: 1,
-        maxWidth: '600px',
-        margin: '10px',
+        //display: 'flex',
+        width: '100%',
+        flexDirection: 'column',
         alignItems: 'center',
+        maxWidth: '600px',
+        margin: '10px auto',
         padding: '20px',
     },
     headerRow: {
+        justifyContent: 'center',
         display: 'flex',
         alignItems: 'center',
         marginBottom: '20px',
+        width: '100%',
     },
     backButton: {
         textDecoration: 'none',

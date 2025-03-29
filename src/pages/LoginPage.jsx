@@ -1,14 +1,15 @@
 // eslint-disable-next-line no-unused-vars
-import React, {useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import PinModal from "../components/PinModal";
 import Header from "../components/Header";
 import styles from "./LoginPage.module.css";
 import {useNotifications} from "../components/NotificationProvider";
-import Footer from "../components/Footer";
+import FooterNoLink from "../components/FooterNoLink";
+import validator from "validator";
 
 const LoginPage = () => {
-    const {addNotification} = useNotifications();
+    const { addNotification } = useNotifications();
 
     const [credentials, setCredentials] = useState({
         username: "",
@@ -18,18 +19,23 @@ const LoginPage = () => {
     const navigate = useNavigate();
 
     const handleChange = (e) => {
-        setCredentials({...credentials, [e.target.name]: e.target.value});
+        setCredentials({ ...credentials, [e.target.name]: e.target.value });
     };
 
     const handleLoginSubmit = async (event) => {
         event.preventDefault();
-        const {username, password} = credentials;
+        let { username, password } = credentials;
 
-        if (!username.trim() || !password.trim()) {
+        // trim s and sanitize
+        username = validator.trim(username);
+        password = validator.trim(password);
+
+        // validate username
+        if (!validator.isAlphanumeric(username) && !validator.isEmail(username)) {
             addNotification({
                 type: "error",
-                title: "Login Failed",
-                message: "Username and password are required",
+                title: "Invalid Input",
+                message: "Username must be an email or contain only letters and numbers.",
             });
             return;
         }
@@ -43,7 +49,7 @@ const LoginPage = () => {
                         "Content-Type": "application/json",
                         Accept: "application/json",
                     },
-                    body: JSON.stringify({username, password}),
+                    body: JSON.stringify({ username, password }),
                 }
             );
 
@@ -152,6 +158,8 @@ const LoginPage = () => {
                                 value={credentials.username}
                                 onChange={handleChange}
                                 className={styles.input}
+                                pattern="[A-Za-z0-9@.]+" 
+                                title="Username must only contain letters, numbers, or '@' and '.'"
                             />
                         </div>
                         <div className={styles.formGroup}>
@@ -211,7 +219,7 @@ const LoginPage = () => {
                 onSubmit={handlePinSubmit}
                 onClose={() => setShowPinModal(false)}
             />
-            <Footer/>
+            <FooterNoLink/>
         </div>
     );
 };

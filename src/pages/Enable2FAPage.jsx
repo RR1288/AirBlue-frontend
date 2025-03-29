@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useNotifications } from '../components/NotificationProvider';
 import PinModal from '../components/PinModal';
 import styles from './Enable2FAPage.module.css';
+import FooterNoLink from "../components/FooterNoLink";
+import Header from "../components/Header";
 
 const Enable2FAPage = () => {
   const { addNotification } = useNotifications();
@@ -88,6 +90,11 @@ const Enable2FAPage = () => {
 
   return (
     <div className={styles.page}>
+            <Header
+                title="AirBlue System"
+                hideSidebar={true}
+            />
+            <main className={styles.mainContent}>    
       <h1>Enable Two-Factor Authentication</h1>
 
       {/* If the QR code is available, show it along with a button to verify.
@@ -107,6 +114,7 @@ const Enable2FAPage = () => {
           Enable 2FA
         </button>
       )}
+      </main>  
 
       {/* PinModal for entering the verification code */}
       <PinModal
@@ -114,6 +122,7 @@ const Enable2FAPage = () => {
         onSubmit={handleVerificationSuccess}
         onClose={handleModalClose}
       />
+      <FooterNoLink/>
     </div>
   );
 };

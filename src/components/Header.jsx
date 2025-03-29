@@ -7,7 +7,7 @@ import styles from "./Header.module.css";
 import Sidebar from "./Sidebar";
 import {Link} from "react-router-dom";
 
-function Header({title, userRole, hideSidebar = false, onRoleChange}) {
+function Header({ title, userRole, hideSidebar = false, onRoleChange }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     // Retrieve and map roles from localStorage.
@@ -18,10 +18,9 @@ function Header({title, userRole, hideSidebar = false, onRoleChange}) {
           return ["attendee"];
         }
         const roleMap = {
-          A: "admin",
-          E: "eventPlanner",
-          F: "financePlanner",
-          T: "attendee",
+            A: "admin",
+            E: "eventPlanner",
+            F: "financePlanner",
         };
         return stored
           .split("")
@@ -61,44 +60,45 @@ function Header({title, userRole, hideSidebar = false, onRoleChange}) {
 
     return (
         <>
-          {/* Render Sidebar component... */}
-          <header className={styles.header}>
-            {/* Conditionally render the menu button... */}
-            {!hideSidebar && (
-              <button
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-                className={styles.menuButton}
-              >
-                <FontAwesomeIcon icon={faBars} />
-              </button>
-            )}
-            {/* Link to home page with title... */}
-            <a href="/home">
-              <h1 className={styles.title}>{title}</h1>
-            </a>
-            {/* Conditionally render role switcher based on availableRoles and localStorage... */}
-            {availableRoles.length > 1 && (
-              <select
-                value={userRole}
-                onChange={handleRoleChange}
-                className={styles.roleSwitcher}
-              >
-                {availableRoles.map((role) => (
-                  <option key={role} value={role}>
-                    {role.charAt(0).toUpperCase() + role.slice(1)}
-                  </option>
-                ))}
-              </select>
-            )}
-            {/* Link to login page with sign-out functionality... */}
-            <Link to="/login" className={styles.signOut} onClick={handleSignOut}>
-              <FontAwesomeIcon
-                icon={faSignOutAlt}
-                className={styles.signOutIcon}
-              />{" "}
-              Sign Out
-            </Link>
-          </header>
+            {renderSidebar()}
+            <header className={styles.header}>
+                {!hideSidebar && (
+                    <button
+                        onClick={() => setSidebarOpen(!sidebarOpen)}
+                        className={styles.menuButton}
+                    >
+                        <FontAwesomeIcon icon={faBars} />
+                    </button>
+                )}
+                <a href="/home">
+                    <h1 className={styles.title}>{title}</h1>
+                </a>
+                {/* Render role switcher if more than one role is available and remove switcher from unneccessary pages*/}
+                {availableRoles.length > 1 && !["/", "/register"].some(path => location.pathname.startsWith(path)) && (
+                    <select
+                        value={userRole}
+                        onChange={handleRoleChange}
+                        className={styles.roleSwitcher}
+                    >
+                        {availableRoles.map((role) => (
+                            <option key={role} value={role}>
+                                {role.charAt(0).toUpperCase() + role.slice(1)}
+                            </option>
+                        ))}
+                    </select>
+                )}
+                <Link
+                    to="/login"
+                    className={styles.signOut}
+                >
+                    <FontAwesomeIcon
+                        icon={faSignOutAlt}
+                        className={styles.signOutIcon}
+                        onClick={handleSignOut}
+                    />{" "}
+                    Sign Out
+                </Link>
+            </header>
         </>
       );
     }
