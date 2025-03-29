@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { createContext, useState, useCallback, useContext } from 'react';
+import React, { createContext, useState, useCallback, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './Notification.module.css';
 
@@ -14,8 +14,8 @@ export const NotificationProvider = ({ children }) => {
   const addNotification = useCallback((notification) => {
     setNotifications((prev) => {
       const newNotification = { ...notification, id: Date.now() };
-      // If there are already 3 notifications, remove the oldest
-      if (prev.length >= 3) {
+      // If there are already 2 notifications, remove the oldest
+      if (prev.length >= 2) {
         return [...prev.slice(1), newNotification];
       }
       return [...prev, newNotification];
@@ -26,6 +26,20 @@ export const NotificationProvider = ({ children }) => {
   const removeNotification = useCallback((id) => {
     setNotifications((prev) => prev.filter((n) => n.id !== id));
   }, []);
+
+  
+  // notification timeout after 5 sec
+  useEffect(() => {
+    const timeouts = notifications.map((notification) => {
+      return setTimeout(() => {
+        removeNotification(notification.id);
+      }, 5000);
+    });
+
+    return () => {
+      timeouts.forEach((timeout) => clearTimeout(timeout));
+    };
+  }, [notifications, removeNotification]);
 
   return (
     <NotificationContext.Provider value={{ addNotification }}>

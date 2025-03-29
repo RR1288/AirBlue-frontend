@@ -52,7 +52,11 @@ const EventCreationPage = () => {
         }
 
         if (start > end) {
-            alert("Start date must be before the end date.");
+            addNotification({
+                type: 'error',
+                title: 'Event Creation Failed',
+                message: "Start date must be before the end date.",
+            });
             return;
         }
 
@@ -91,7 +95,11 @@ const EventCreationPage = () => {
                 });
                 navigate("/manage-events");
             } else {
-                alert("Event creation failed. Please try again.");
+                addNotification({
+                    type: 'error',
+                    title: 'Event Creation Failed',
+                    message: "Event creation failed. Please try again.",
+                  });                  
             }
         } catch (error) {
             console.error("Error creating event:", error);

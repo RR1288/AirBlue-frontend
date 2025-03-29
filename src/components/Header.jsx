@@ -15,7 +15,7 @@ function Header({ title, userRole, hideSidebar = false, onRoleChange }) {
     const availableRoles = useMemo(() => {
         const stored = localStorage.getItem("roles") || "";
         if (stored === "") {
-            return ["attendee"];
+          return ["attendee"];
         }
         const roleMap = {
             A: "admin",
@@ -23,31 +23,31 @@ function Header({ title, userRole, hideSidebar = false, onRoleChange }) {
             F: "financePlanner",
         };
         return stored
-            .split("")
-            .map((letter) => roleMap[letter])
-            .filter(Boolean);
-    }, []);
-
-    // Handle role switcher changes.
-    const handleRoleChange = (e) => {
+          .split("")
+          .map((letter) => roleMap[letter])
+          .filter(Boolean);
+      }, []);
+    
+      // Handle role switcher changes.
+      const handleRoleChange = (e) => {
         const newRole = e.target.value;
         if (onRoleChange) {
-            onRoleChange(newRole);
+          onRoleChange(newRole);
         }
-    };
-
+      };
+    
     // Render the appropriate sidebar based on the current userRole.
     const renderSidebar = () => {
         if (hideSidebar) return null;
         return (
-            <Sidebar
-                userRole={userRole}
-                isOpen={sidebarOpen}
-                setIsOpen={setSidebarOpen}
-            />
+          <Sidebar
+            userRole={userRole}
+            isOpen={sidebarOpen}
+            setIsOpen={setSidebarOpen}
+          />
         );
-    };
-
+      };
+    
     // Handle the sign-out process
     const handleSignOut = () => {
         // Clear localStorage or session data
@@ -100,8 +100,8 @@ function Header({ title, userRole, hideSidebar = false, onRoleChange }) {
                 </Link>
             </header>
         </>
-    );
-}
+      );
+    }
 
 Header.propTypes = {
     title: PropTypes.string.isRequired,

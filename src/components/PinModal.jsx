@@ -52,7 +52,11 @@ const PinModal = ({ isOpen, onSubmit, onClose }) => {
             }
         } catch (error) {
             setError(error.message);
-            alert(error.message);
+            addNotification({
+                type: 'error',
+                title: 'Error',
+                message: error.message,
+              });
         }
     };
 

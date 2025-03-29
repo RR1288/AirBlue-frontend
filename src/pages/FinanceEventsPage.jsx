@@ -52,22 +52,32 @@ const FinanceEventsPage = () => {
         }
     };
 
+    const sanitizeBudget = (value) => {
+        return value.replace(/[^0-9.]/g, "");
+    };
+
     const updateBudget = async (eventId, totalBudget, flightBudget) => {
-        if (totalBudget <= 0 || flightBudget <= 0) {
+        const total = parseFloat(totalBudget);
+        const flight = parseFloat(flightBudget);
+
+        //validation
+        if (isNaN(total) || isNaN(flight) || total <= 0 || flight <= 0) {
             addNotification({
                 title: "Warning",
-                message: "Budgets must be greater than 0!",
+                message: "Budgets must be valid numbers greater than 0!",
                 type: "warning",
             });
             return;
         }
 
+
+
         try {
             const res = await getData("POST", "/events/set-budget", {
                 userId,
                 eventID: eventId,
-                totalBudget,
-                flightBudget,
+                totalBudget: sanitizeBudget(total),
+                flightBudget: sanitizeBudget(flight),
             });
             if (!res.ok) throw new Error("Failed to update budget");
             addNotification({
@@ -110,10 +120,14 @@ const FinanceEventsPage = () => {
         }
     };
 
+    const sanitizeSearch = (term) => {
+        return term.replace(/[^a-zA-Z0-9 ]/g, "").trim();
+    };
+
     useEffect(() => {
         setFilteredEvents(
             events.filter((event) =>
-                event.title.toLowerCase().includes(searchTerm.toLowerCase())
+                event.title.toLowerCase().includes(sanitizeSearch(searchTerm).toLowerCase())
             )
         );
     }, [searchTerm, events]);
@@ -137,11 +151,6 @@ const FinanceEventsPage = () => {
     const closeBudgetModal = () => {
         setSelectedEvent(null);
     };
-
-    // const openStatsModal = (event, e) => {
-    //     e.stopPropagation(); // Prevent triggering budget modal
-    //     setSelectedStatsEvent(event);
-    // };
 
     const closeStatsModal = () => {
         setSelectedStatsEvent(null);
@@ -174,70 +183,35 @@ const FinanceEventsPage = () => {
                 </section>
                 <section className={styles.eventsSection}>
                     {filteredEvents.length > 0 ? (
-                        filteredEvents.map((event) => {
-                            console.log(event);
-                            
-                            // const percentageUsed = event.eventBudget
-                            //     ? Math.round(
-                            //           (Number(event.totalAmountSpent) /
-                            //               Number(event.eventBudget)) *
-                            //               100
-                            //       )
-                            //     : 0;
+                        filteredEvents.map((event) => (
+                            <div key={event.id} className={styles.eventCard}>
+                                {(!event.EventStaffs?.length || event.EventStaffs[0]?.financeUser === null) && (
+                                    <span className={styles.orphanLabel}>Orphan Event</span>
+                                )}
+                                <h3 className={styles.eventTitle}>{event.title}</h3>
+                                <p className={styles.eventDate}>
+                                    <FontAwesomeIcon icon={faCalendarAlt} /> {formatDate(event.startDate)} - {formatDate(event.endDate)}
+                                </p>
+                                <p className={styles.eventLocation}>
+                                    <FontAwesomeIcon icon={faMapMarkerAlt} /> {event.location}
+                                </p>
+                                <p className={styles.eventDescription}>{event.description}</p>
 
-                            return (
-                                <div
-                                    key={event.id}
-                                    className={styles.eventCard}
-                                >
-                                    {(!event.EventStaffs?.length || event.EventStaffs[0]?.financeUser === null) && (
-                                        <span className={styles.orphanLabel}>
-                                            Orphan Event
-                                        </span>
-                                    )}
-                                    <h3 className={styles.eventTitle}>
-                                        {event.title}
-                                    </h3>
-                                    <p className={styles.eventDate}>
-                                        <FontAwesomeIcon icon={faCalendarAlt} />{" "}
-                                        {formatDate(event.startDate)} - {formatDate(event.endDate)}
-                                    </p>
-                                    <p className={styles.eventLocation}>
-                                        <FontAwesomeIcon
-                                            icon={faMapMarkerAlt}
-                                        />{" "}
-                                        {event.location}
-                                    </p>
-                                    <p className={styles.eventDescription}>
-                                        {event.description}
-                                    </p>
-
-                                    <div className={styles.options}>
-                                        <button
-                                            className={styles.optionButton}
-                                            onClick={() => openBudgetModal(event)}
-                                            disabled={loadingAssign}
-                                        >
-                                            <FontAwesomeIcon icon={faDollarSign} className={styles.optionIcon} />{" "}
-                                            {(!event.EventStaffs?.length || event.EventStaffs[0]?.financeUser === null)
-                                                ? loadingAssign
-                                                    ? "Assigning..."
-                                                    : "Assign to me & Update Budget"
-                                                : "Update Budget"}
-                                        </button>
-                                        {/* {event.EventStaffs?.length > 0 && event.EventStaffs[0]?.financeUser !== null && (
-                                            <button
-                                                className={styles.optionButton}
-                                                onClick={(e) => openStatsModal(event, e)}
-                                            >
-                                                <FontAwesomeIcon icon={faChartPie} className={styles.optionIcon} />{" "}
-                                                See Stats ({percentageUsed}%)
-                                            </button>
-                                        )} */}
-                                    </div>
+                                <div className={styles.options}>
+                                    <button
+                                        className={styles.optionButton}
+                                        onClick={() => openBudgetModal(event)}
+                                        disabled={loadingAssign}
+                                    >
+                                        <FontAwesomeIcon icon={faDollarSign} className={styles.optionIcon} /> {(!event.EventStaffs?.length || event.EventStaffs[0]?.financeUser === null)
+                                            ? loadingAssign
+                                                ? "Assigning..."
+                                                : "Assign to me & Update Budget"
+                                            : "Update Budget"}
+                                    </button>
                                 </div>
-                            );
-                        })
+                            </div>
+                        ))
                     ) : (
                         <p className={styles.noEventsMessage}>
                             No finance events found.
