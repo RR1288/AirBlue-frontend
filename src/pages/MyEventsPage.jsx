@@ -186,7 +186,9 @@ const MyEventsPage = () => {
             {selectedTab === "upcoming" && displayedEvents.length > 0 && (
               <section className={styles.section}>
                 {displayedEvents.map((event) => (
-                  <div key={event.id} className={styles.eventCard}>
+                  
+                  <div key={event.eventId} className={styles.eventCard}>
+                    {console.log(event)}
                     {renderStatusChip(event.status)}
                     <h3 className={styles.eventTitle}>{event.name}</h3>
                     <p className={styles.eventDetails}>
@@ -198,7 +200,7 @@ const MyEventsPage = () => {
                       <button
                         className={styles.detailsButton}
                         onClick={() =>
-                          navigate(`/flight-search/${event.id}`, { state: { event } })
+                          navigate(`/flight-search/${event.eventId}`, { state: { event } })
                         }
                       >
                         <FontAwesomeIcon icon={faPlane} /> Book Flight
@@ -208,13 +210,13 @@ const MyEventsPage = () => {
                       <>
                         <button
                           className={styles.detailsButton}
-                          onClick={() => navigate(`/flight-details/${event.id}`)}
+                          onClick={() => navigate(`/flight-details/${event.eventId}`)}
                         >
                           <FontAwesomeIcon icon={faInfoCircle} /> Flight Details
                         </button>
                         <button
                           className={styles.detailsButton}
-                          onClick={() => navigate(`/edit-flight/${event.id}`)}
+                          onClick={() => navigate(`/edit-flight/${event.eventId}`)}
                         >
                           <FontAwesomeIcon icon={faPencil} /> Change Flight
                         </button>
@@ -230,7 +232,7 @@ const MyEventsPage = () => {
             {selectedTab === "past" && displayedEvents.length > 0 && (
               <section className={styles.section}>
                 {displayedEvents.map((event) => (
-                  <div key={event.id} className={styles.eventCard}>
+                  <div key={event.eventId} className={styles.eventCard}>
                     {renderStatusChip("past")}
                     <h3 className={styles.eventTitle}>{event.name}</h3>
                     <p className={styles.eventDetails}>
