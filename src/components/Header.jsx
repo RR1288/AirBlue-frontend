@@ -5,9 +5,10 @@ import {faSignOutAlt, faBars} from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 import styles from "./Header.module.css";
 import Sidebar from "./Sidebar";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 
-function Header({ title, userRole, hideSidebar = false, onRoleChange }) {
+function Header({title, userRole, hideSidebar = false, onRoleChange}) {
+    const location = useLocation();
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     // Retrieve and map roles from localStorage.
@@ -15,7 +16,7 @@ function Header({ title, userRole, hideSidebar = false, onRoleChange }) {
     const availableRoles = useMemo(() => {
         const stored = localStorage.getItem("roles") || "";
         if (stored === "") {
-          return ["attendee"];
+            return ["attendee"];
         }
         const roleMap = {
             A: "admin",
@@ -23,31 +24,30 @@ function Header({ title, userRole, hideSidebar = false, onRoleChange }) {
             F: "financePlanner",
         };
         return stored
-          .split("")
-          .map((letter) => roleMap[letter])
-          .filter(Boolean);
-      }, []);
-    
-      // Handle role switcher changes.
-      const handleRoleChange = (e) => {
+            .split("")
+            .map((letter) => roleMap[letter])
+            .filter(Boolean);
+    }, []);
+
+    // Handle role switcher changes.
+    const handleRoleChange = (e) => {
         const newRole = e.target.value;
         if (onRoleChange) {
-          onRoleChange(newRole);
+            onRoleChange(newRole);
         }
-      };
-    
+    };
     // Render the appropriate sidebar based on the current userRole.
     const renderSidebar = () => {
         if (hideSidebar) return null;
         return (
-          <Sidebar
-            userRole={userRole}
-            isOpen={sidebarOpen}
-            setIsOpen={setSidebarOpen}
-          />
+            <Sidebar
+                userRole={userRole}
+                isOpen={sidebarOpen}
+                setIsOpen={setSidebarOpen}
+            />
         );
-      };
-    
+    };
+
     // Handle the sign-out process
     const handleSignOut = () => {
         // Clear localStorage or session data
@@ -55,7 +55,7 @@ function Header({ title, userRole, hideSidebar = false, onRoleChange }) {
         localStorage.removeItem("roles");
 
         // Redirect to the login page
-        window.location.href = "/login"; // Or use React Router's history.push('/login')
+        window.location.href = "/login";
     };
 
     return (
@@ -74,19 +74,27 @@ function Header({ title, userRole, hideSidebar = false, onRoleChange }) {
                     <h1 className={styles.title}>{title}</h1>
                 </a>
                 {/* Render role switcher if more than one role is available and remove switcher from unneccessary pages*/}
-                {availableRoles.length > 1 && !["/", "/register"].some(path => location.pathname.startsWith(path)) && (
-                    <select
-                        value={userRole}
-                        onChange={handleRoleChange}
-                        className={styles.roleSwitcher}
-                    >
-                        {availableRoles.map((role) => (
-                            <option key={role} value={role}>
-                                {role.charAt(0).toUpperCase() + role.slice(1)}
-                            </option>
-                        ))}
-                    </select>
-                )}
+                {availableRoles.length > 1 &&
+                    location.pathname !== "/" &&
+                    location.pathname !== "/login" &&
+                    location.pathname !== "/enable-2fa" &&
+                    location.pathname !== "/attendee-register" && (
+                        <select
+                            value={userRole}
+                            onChange={handleRoleChange}
+                            className={styles.roleSwitcher}
+                        >
+                            {availableRoles.map((role) => (
+                                <option
+                                    key={role}
+                                    value={role}
+                                >
+                                    {role.charAt(0).toUpperCase() +
+                                        role.slice(1)}
+                                </option>
+                            ))}
+                        </select>
+                    )}
                 <Link
                     to="/login"
                     className={styles.signOut}
@@ -100,8 +108,8 @@ function Header({ title, userRole, hideSidebar = false, onRoleChange }) {
                 </Link>
             </header>
         </>
-      );
-    }
+    );
+}
 
 Header.propTypes = {
     title: PropTypes.string.isRequired,

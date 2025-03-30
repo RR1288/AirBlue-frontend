@@ -44,10 +44,10 @@ Sidebar.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     setIsOpen: PropTypes.func.isRequired,
     userRole: PropTypes.oneOf([
-        "attendee",
+        "admin",
         "eventPlanner",
         "financePlanner",
-        "user",
+        "attendee",
     ]).isRequired,
 };
 
