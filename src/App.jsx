@@ -39,7 +39,7 @@ function App() {
                     <Route path="/event-edit" element={<EventEditPage/>} />
                     <Route path="/under-construction" element={<UnderConstruction/>} />
                     <Route path="/event-creation" element={<EventCreationPage/>} />
-                    <Route path="//flight-search/:eventId" element={<FlightSearchPage/>} />
+                    <Route path="/flight-search/:eventId" element={<FlightSearchPage/>} />
                     <Route path="/approval" element={<ApprovalPage/>} />
                     <Route path="/admin" element={<AdminPage/>} />
                     <Route path="/setuser-info" element={<SetUserInfoPage/>} />

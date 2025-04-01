@@ -8,6 +8,7 @@ import {
   faEdit,
   faTimes,
   faUsers,
+  faPlane,
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./ManageEventsPage.module.css";
 import getData from "../utils/getData";
@@ -33,7 +34,7 @@ const ManageEventsPage = () => {
   const fetchEvents = async () => {
     setLoading(true);
     try {
-      const res = await getData("GET", "/events/getAllEventsFinanceView");
+      const res = await getData("GET", "/events/getAllEventsPlannerView");
       if (!res.ok) throw new Error("Failed to fetch events");
       const data = await res.json();
 
@@ -69,7 +70,14 @@ const ManageEventsPage = () => {
   // Navigate to the Manage Attendees page, sending both event ID and groupEventID
   const handleManageAttendees = (event) => {
     navigate(`/manage-attendees/${event.id}`, {
-      state: { groupEventID: event.groupEventID },
+      state: { groupEventID: event.groupEventID, event},
+    });
+  };
+  
+  // Navigate to the Manage Fligths page, sending event ID 
+  const handleManageFlights = (event) => {
+    navigate(`/approval`, {
+      state: { event: event },
     });
   };
 
@@ -143,6 +151,13 @@ const ManageEventsPage = () => {
                   >
                     <FontAwesomeIcon icon={faUsers} className={styles.optionIcon} />{" "}
                     Manage Attendees
+                  </button>
+                  <button
+                    className={styles.optionButton}
+                    onClick={() => handleManageFlights(event)}
+                  >
+                    <FontAwesomeIcon icon={faPlane} className={styles.optionIcon} />{" "}
+                    Manage Flights
                   </button>
                   <button
                     className={styles.optionButton}
