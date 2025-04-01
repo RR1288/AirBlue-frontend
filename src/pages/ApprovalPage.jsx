@@ -1,8 +1,8 @@
 // eslint-disable-next-line no-unused-vars
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./ApprovalPage.module.css";
 import Header from "../components/Header";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCheckCircle,
     faTimesCircle,
@@ -11,10 +11,10 @@ import {
     faSearch,
     faHourglassHalf,
 } from "@fortawesome/free-solid-svg-icons";
-import {Link, useLocation} from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import FlightDetailsModal from "./FlightDetailsModal";
 import getData from "../utils/getData";
-import {useNotifications} from "../components/NotificationProvider";
+import { useNotifications } from "../components/NotificationProvider";
 
 const ApprovalPage = () => {
     // Get event from location state (includes groupEventBudget, threshold, etc.)
@@ -22,14 +22,11 @@ const ApprovalPage = () => {
     const event = location.state.event;
 
     const [searchTerm, setSearchTerm] = useState("");
-      const [filteredAttendees, setFilteredAttendees] = useState([]);
-    
+    const [filteredAttendees, setFilteredAttendees] = useState([]);
     const [loading, setLoading] = useState(false);
-
     // Flat list of attendees for the event
     const [attendees, setAttendees] = useState([]);
-
-    const {addNotification} = useNotifications();
+    const { addNotification } = useNotifications();
 
     useEffect(() => {
         fetchAttendeesData();
@@ -37,10 +34,11 @@ const ApprovalPage = () => {
 
     const fetchAttendeesData = async () => {
         setLoading(true);
+        console.log(event);
         try {
             const response = await getData(
                 "GET",
-                `/events/getAllAttendees/?eventId=${event.id}`
+                `/events/getAllAttendees?eventId=${event.id}`
             );
             if (!response.ok) throw new Error("Failed to fetch attendees data");
             const res = await response.json();
@@ -55,9 +53,6 @@ const ApprovalPage = () => {
             setLoading(false);
         }
     };
-
-    // Use the threshold from the event; default to 100 if not provided
-    const reviewThreshold = parseFloat(event?.threshold) || 100;
 
     // State for modal management
     const [selectedFlight, setSelectedFlight] = useState(null);
@@ -82,7 +77,7 @@ const ApprovalPage = () => {
                 a.email === attendeeEmail
                     ? {
                           ...a,
-                          Booking: [{...a.Booking[0], status: action}],
+                          Booking: [{ ...a.Booking[0], status: action }],
                       }
                     : a
             )
@@ -94,27 +89,37 @@ const ApprovalPage = () => {
     const handleDirectAction = (attendee, action) => {
         setAttendees(
             attendees.map((a) =>
-                a.id === attendee.id ? {...a, flightStatus: action} : a
+                a.id === attendee.id ? { ...a, flightStatus: action } : a
             )
         );
     };
 
     useEffect(() => {
         setFilteredAttendees(
-          attendees.filter((attendee) =>
-            attendee.Name.toLowerCase().includes(searchTerm.toLowerCase())
-          )
+            attendees.filter((attendee) =>
+                attendee.Name.toLowerCase().includes(searchTerm.toLowerCase())
+            )
         );
-      }, [searchTerm, attendees]);
+    }, [searchTerm, attendees]);
 
-      const handleSearchChange = (e) => {
+    const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
-      };
-    // Returns a status chip with a color and an icon based on flightStatus
+    };
+
+    // Returns a status chip with a color and an icon based on flightStatus.
+    // If no status is present, it will show "No flight selected yet".
     const getStatusChip = (status) => {
         let chipClass = "";
         let icon = null;
-        switch (status) {
+        if (!status) {
+            chipClass = styles.chipNoStatus;
+            return (
+                <span className={`${styles.chip} ${chipClass}`}>
+                    No flight selected yet
+                </span>
+            );
+        }
+        switch (status.toLowerCase()) {
             case "approved":
                 chipClass = styles.chipApproved;
                 icon = <FontAwesomeIcon icon={faCheckCircle} />;
@@ -140,10 +145,9 @@ const ApprovalPage = () => {
         );
     };
 
-    // Determine which action button to show based on flight cost vs. group budget
+    // Determine which action button to show based on flight cost vs. group budget.
+    // If no flight status exists, only show the "Send Reminder" button.
     const getActionButton = (attendee) => {
-        console.log(attendee);
-        console.log(event);
 
         // Find the attendee's group in event.EventGroups
         const group = event.EventGroups.find(
@@ -156,14 +160,30 @@ const ApprovalPage = () => {
 
         // Get the budget for this attendee's group (convert string to number)
         const budget = parseFloat(group.FlightBudget) || 1000;
-        const cost = parseFloat(attendee.Booking[0].cost);
-        const status = attendee.Booking[0].status;
+        const cost = parseFloat(attendee?.Booking[0]?.cost);
+        const status = attendee?.Booking[0]?.status;
+
+        // If no flight status, render only the "Send Reminder" button
+        if (!status) {
+            return (
+                <button
+                    className={styles.reminderButton}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        // Stub code: implement the send reminder action here.
+                        console.log("Send reminder clicked for", attendee.email);
+                    }}
+                >
+                    Send Reminder
+                </button>
+            );
+        }
 
         // Get event's threshold for decision-making
         const reviewThreshold = parseFloat(event.threshold) || 100;
 
         // If flight is already approved, show Cancel button
-        if (status === "approved") {
+        if (status.toLowerCase() === "approved") {
             return (
                 <button
                     className={styles.cancelButton}
@@ -178,7 +198,8 @@ const ApprovalPage = () => {
         }
 
         // For rejected or cancelled flights, no action buttons
-        if (["rejected", "cancelled"].includes(status)) return null;
+        if (["rejected", "cancelled"].includes(status.toLowerCase()))
+            return null;
 
         // If cost is within budget, show Approve button
         if (cost <= budget) {
@@ -228,10 +249,7 @@ const ApprovalPage = () => {
             <Header title="AirBlue System" />
             <div className={styles.mainContent}>
                 <div className={styles.headerRow}>
-                    <Link
-                        to="/home"
-                        className={styles.backButton}
-                    >
+                    <Link to="/home" className={styles.backButton}>
                         <FontAwesomeIcon
                             icon={faArrowLeft}
                             className={styles.icon}
@@ -267,33 +285,42 @@ const ApprovalPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {filteredAttendees.map((attendee) => (
-                                <tr
-                                    key={attendee.email}
-                                    className={styles.subRow}
-                                >
-                                    <td className={styles.subTd}>
-                                        {attendee.Name} ({attendee.groupName})
-                                    </td>
-                                    <td className={styles.subTd}>
-                                        ${attendee.Booking[0].cost}
-                                    </td>
-                                    <td className={styles.subTd}>
-                                        {getStatusChip(attendee.Booking[0].status)}
-                                    </td>
-                                    <td className={styles.subTd}>
-                                        {getActionButton(attendee)}
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                openFlightModal(attendee);
-                                            }}
-                                        >
-                                            <FontAwesomeIcon icon={faEye} />
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
+                            {loading ? (
+                                <p className={styles.loading}>
+                                    Loading events...
+                                </p>
+                            ) : (
+                                filteredAttendees.map((attendee) => (
+                                    <tr
+                                        key={attendee.email}
+                                        className={styles.subRow}
+                                    >
+                                        <td className={styles.subTd}>
+                                            {attendee.Name} (
+                                            {attendee.groupName})
+                                        </td>
+                                        <td className={styles.subTd}>
+                                            ${attendee?.Booking[0]?.cost || '0.00'}
+                                        </td>
+                                        <td className={styles.subTd}>
+                                            {getStatusChip(
+                                                attendee?.Booking[0]?.status
+                                            )}
+                                        </td>
+                                        <td className={styles.subTd}>
+                                            {getActionButton(attendee)}
+                                            {attendee?.Booking[0]?.status && <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    openFlightModal(attendee);
+                                                }}
+                                            >
+                                                <FontAwesomeIcon icon={faEye} />
+                                            </button>}
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 </div>
