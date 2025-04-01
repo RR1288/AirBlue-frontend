@@ -22,6 +22,8 @@ const ApprovalPage = () => {
     const event = location.state.event;
 
     const [searchTerm, setSearchTerm] = useState("");
+      const [filteredAttendees, setFilteredAttendees] = useState([]);
+    
     const [loading, setLoading] = useState(false);
 
     // Flat list of attendees for the event
@@ -97,11 +99,17 @@ const ApprovalPage = () => {
         );
     };
 
-    // Filter attendees by name based on the search term
-    const filteredAttendees = attendees.filter((attendee) => {
-        attendee.Name.toLowerCase().includes(searchTerm.toLowerCase());
-    });
+    useEffect(() => {
+        setFilteredAttendees(
+          attendees.filter((attendee) =>
+            attendee.Name.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+        );
+      }, [searchTerm, attendees]);
 
+      const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+      };
     // Returns a status chip with a color and an icon based on flightStatus
     const getStatusChip = (status) => {
         let chipClass = "";
@@ -237,7 +245,7 @@ const ApprovalPage = () => {
                         type="text"
                         placeholder="Search events or users..."
                         value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        onChange={handleSearchChange}
                         className={styles.searchInput}
                     />
                     <FontAwesomeIcon
@@ -259,7 +267,7 @@ const ApprovalPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {attendees.map((attendee) => (
+                            {filteredAttendees.map((attendee) => (
                                 <tr
                                     key={attendee.email}
                                     className={styles.subRow}
