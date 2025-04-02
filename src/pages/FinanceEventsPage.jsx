@@ -76,8 +76,10 @@ const FinanceEventsPage = () => {
             const res = await getData("POST", "/events/set-budget", {
                 userId,
                 eventID: eventId,
-                totalBudget: sanitizeBudget(total),
-                flightBudget: sanitizeBudget(flight),
+                // totalBudget: sanitizeBudget(total),
+                // flightBudget: sanitizeBudget(flight),
+                totalBudget: (total),
+                flightBudget: (flight),
             });
             if (!res.ok) throw new Error("Failed to update budget");
             addNotification({
@@ -137,7 +139,7 @@ const FinanceEventsPage = () => {
     };
 
     const openBudgetModal = async (event) => {
-        if (!event.EventStaffs || event.EventStaffs[0]?.financeUser === null) {
+        if (event.orphan) {
             try {
                 await assignEventToMe(event.id);
             } catch (error) {
@@ -185,7 +187,8 @@ const FinanceEventsPage = () => {
                     {filteredEvents.length > 0 ? (
                         filteredEvents.map((event) => (
                             <div key={event.id} className={styles.eventCard}>
-                                {(!event.EventStaffs?.length || event.EventStaffs[0]?.financeUser === null) && (
+                                {/* {(!event.EventStaffs?.length || event.EventStaffs[0]?.financeUser === null) && ( */}
+                                {(event.orphan) && (
                                     <span className={styles.orphanLabel}>Orphan Event</span>
                                 )}
                                 <h3 className={styles.eventTitle}>{event.title}</h3>
@@ -203,7 +206,7 @@ const FinanceEventsPage = () => {
                                         onClick={() => openBudgetModal(event)}
                                         disabled={loadingAssign}
                                     >
-                                        <FontAwesomeIcon icon={faDollarSign} className={styles.optionIcon} /> {(!event.EventStaffs?.length || event.EventStaffs[0]?.financeUser === null)
+                                        <FontAwesomeIcon icon={faDollarSign} className={styles.optionIcon} /> {((event.orphan))
                                             ? loadingAssign
                                                 ? "Assigning..."
                                                 : "Assign to me & Update Budget"
