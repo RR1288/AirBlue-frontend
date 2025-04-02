@@ -27,7 +27,10 @@ const ApprovalPage = () => {
     // Flat list of attendees for the event
     const [attendees, setAttendees] = useState([]);
     const { addNotification } = useNotifications();
+
+    
     // Track which attendee is currently processing an action
+  // eslint-disable-next-line no-unused-vars
   const [processingAttendee, setProcessingAttendee] = useState(null);
 
 
@@ -214,6 +217,10 @@ const ApprovalPage = () => {
             return null;
         }
 
+        console.log("budget for this attendee ====");
+        console.dir(group.FlightBudget);
+        
+        
         // Get the budget for this attendee's group (convert string to number)
         const budget = parseFloat(group.FlightBudget) || 1000;
         const cost = parseFloat(attendee?.Booking[0]?.cost);

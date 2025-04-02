@@ -52,16 +52,17 @@ const FinanceEventsPage = () => {
         }
     };
 
-    const sanitizeBudget = (value) => {
-        return value.replace(/[^0-9.]/g, "");
-    };
+    // const sanitizeBudget = (value) => {
+    //     return value.replace(/[^0-9.]/g, "");
+    // };
 
-    const updateBudget = async (eventId, totalBudget, flightBudget) => {
+    const updateBudget = async (eventId, totalBudget, flightBudget, flightThreshold) => {
         const total = parseFloat(totalBudget);
         const flight = parseFloat(flightBudget);
+        const threshold = parseFloat(flightThreshold);
 
         //validation
-        if (isNaN(total) || isNaN(flight) || total <= 0 || flight <= 0) {
+        if (isNaN(total) || isNaN(flight) || total <= 0 || flight <= 0 || threshold < 0 || threshold > 1) {
             addNotification({
                 title: "Warning",
                 message: "Budgets must be valid numbers greater than 0!",
@@ -80,6 +81,7 @@ const FinanceEventsPage = () => {
                 // flightBudget: sanitizeBudget(flight),
                 totalBudget: (total),
                 flightBudget: (flight),
+                thresholdVal: threshold
             });
             if (!res.ok) throw new Error("Failed to update budget");
             addNotification({
@@ -88,6 +90,7 @@ const FinanceEventsPage = () => {
                 type: "success",
             });
             fetchEvents();
+            // onClose();
         } catch (error) {
             addNotification({
                 title: "Error",
@@ -147,6 +150,7 @@ const FinanceEventsPage = () => {
                 return; // Prevent opening the modal if assignment fails
             }
         }
+        
         setSelectedEvent(event);
     };
 
@@ -162,7 +166,8 @@ const FinanceEventsPage = () => {
         await updateBudget(
             updatedEvent.id,
             updatedEvent.eventBudget,
-            updatedEvent.flightBudget
+            updatedEvent.flightBudget,
+            updatedEvent.flightThreshold
         );
     };
 

@@ -21,12 +21,12 @@ import EventGroupModal from "../components/EventGroupModal.jsx";
 
 const ManageEventsPage = () => {
   const navigate = useNavigate();
-  const userId = Number(localStorage.getItem("userId")) || null;
+  // const userId = Number(localStorage.getItem("userId")) || null;
   const { addNotification } = useNotifications();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredEvents, setFilteredEvents] = useState([]);
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  // const [selectedEvent, setSelectedEvent] = useState(null);
   const [groupModalEvent, setGroupModalEvent] = useState(null);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -105,6 +105,8 @@ const ManageEventsPage = () => {
 
   const handleUpdateEvent = async (updatedEvent) => {
     // Replace with API call to update event details if needed.
+    console.log(updatedEvent);
+    
     addNotification({
       title: "Success",
       message: "Event updated successfully!",
@@ -114,6 +116,8 @@ const ManageEventsPage = () => {
   };
 
   const handleDeleteEvent = async (eventId) => {
+    console.log(eventId);
+    
     // Replace with API call to delete the event if needed.
     addNotification({
       title: "Success",
