@@ -236,7 +236,10 @@ const ApprovalPage = () => {
         }
 
         // Get event's threshold for decision-making
-        const reviewThreshold = parseFloat(event.threshold) || 100;
+        console.log("event");
+        console.dir(event);
+        
+        const reviewThreshold = parseFloat(event.threshold);
 
         // If flight is already approved, show Cancel button
         if (status.toLowerCase() === "approved") {
@@ -271,8 +274,8 @@ const ApprovalPage = () => {
                 </button>
             );
         }
-        // If cost exceeds (budget + threshold), show Reject button
-        else if (cost > budget + reviewThreshold) {
+        // If cost exceeds budget * (1 + reviewThreshold) , show Reject button
+        else if (cost > budget * (1 + reviewThreshold)) {
             return (
                 <button
                     className={styles.rejectButton}
