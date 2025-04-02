@@ -27,6 +27,9 @@ const ApprovalPage = () => {
     // Flat list of attendees for the event
     const [attendees, setAttendees] = useState([]);
     const { addNotification } = useNotifications();
+    // Track which attendee is currently processing an action
+  const [processingAttendee, setProcessingAttendee] = useState(null);
+
 
     useEffect(() => {
         fetchAttendeesData();
@@ -69,6 +72,56 @@ const ApprovalPage = () => {
         setSelectedFlight(null);
         setModalOpen(false);
     };
+
+
+    const fetchUserItinerary = async (attendeeId) => {
+        try {
+          // Adjust the endpoint URL according to your API
+          const response = await getData("GET", `/flights/view/getFlightInfo?attendeeId=${attendeeId}`);
+          if (!response.ok) {
+            throw new Error("Failed to fetch itineraries");
+          }
+          const data = await response.json();
+          
+          // Assume the response contains an array of orders in data.orders
+          const orders = data.data || [];
+
+        return orders[0];
+        } catch (error) {
+          console.error(error);
+          return null;
+        }
+      };
+
+
+    const approveFlight = async (attendee) => {
+        setProcessingAttendee(attendee.email);
+        
+        
+        try {
+            const itinerary = await fetchUserItinerary(attendee.ID);
+          const response = await getData("POST", `/flights/${itinerary.DuffleOrderID}/book`);
+          if (!response.ok) {
+            throw new Error("Flight booking failed");
+          }
+          // Update the attendee's booking status to "approved"
+          setAttendees((prev) =>
+            prev.map((a) =>
+              a.email === attendee.email
+                ? { ...a, Booking: [{ ...a.Booking[0], status: "approved" }] }
+                : a
+            )
+          );
+        } catch (error) {
+          addNotification({
+            title: "Error",
+            message: error.message,
+            type: "error",
+          });
+        } finally {
+          setProcessingAttendee(null);
+        }
+      };
 
     // Update flight status for a specific attendee (flat update)
     const updateAttendeeStatus = (attendeeEmail, action) => {
@@ -148,9 +201,12 @@ const ApprovalPage = () => {
     // Determine which action button to show based on flight cost vs. group budget.
     // If no flight status exists, only show the "Send Reminder" button.
     const getActionButton = (attendee) => {
-
+        console.log(event);
+        console.log(attendee);
+        
+        
         // Find the attendee's group in event.EventGroups
-        const group = event.EventGroups.find(
+        const group = event.EventGroups?.find(
             (g) => g.Name === attendee.groupName
         );
         if (!group) {
@@ -208,7 +264,7 @@ const ApprovalPage = () => {
                     className={styles.approveButton}
                     onClick={(e) => {
                         e.stopPropagation();
-                        handleDirectAction(attendee, "approved");
+                        approveFlight(attendee);
                     }}
                 >
                     <FontAwesomeIcon icon={faCheckCircle} /> Approve
