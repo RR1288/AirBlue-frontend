@@ -1,8 +1,8 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import styles from "./ApprovalPage.module.css";
 import Header from "../components/Header";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
     faCheckCircle,
     faTimesCircle,
@@ -11,10 +11,10 @@ import {
     faSearch,
     faHourglassHalf,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link, useLocation } from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import FlightDetailsModal from "./FlightDetailsModal";
 import getData from "../utils/getData";
-import { useNotifications } from "../components/NotificationProvider";
+import {useNotifications} from "../components/NotificationProvider";
 
 const ApprovalPage = () => {
     // Get event from location state (includes groupEventBudget, threshold, etc.)
@@ -26,13 +26,11 @@ const ApprovalPage = () => {
     const [loading, setLoading] = useState(false);
     // Flat list of attendees for the event
     const [attendees, setAttendees] = useState([]);
-    const { addNotification } = useNotifications();
+    const {addNotification} = useNotifications();
 
-    
     // Track which attendee is currently processing an action
-  // eslint-disable-next-line no-unused-vars
-  const [processingAttendee, setProcessingAttendee] = useState(null);
-
+    // eslint-disable-next-line no-unused-vars
+    const [processingAttendee, setProcessingAttendee] = useState(null);
 
     useEffect(() => {
         fetchAttendeesData();
@@ -76,55 +74,94 @@ const ApprovalPage = () => {
         setModalOpen(false);
     };
 
-
     const fetchUserItinerary = async (attendeeId) => {
         try {
-          // Adjust the endpoint URL according to your API
-          const response = await getData("GET", `/flights/view/getFlightInfo?attendeeId=${attendeeId}`);
-          if (!response.ok) {
-            throw new Error("Failed to fetch itineraries");
-          }
-          const data = await response.json();
-          
-          // Assume the response contains an array of orders in data.orders
-          const orders = data.data || [];
+            // Adjust the endpoint URL according to your API
+            const response = await getData(
+                "GET",
+                `/flights/view/getFlightInfo?attendeeId=${attendeeId}`
+            );
+            if (!response.ok) {
+                throw new Error("Failed to fetch itineraries");
+            }
+            const data = await response.json();
 
-        return orders[0];
+            // Assume the response contains an array of orders in data.orders
+            const orders = data.data || [];
+
+            return orders[0];
         } catch (error) {
-          console.error(error);
-          return null;
+            console.error(error);
+            return null;
         }
-      };
-
+    };
 
     const approveFlight = async (attendee) => {
         setProcessingAttendee(attendee.email);
-        
-        
+
         try {
             const itinerary = await fetchUserItinerary(attendee.ID);
-          const response = await getData("POST", `/flights/${itinerary.DuffleOrderID}/book`);
-          if (!response.ok) {
-            throw new Error("Flight booking failed");
-          }
-          // Update the attendee's booking status to "approved"
-          setAttendees((prev) =>
-            prev.map((a) =>
-              a.email === attendee.email
-                ? { ...a, Booking: [{ ...a.Booking[0], status: "approved" }] }
-                : a
-            )
-          );
+            const response = await getData(
+                "POST",
+                `/flights/${itinerary.DuffleOrderID}/book`
+            );
+            if (!response.ok) {
+                throw new Error("Flight booking failed");
+            }
+            // Update the attendee's booking status to "approved"
+            setAttendees((prev) =>
+                prev.map((a) =>
+                    a.email === attendee.email
+                        ? {
+                              ...a,
+                              Booking: [{...a.Booking[0], status: "approved"}],
+                          }
+                        : a
+                )
+            );
         } catch (error) {
-          addNotification({
-            title: "Error",
-            message: error.message,
-            type: "error",
-          });
+            addNotification({
+                title: "Error",
+                message: error.message,
+                type: "error",
+            });
         } finally {
-          setProcessingAttendee(null);
+            setProcessingAttendee(null);
         }
-      };
+    };
+
+    const rejectFlight = async (attendee) => {
+        setProcessingAttendee(attendee.email);
+        try {
+            const itinerary = await fetchUserItinerary(attendee.ID);
+            const response = await getData(
+                "POST",
+                `/flights/${itinerary.ItineraryID}/declinePendingFlight`
+            );
+            if (!response.ok) {
+                throw new Error("Flight declining failed");
+            }
+            // Update the attendee's booking status to "denied"
+            setAttendees((prev) =>
+                prev.map((a) =>
+                    a.email === attendee.email
+                        ? {
+                              ...a,
+                              Booking: [{...a.Booking[0], status: "denied"}],
+                          }
+                        : a
+                )
+            );
+        } catch (error) {
+            addNotification({
+                title: "Error",
+                message: error.message,
+                type: "error",
+            });
+        } finally {
+            setProcessingAttendee(null);
+        }
+    };
 
     // Update flight status for a specific attendee (flat update)
     const updateAttendeeStatus = (attendeeEmail, action) => {
@@ -133,21 +170,12 @@ const ApprovalPage = () => {
                 a.email === attendeeEmail
                     ? {
                           ...a,
-                          Booking: [{ ...a.Booking[0], status: action }],
+                          Booking: [{...a.Booking[0], status: action}],
                       }
                     : a
             )
         );
         closeFlightModal();
-    };
-
-    // Approve, reject, or cancel flight directly from the table
-    const handleDirectAction = (attendee, action) => {
-        setAttendees(
-            attendees.map((a) =>
-                a.id === attendee.id ? { ...a, flightStatus: action } : a
-            )
-        );
     };
 
     useEffect(() => {
@@ -180,12 +208,8 @@ const ApprovalPage = () => {
                 chipClass = styles.chipApproved;
                 icon = <FontAwesomeIcon icon={faCheckCircle} />;
                 break;
-            case "rejected":
+            case "denied":
                 chipClass = styles.chipRejected;
-                icon = <FontAwesomeIcon icon={faTimesCircle} />;
-                break;
-            case "cancelled":
-                chipClass = styles.chipCancelled;
                 icon = <FontAwesomeIcon icon={faTimesCircle} />;
                 break;
             case "pending":
@@ -204,10 +228,6 @@ const ApprovalPage = () => {
     // Determine which action button to show based on flight cost vs. group budget.
     // If no flight status exists, only show the "Send Reminder" button.
     const getActionButton = (attendee) => {
-        console.log(event);
-        console.log(attendee);
-        
-        
         // Find the attendee's group in event.EventGroups
         const group = event.EventGroups?.find(
             (g) => g.Name === attendee.groupName
@@ -217,10 +237,6 @@ const ApprovalPage = () => {
             return null;
         }
 
-        console.log("budget for this attendee ====");
-        console.dir(group.FlightBudget);
-        
-        
         // Get the budget for this attendee's group (convert string to number)
         const budget = parseFloat(group.FlightBudget) || 1000;
         const cost = parseFloat(attendee?.Booking[0]?.cost);
@@ -233,8 +249,11 @@ const ApprovalPage = () => {
                     className={styles.reminderButton}
                     onClick={(e) => {
                         e.stopPropagation();
-                        // Stub code: implement the send reminder action here.
-                        console.log("Send reminder clicked for", attendee.email);
+                        // TODO: implement the send reminder action here.
+                        console.log(
+                            "Send reminder clicked for",
+                            attendee.email
+                        );
                     }}
                 >
                     Send Reminder
@@ -243,29 +262,11 @@ const ApprovalPage = () => {
         }
 
         // Get event's threshold for decision-making
-        console.log("event");
-        console.dir(event);
-        
+
         const reviewThreshold = parseFloat(event.threshold);
 
-        // If flight is already approved, show Cancel button
-        if (status.toLowerCase() === "approved") {
-            return (
-                <button
-                    className={styles.cancelButton}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        handleDirectAction(attendee, "cancelled");
-                    }}
-                >
-                    <FontAwesomeIcon icon={faTimesCircle} /> Cancel
-                </button>
-            );
-        }
-
-        // For rejected or cancelled flights, no action buttons
-        if (["rejected", "cancelled"].includes(status.toLowerCase()))
-            return null;
+        // For denied flights, no action buttons
+        if (["denied", "approved"].includes(status.toLowerCase())) return null;
 
         // If cost is within budget, show Approve button
         if (cost <= budget) {
@@ -288,7 +289,7 @@ const ApprovalPage = () => {
                     className={styles.rejectButton}
                     onClick={(e) => {
                         e.stopPropagation();
-                        handleDirectAction(attendee, "rejected");
+                        rejectFlight(attendee);
                     }}
                 >
                     <FontAwesomeIcon icon={faTimesCircle} /> Reject
@@ -315,7 +316,10 @@ const ApprovalPage = () => {
             <Header title="AirBlue System" />
             <div className={styles.mainContent}>
                 <div className={styles.headerRow}>
-                    <Link to="/home" className={styles.backButton}>
+                    <Link
+                        to="/home"
+                        className={styles.backButton}
+                    >
                         <FontAwesomeIcon
                             icon={faArrowLeft}
                             className={styles.icon}
@@ -366,7 +370,9 @@ const ApprovalPage = () => {
                                             {attendee.groupName})
                                         </td>
                                         <td className={styles.subTd}>
-                                            ${attendee?.Booking[0]?.cost || '0.00'}
+                                            $
+                                            {attendee?.Booking[0]?.cost ||
+                                                "0.00"}
                                         </td>
                                         <td className={styles.subTd}>
                                             {getStatusChip(
@@ -375,14 +381,20 @@ const ApprovalPage = () => {
                                         </td>
                                         <td className={styles.subTd}>
                                             {getActionButton(attendee)}
-                                            {attendee?.Booking[0]?.status && <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    openFlightModal(attendee);
-                                                }}
-                                            >
-                                                <FontAwesomeIcon icon={faEye} />
-                                            </button>}
+                                            {attendee?.Booking[0]?.status && (
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        openFlightModal(
+                                                            attendee
+                                                        );
+                                                    }}
+                                                >
+                                                    <FontAwesomeIcon
+                                                        icon={faEye}
+                                                    />
+                                                </button>
+                                            )}
                                         </td>
                                     </tr>
                                 ))
@@ -395,14 +407,13 @@ const ApprovalPage = () => {
                 <FlightDetailsModal
                     flight={selectedFlight}
                     onClose={closeFlightModal}
-                    onApprove={(attendeeId) =>
-                        updateAttendeeStatus(attendeeId, "Approved")
+                    onApprove={
+                        () => approveFlight(selectedFlight)
+                        // updateAttendeeStatus(attendeeId, "Approved")
                     }
-                    onReject={(attendeeId) =>
-                        updateAttendeeStatus(attendeeId, "Rejected")
-                    }
-                    onCancel={(attendeeId) =>
-                        updateAttendeeStatus(attendeeId, "Cancelled")
+                    onReject={
+                        () => rejectFlight(selectedFlight)
+                        //updateAttendeeStatus(attendeeId, "Rejected")
                     }
                 />
             )}
