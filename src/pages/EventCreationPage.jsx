@@ -6,7 +6,7 @@ import Header from "../components/Header";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import styles from "./EventCreationPage.module.css";
-import getData from "../utils/getData";
+import {getData} from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
 
 const EventCreationPage = () => {

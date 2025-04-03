@@ -13,7 +13,7 @@ import {
   faLayerGroup, // Icon for groups (or choose any suitable)
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./ManageEventsPage.module.css";
-import getData from "../utils/getData";
+import {getData} from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
 import { formatDate } from "../utils/formatUtils";
 import { useNavigate } from "react-router-dom";

@@ -1,4 +1,4 @@
-async function getData(method, endpoint, body={}) {
+export async function getData(method, endpoint, body={}) {
     const token = localStorage.getItem("token");
     let res;
     // If method POST
@@ -31,4 +31,20 @@ async function getData(method, endpoint, body={}) {
     return res;
 }
 
-export default getData;
+export async function sendFile(endpoint, formData) {
+    const token = localStorage.getItem("token");
+    let res;
+ 
+        res = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, {
+            method: 'POST',
+            headers: {
+                Accept: "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: formData
+        });
+
+    
+    return res;
+}
+

@@ -4,7 +4,7 @@ import {useLocation, Link} from "react-router-dom";
 import Header from "../components/Header";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowLeft, faArrowRight} from "@fortawesome/free-solid-svg-icons";
-import getData from "../utils/getData";
+import {getData} from "../utils/getData";
 import {useNotifications} from "../components/NotificationProvider";
 import styles from "./FlightSearchPage.module.css";
 

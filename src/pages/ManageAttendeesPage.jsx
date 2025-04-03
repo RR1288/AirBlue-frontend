@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
 import Header from "../components/Header";
+import BulkInvitationModal from "../components/BulkInvitationModal"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeft,
@@ -11,7 +12,7 @@ import {
   faTimes,
   faPaperPlane,
 } from "@fortawesome/free-solid-svg-icons";
-import getData from "../utils/getData";
+import {getData} from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
 import styles from "./ManageAttendees.module.css";
 
@@ -58,7 +59,6 @@ const SingleInvitationModal = ({ eventId, eventGroups, onClose, onSend }) => {
           onChange={(e) => setSelectedGroup(e.target.value)}
         >
           <option value="">Select Event Group</option>
-          {console.log(eventGroups[0])}
           {eventGroups[0].map((group) => (
             <option key={group.EventGroupID} value={group.EventGroupID}>
               {group.Name}
@@ -80,18 +80,6 @@ const SingleInvitationModal = ({ eventId, eventGroups, onClose, onSend }) => {
   );
 };
 
-// Bulk Invitation Modal (unchanged)
-const BulkInvitationModal = ({ onClose }) => (
-  <div className={styles.modalOverlay}>
-    <div className={styles.modalContent}>
-      <h2>Send Bulk Invitations</h2>
-      <p>Upload your .csv or .txt file here.</p>
-      <button onClick={onClose} className={styles.closeModalButton}>
-        Close
-      </button>
-    </div>
-  </div>
-);
 
 const ManageAttendees = () => {
   const { eventId } = useParams();
@@ -289,7 +277,7 @@ const ManageAttendees = () => {
         )}
       </main>
       {showBulkModal && (
-        <BulkInvitationModal onClose={() => setShowBulkModal(false)} />
+        <BulkInvitationModal eventId={eventId} eventGroups={eventGroups} onClose={() => setShowBulkModal(false)} />
       )}
       {showSingleModal && (
         <SingleInvitationModal
