@@ -7,6 +7,8 @@ import {faArrowLeft, faArrowRight} from "@fortawesome/free-solid-svg-icons";
 import getData from "../utils/getData";
 import {useNotifications} from "../components/NotificationProvider";
 import styles from "./FlightSearchPage.module.css";
+import { validateDates } from "../utils/validateUtils";
+import { sanitizeInput } from "../utils/sanitizeUtils";
 
 const FlightSearchPage = () => {
     const location = useLocation();
@@ -29,21 +31,24 @@ const FlightSearchPage = () => {
 
     const handleChange = (e) => {
         const {name, value} = e.target;
-        setSearchQuery({...searchQuery, [name]: value});
+        const sanitizedValue = sanitizeInput(value);
+        setSearchQuery({...searchQuery, [name]: sanitizedValue});
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const departure = new Date(searchQuery.departureDate);
-        const retDate = new Date(searchQuery.returnDate);
-        if (departure > retDate) {
-            alert("Departure date must be before the return date.");
+        if (!validateDates(searchQuery.departureDate, searchQuery.returnDate)) {
+            addNotification({
+                title: "Error",
+                message: "Departure date must be before the return date.",
+                type: "error",
+            });
             return;
         }
 
-        const formattedDepartureDate = departure.toISOString().split("T")[0];
-        const formattedReturnDate = retDate.toISOString().split("T")[0];
+        const formattedDepartureDate = searchQuery.departureDate;
+        const formattedReturnDate = searchQuery.returnDate;
 
         // Construct the flight search endpoint URL with query parameters
         const searchEndpoint = `/flights/create-request?origin=${encodeURIComponent(
