@@ -108,7 +108,7 @@ const FlightDetailsModal = ({
                         style={{color: "green", marginRight: "5px"}}
                     />
                 );
-            case "rejected":
+            case "denied":
                 return (
                     <FontAwesomeIcon
                         icon={faTimesCircle}
