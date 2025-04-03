@@ -6,6 +6,8 @@ import PropTypes from "prop-types";
 import styles from "./Header.module.css";
 import Sidebar from "./Sidebar";
 import {Link, useLocation} from "react-router-dom";
+import { AuthContext } from "./AuthContext";
+import ProtectedRoute from "./ProtectedRoute";
 
 function Header({title, userRole, hideSidebar = false, onRoleChange}) {
     const location = useLocation();
