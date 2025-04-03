@@ -24,6 +24,42 @@ const AdminPage = () => {
         setUsers(users.filter(user => user.id !== id));
     };
 
+    const HandleResetPassword = async () => {
+        try {
+            const response = await getData("GET", `/users/reset-password-admin`);
+            if (!response.ok) throw new Error("Failed to reset password");
+            const res = await response.json();
+            setPassword({
+                user: res.data.userID,
+                password: res.data.password,
+            });
+          } catch (error) {
+            addNotification({
+              title: "Error",
+              message: error.message,
+              type: "error",
+            });
+          }
+    }
+
+    const changeOrgPermissions = async () => {
+        try {
+            const response = await getData("GET", `/organizations/`/**changePermission?*/);
+            if (!response.ok) throw new Error("Failed to change organization user permissions");
+            const res = await response.json();
+           /*
+            
+           * */
+          } catch (error) {
+            addNotification({
+              title: "Error",
+              message: error.message,
+              type: "error",
+            });
+          }
+    }
+    }
+
     return (
         <div style={styles.page}>
             {/* header */}
