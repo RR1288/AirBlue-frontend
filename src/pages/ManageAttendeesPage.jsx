@@ -5,6 +5,7 @@ import { faArrowLeft, faFilter } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
 const ManageAttendees = () => {
+  const [selectedRole, setSelectedRole] = useState("");
   // State for first and last name filters
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -44,9 +45,17 @@ const ManageAttendees = () => {
     setLastName('');
   };
 
+  const handleRoleChange = (newRole) => {
+    setSelectedRole(newRole);
+};
+
   return (
     <div style={styles.container}>
-      <Header title="AirBlue System" />
+      <Header
+        title="AirBlue System"
+        userRole={selectedRole}
+        onRoleChange={handleRoleChange}
+      />
       <main style={styles.main}>
         <section style={styles.attendees}>
           {/* Container for back button and title */}
@@ -54,9 +63,9 @@ const ManageAttendees = () => {
             <Link to="/home" style={styles.backButton}>
               <FontAwesomeIcon icon={faArrowLeft} />
             </Link>
-              <div style={styles.titleContainer}>
-                 <h2 style={styles.title1}>IEEE Board Meeting 2024</h2>
-              </div>
+            <div style={styles.titleContainer}>
+              <h2 style={styles.title1}>IEEE Board Meeting 2024</h2>
+            </div>
           </div>
           <h3 style={styles.title2}>Attendees</h3>
 
@@ -130,16 +139,16 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '5% 10px',  
+    padding: '5% 10px',
     marginTop: '20px',
   },
   headerRow: {
     display: 'flex',
     alignItems: 'center',
     width: '100%',
-    maxWidth: '100%',  
+    maxWidth: '100%',
     marginBottom: '20px',
-    flexDirection: 'row',  
+    flexDirection: 'row',
     //justifyContent: 'center'
   },
   backButton: {
@@ -148,14 +157,14 @@ const styles = {
     color: '#0B2853',
     fontSize: '16px',
     fontWeight: '600',
-    marginRight: 'auto', 
+    marginRight: 'auto',
     //marginLeft: 'auto',
   },
   title1: {
     fontSize: '24px',
     color: '#0B2853',
     fontWeight: '600',
-    marginTop: '0', 
+    marginTop: '0',
     marginBottom: '10px',
   },
   titleContainer: {
@@ -175,7 +184,7 @@ const styles = {
     gap: '10px',
     marginBottom: '20px',
     width: '100%',
-    flexWrap: 'wrap', 
+    flexWrap: 'wrap',
   },
   filterInput: {
     padding: '8px',
@@ -210,7 +219,7 @@ const styles = {
     overflowY: 'auto',
     width: '100%',
     color: 'black',
-    maxWidth: '100%',  
+    maxWidth: '100%',
     marginBottom: '20px',
   },
   attendeeItem: {

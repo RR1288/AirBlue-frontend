@@ -5,6 +5,7 @@ import Header from '../components/Header';
 // FOR ATTENDEES REGISTERED EVENTS
 
 const MyEventsPage = () => {
+    const [selectedRole, setSelectedRole] = useState("");
     const [events, setEvents] = useState([]); // Stores attendee's registered events
     const [loading, setLoading] = useState(true); // Loading state
     const navigate = useNavigate();
@@ -50,9 +51,17 @@ const MyEventsPage = () => {
     const upcomingEvents = events.filter(event => new Date(event.date) >= today);
     const pastEvents = events.filter(event => new Date(event.date) < today);
 
+    const handleRoleChange = (newRole) => {
+        setSelectedRole(newRole);
+    };
+
     return (
         <div style={styles.page}>
-            <Header title="AirBlue System" />
+            <Header
+                title="AirBlue System"
+                userRole={selectedRole}
+                onRoleChange={handleRoleChange}
+            />
             <div style={styles.mainContent}>
                 <h1 style={styles.h1}>My Events</h1>
 

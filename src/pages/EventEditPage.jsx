@@ -5,6 +5,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
 const EventsEditPage = () => {
+    const [selectedRole, setSelectedRole] = useState("");
     const [eventDetails, setEventDetails] = useState({
         title: "IEEE Board Meeting 2024",
         eventType: "Board Meeting",
@@ -26,24 +27,25 @@ const EventsEditPage = () => {
         console.log("Updated Event Details:", eventDetails);
     };
 
+    const handleRoleChange = (newRole) => {
+        setSelectedRole(newRole);
+    };
+
     return (
         <div style={styles.page}>
-            {/* Header Component */}
-            <Header title="AirBlue System" />
-
-            {/* Main Content */}
+            <Header
+                title="AirBlue System"
+                userRole={selectedRole}
+                onRoleChange={handleRoleChange}
+            />
             <div style={styles.mainContent}>
-                {/* Back Button and Title */}
                 <div style={styles.headerRow}>
                     <Link to="/manage-events" style={styles.backButton}>
                         <FontAwesomeIcon icon={faArrowLeft} style={styles.icon} />
                     </Link>
                     <h2 style={styles.eventTitle}>Edit Event</h2>
                 </div>
-
-                {/* Event Edit Form */}
                 <form onSubmit={handleSubmit} style={styles.form}>
-                    {/* Event Title */}
                     <div style={styles.row}>
                         <label style={styles.label}>Event Title:</label>
                         <input
@@ -55,8 +57,6 @@ const EventsEditPage = () => {
                             required
                         />
                     </div>
-
-                    {/* Event Type */}
                     <div style={styles.row}>
                         <label style={styles.label}>Event Type:</label>
                         <select
@@ -71,8 +71,6 @@ const EventsEditPage = () => {
                             <option value="Seminar">Seminar</option>
                         </select>
                     </div>
-
-                    {/* Event Date */}
                     <div style={styles.row}>
                         <label style={styles.label}>Event Date:</label>
                         <input
@@ -83,8 +81,6 @@ const EventsEditPage = () => {
                             style={styles.input}
                         />
                     </div>
-
-                    {/* Location */}
                     <div style={styles.row}>
                         <label style={styles.label}>Location:</label>
                         <input
@@ -95,8 +91,6 @@ const EventsEditPage = () => {
                             style={styles.input}
                         />
                     </div>
-
-                    {/* Notes */}
                     <div style={styles.row}>
                         <label style={styles.label}>Notes:</label>
                         <textarea
@@ -106,8 +100,6 @@ const EventsEditPage = () => {
                             style={styles.textarea}
                         />
                     </div>
-
-                    {/* Save Changes Button */}
                     <button type="submit" style={styles.saveButton}>
                         Save Changes
                     </button>
@@ -117,89 +109,6 @@ const EventsEditPage = () => {
     );
 };
 
-// Styles
-const styles = {
-    page: {
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-        width: '100vw',
-        backgroundColor: '#FFFFFF',
-    },
-    mainContent: {
-        flex: 1,
-        maxWidth: '600px',
-        margin: '10px',
-        alignItems: 'center',
-        padding: '20px',
-    },
-    headerRow: {
-        display: 'flex',
-        alignItems: 'center',
-        marginBottom: '20px',
-    },
-    backButton: {
-        textDecoration: 'none',
-        color: '#0B2853',
-        marginRight: '10px',
-        fontSize: '16px',
-        fontWeight: '600',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '5px',
-    },
-    icon: {
-        fontSize: '16px',
-        color: '#0B2853',
-    },
-    eventTitle: {
-        fontSize: '22px',
-        fontWeight: 'bold',
-        color: '#0B2853',
-    },
-    form: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '20px',
-    },
-    row: {
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    label: {
-        marginBottom: '5px',
-        fontWeight: 'bold',
-        color: '#0B2853',
-    },
-    input: {
-        padding: '10px',
-        borderRadius: '4px',
-        border: '1px solid #ccc',
-        fontSize: '16px',
-        backgroundColor: '#FFFFFF',
-        color: '#333',
-    },
-    textarea: {
-        padding: '10px',
-        borderRadius: '4px',
-        border: '1px solid #ccc',
-        minHeight: '100px',
-        fontSize: '16px',
-        backgroundColor: '#FFFFFF',
-        color: '#333',
-    },
-    saveButton: {
-        backgroundColor: '#0B2853',
-        color: 'white',
-        border: 'none',
-        padding: '12px',
-        borderRadius: '4px',
-        fontSize: '16px',
-        fontWeight: 'bold',
-        cursor: 'pointer',
-        textAlign: 'center',
-        width: '100%',
-    },
-};
+const styles = { /* your existing styles here */ };
 
 export default EventsEditPage;

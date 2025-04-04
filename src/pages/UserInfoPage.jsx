@@ -6,8 +6,13 @@ import { faUser, faEnvelope, faUserTag } from "@fortawesome/free-solid-svg-icons
 import { faPhone } from "@fortawesome/free-solid-svg-icons/faPhone";
 
 const UserInfoPage = () => {
+    const [selectedRole, setSelectedRole] = useState("");
     const [userInfo, setUserInfo] = useState(null);
     const navigate = useNavigate();
+
+    const handleRoleChange = (newRole) => {
+        setSelectedRole(newRole);
+    };
 
     useEffect(() => {
         // Simulated fetching logic (to be replaced with actual backend API call)
@@ -30,7 +35,11 @@ const UserInfoPage = () => {
 
     return (
         <div style={styles.container}>
-            <Header  title="AirBlue System"  />
+            <Header
+                title="AirBlue System"
+                userRole={selectedRole}
+                onRoleChange={handleRoleChange}
+            />
             <main style={styles.main}>
                 <section style={styles.infoSection}>
                     <h1 style={styles.h1}>User Information</h1>

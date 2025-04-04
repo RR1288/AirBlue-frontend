@@ -1,39 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../components/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
 const EventDetailPage = () => {
+    const [selectedRole, setSelectedRole] = useState("");
+
+    const handleRoleChange = (newRole) => {
+        setSelectedRole(newRole);
+    };
+
     return (
         <div style={styles.page}>
-            {/* Header Component */}
-            <Header title="AirBlue System" />
-
+            <Header
+                title="AirBlue System"
+                userRole={selectedRole}
+                onRoleChange={handleRoleChange}
+            />
             <div style={styles.mainContent}>
-                {/* Back Button and Title */}
                 <div style={styles.headerRow}>
                     <Link to="/my-events" style={styles.backButton}>
                         <FontAwesomeIcon icon={faArrowLeft} style={styles.icon} />
                     </Link>
                     <h1 style={styles.eventTitle}>IEEE Board Meeting 2024</h1>
                 </div>
-
-                {/* Event Details Section (Static Text) */}
                 <div style={styles.detailsContainer}>
                     <p style={styles.detail}><strong>Date:</strong> October 31, 2024</p>
                     <p style={styles.detail}><strong>Event Type:</strong> Board Meeting</p>
                     <p style={styles.detail}><strong>Location:</strong> Rochester Conference Center</p>
-
-                    {/* Budget Section (Read-Only) */}
                     <p style={styles.detail}><strong>Budget per Event:</strong> $5,000.00</p>
                     <p style={styles.detail}><strong>Budget per Attendee:</strong> $400.00</p>
-
-                    {/* Notes Section (Read-Only) */}
                     <div style={styles.notesContainer}>
                         <strong>Notes:</strong>
                         <p style={styles.notes}>
-                            Event Notes: The IEEE Board Meeting is scheduled for October 31, 2024 at the Rochester Conference Center. Awaiting RSVP's.
+                            Event Notes: The IEEE Board Meeting is scheduled for October 31, 2024 at the Rochester Conference Center. Awaiting RSVPs.
                         </p>
                     </div>
                 </div>

@@ -5,6 +5,7 @@ import { faSearch, faFilter, faArrowLeft, faPlaneDeparture } from '@fortawesome/
 import { Link } from 'react-router-dom';
 
 const FlightSearchPage = () => {
+    const [selectedRole, setSelectedRole] = useState("");
     const [searchQuery, setSearchQuery] = useState('');
 
     // Default flights
@@ -15,10 +16,18 @@ const FlightSearchPage = () => {
         { id: 4, destination: "Shkodër, Albania", price: "$80", time: "4:00 PM" },
     ];
 
+    const handleRoleChange = (newRole) => {
+        setSelectedRole(newRole);
+    };
+
     return (
         <div style={styles.page}>
             {/* _Header_Component_ */}
-            <Header title="AirBlue System" />
+            <Header
+                title="AirBlue System"
+                userRole={selectedRole}
+                onRoleChange={handleRoleChange}
+            />
 
             <div style={styles.mainContent}>
                 {/* _Back_Button_and_Title_ */}

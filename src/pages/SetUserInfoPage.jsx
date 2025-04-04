@@ -93,6 +93,7 @@ const styles = {
 };
 
 const UserInfoPage = () => {
+  const [selectedRole, setSelectedRole] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userInfo, setUserInfo] = useState({
     firstName: '',
@@ -106,6 +107,10 @@ const UserInfoPage = () => {
     setUserInfo({ ...userInfo, [e.target.name]: e.target.value });
   };
 
+  const handleRoleChange = (newRole) => {
+    setSelectedRole(newRole);
+  };
+
   return (
     <div style={styles.page}>
       {/* Sidebar */}
@@ -113,7 +118,8 @@ const UserInfoPage = () => {
 
       {/* Main Content */}
       <div style={{ flex: 1 }}>
-        <Header title="AirBlue System" setSidebarOpen={setSidebarOpen} />
+        <Header title="AirBlue System" userRole={selectedRole}
+          onRoleChange={handleRoleChange} setSidebarOpen={setSidebarOpen} />
         <div style={styles.contentWrapper}>
           <div style={styles.card}>
             {/* Back Button */}

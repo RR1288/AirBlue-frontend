@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import Header from '../components/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserShield, faTrash, faArrowLeft, faAlignJustify } from '@fortawesome/free-solid-svg-icons';
+import { faUserShield, faTrash, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
 const AdminPage = () => {
-    // sample user data
+    const [selectedRole, setSelectedRole] = useState("");
     const [users, setUsers] = useState([
         { id: 1, name: "Alice Johnson", role: "User" },
         { id: 2, name: "Bob Smith", role: "User" },
@@ -14,35 +14,35 @@ const AdminPage = () => {
 
     const availableRoles = ["User", "Event Planner", "Finance", "Admin"];
 
-    // function to update user role
     const updateUserRole = (id, newRole) => {
         setUsers(users.map(user => user.id === id ? { ...user, role: newRole } : user));
     };
 
-    // function to remove a user
+    const handleRoleChange = (newRole) => {
+        setSelectedRole(newRole);
+    };
+
     const removeUser = (id) => {
         setUsers(users.filter(user => user.id !== id));
     };
 
     return (
         <div style={styles.page}>
-            {/* header */}
-            <Header title="AirBlue System" />
-
+            <Header
+                title="AirBlue System"
+                userRole={selectedRole}
+                onRoleChange={handleRoleChange}
+            />
             <div style={styles.mainContent}>
-                {/* back Button & Title */}
                 <div style={styles.headerRow}>
                     <Link to="/home" style={styles.backButton}>
                         <FontAwesomeIcon icon={faArrowLeft} style={styles.icon} />
                     </Link>
                     <h1 style={styles.title}>Admin Panel</h1>
                 </div>
-
                 <p style={styles.description}>
                     Manage users, assign roles, and remove inactive accounts.
                 </p>
-
-                {/* users Table */}
                 <div style={styles.tableContainer}>
                     <table style={styles.table}>
                         <thead>
@@ -53,38 +53,30 @@ const AdminPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {users.length > 0 ? (
-                                users.map((user) => (
-                                    <tr key={user.id} style={styles.row}>
-                                        <td style={styles.td}>{user.name}</td>
-                                        <td style={{ ...styles.td, fontWeight: 'bold', color: user.role === "Admin" ? "blue" : user.role === "Finance" ? "green" : "#555" }}>
-                                            {user.role}
-                                        </td>
-                                        <td style={styles.td}>
-                                            {user.role !== "Admin" && (
-                                                <select
-                                                    style={styles.roleDropdown}
-                                                    value={user.role}
-                                                    onChange={(e) => updateUserRole(user.id, e.target.value)}
-                                                >
-                                                    {availableRoles.map((role) => (
-                                                        <option key={role} value={role}>{role}</option>
-                                                    ))}
-                                                </select>
-                                            )}
-                                            <button style={styles.removeButton} onClick={() => removeUser(user.id)}>
-                                                <FontAwesomeIcon icon={faTrash} /> Remove
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="3" style={styles.placeholderText}>
-                                        No users found.
+                            {users.map(user => (
+                                <tr key={user.id} style={styles.row}>
+                                    <td style={styles.td}>{user.name}</td>
+                                    <td style={{ ...styles.td, fontWeight: 'bold', color: user.role === "Admin" ? "blue" : user.role === "Finance" ? "green" : "#555" }}>
+                                        {user.role}
+                                    </td>
+                                    <td style={styles.td}>
+                                        {user.role !== "Admin" && (
+                                            <select
+                                                style={styles.roleDropdown}
+                                                value={user.role}
+                                                onChange={(e) => updateUserRole(user.id, e.target.value)}
+                                            >
+                                                {availableRoles.map(role => (
+                                                    <option key={role} value={role}>{role}</option>
+                                                ))}
+                                            </select>
+                                        )}
+                                        <button style={styles.removeButton} onClick={() => removeUser(user.id)}>
+                                            <FontAwesomeIcon icon={faTrash} /> Remove
+                                        </button>
                                     </td>
                                 </tr>
-                            )}
+                            ))}
                         </tbody>
                     </table>
                 </div>
@@ -92,6 +84,7 @@ const AdminPage = () => {
         </div>
     );
 };
+
 
 
 const styles = {

@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faSearch,
     faCalendarAlt,
@@ -14,11 +14,12 @@ import FinanceEventStatsModal from "../components/FinanceEventStatsModal";
 import styles from "./FinanceEventsPage.module.css";
 
 import getData from "../utils/getData";
-import {useNotifications} from "../components/NotificationProvider";
+import { useNotifications } from "../components/NotificationProvider";
 
 const FinanceEventsPage = () => {
+    const [selectedRole, setSelectedRole] = useState("");
     const userId = parseInt(localStorage.getItem("userId"));
-    const {addNotification} = useNotifications();
+    const { addNotification } = useNotifications();
 
     const [searchTerm, setSearchTerm] = useState("");
     const [filteredEvents, setFilteredEvents] = useState([]);
@@ -115,7 +116,7 @@ const FinanceEventsPage = () => {
                 event.eventBudget || 0,
                 event.flightBudget || 0
             );
-        } 
+        }
         setSelectedEvent(event);
     };
 
@@ -142,9 +143,17 @@ const FinanceEventsPage = () => {
         );
     };
 
+    const handleRoleChange = (newRole) => {
+        setSelectedRole(newRole);
+    };
+
     return (
         <div className={styles.container}>
-            <Header title="AirBlue System" />
+            <Header
+                title="AirBlue System"
+                userRole={selectedRole}
+                onRoleChange={handleRoleChange}
+            />
             <main className={styles.main}>
                 <section className={styles.searchSection}>
                     <input
@@ -165,10 +174,10 @@ const FinanceEventsPage = () => {
                             // Calculate percentage used from event budget.
                             const percentageUsed = event.eventBudget
                                 ? Math.round(
-                                      (event.totalAmountSpent /
-                                          event.eventBudget) *
-                                          100
-                                  )
+                                    (event.totalAmountSpent /
+                                        event.eventBudget) *
+                                    100
+                                )
                                 : 0;
                             return (
                                 <div

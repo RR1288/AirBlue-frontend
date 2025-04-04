@@ -5,6 +5,7 @@ import { faPenToSquare, faTrash, faArrowLeft, faFilter } from "@fortawesome/free
 import { Link, useNavigate } from "react-router-dom";
 
 const ManageEventsPage = () => {
+  const [selectedRole, setSelectedRole] = useState("");
   const navigate = useNavigate();
 
   // Mock event data
@@ -23,9 +24,17 @@ const ManageEventsPage = () => {
     setEvents(events.filter(event => event.id !== id)); // Remove from UI
   };
 
+  const handleRoleChange = (newRole) => {
+    setSelectedRole(newRole);
+  };
+
   return (
     <div style={styles.container}>
-      <Header title="AirBlue System" />
+      <Header
+        title="AirBlue System"
+        userRole={selectedRole}
+        onRoleChange={handleRoleChange}
+      />
       <main style={styles.main}>
         <section style={styles.events}>
           {/* Back Button & Title */}

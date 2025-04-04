@@ -9,6 +9,7 @@ import getData from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
 
 const EventCreationPage = () => {
+    const [selectedRole, setSelectedRole] = useState("");
     const { addNotification } = useNotifications();
     const [formData, setFormData] = useState({
         title: "",
@@ -80,9 +81,17 @@ const EventCreationPage = () => {
         }
     };
 
+    const handleRoleChange = (newRole) => {
+        setSelectedRole(newRole);
+    };
+
     return (
         <div className={styles.page}>
-            <Header title="AirBlue System" />
+           <Header
+                title="AirBlue System"
+                userRole={selectedRole}
+                onRoleChange={handleRoleChange}
+            />
 
             <div className={styles.mainContent}>
                 <div className={styles.headerRow}>

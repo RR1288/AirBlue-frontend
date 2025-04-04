@@ -5,39 +5,40 @@ import { faCheckCircle, faTimesCircle, faArrowLeft } from '@fortawesome/free-sol
 import { Link } from 'react-router-dom';
 
 const ApprovalPage = () => {
-    // sample approval data
+    const [selectedRole, setSelectedRole] = useState("");
     const [approvals, setApprovals] = useState([
         { id: 1, request: "Flight Request - Tirana to Pristina", status: "Pending" },
         { id: 2, request: "Event Budget Approval - Business Summit", status: "Pending" },
         { id: 3, request: "User Registration - John Doe", status: "Pending" },
     ]);
 
-    // function to handle approval
     const handleApproval = (id, action) => {
         setApprovals(approvals.map(item =>
             item.id === id ? { ...item, status: action } : item
         ));
     };
 
+    const handleRoleChange = (newRole) => {
+        setSelectedRole(newRole);
+    };
+
     return (
         <div style={styles.page}>
-            {/* header */}
-            <Header title="AirBlue System" />
-
+            <Header
+                title="AirBlue System"
+                userRole={selectedRole}
+                onRoleChange={handleRoleChange}
+            />
             <div style={styles.mainContent}>
-                {/* back Button & Title */}
                 <div style={styles.headerRow}>
                     <Link to="/home" style={styles.backButton}>
                         <FontAwesomeIcon icon={faArrowLeft} style={styles.icon} />
                     </Link>
                     <h1 style={styles.title}>Approval Requests</h1>
                 </div>
-
                 <p style={styles.description}>
                     Review and manage pending approvals for flights, events, and user registrations.
                 </p>
-
-                {/* approvals Table */}
                 <div style={styles.tableContainer}>
                     <table style={styles.table}>
                         <thead>
@@ -48,7 +49,7 @@ const ApprovalPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {approvals.map((item) => (
+                            {approvals.map(item => (
                                 <tr key={item.id} style={styles.row}>
                                     <td style={styles.td}>{item.request}</td>
                                     <td style={{ ...styles.td, fontWeight: 'bold', color: item.status === "Approved" ? "green" : item.status === "Rejected" ? "red" : "#555" }}>
