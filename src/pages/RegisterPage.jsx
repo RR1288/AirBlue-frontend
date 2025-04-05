@@ -99,6 +99,9 @@ const RegisterPage = () => {
                                 style={styles.input}
                                 required
                             />
+                            <small style={styles.passwordInfo}>
+                                Password must be at least 8 characters long, include an uppercase letter, and a special character.
+                            </small>
                         </div>
                         <button type="submit" style={styles.button}>Register</button>
                     </form>
@@ -172,6 +175,12 @@ const styles = {
         textAlign: 'center',
         color: '#0B2853',
         fontWeight: 'bold',
+    },
+    passwordInfo: {
+        display: 'block',
+        marginTop: '5px',
+        fontSize: '0.9em',
+        color: '#555',
     },
 };
 
