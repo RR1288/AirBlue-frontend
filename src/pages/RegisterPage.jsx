@@ -63,10 +63,15 @@ const RegisterPage = () => {
             <div style={styles.mainContent}>
                 <h1 style={styles.h1}>Register</h1>
                 <div style={styles.formContainer}>
+                <p style={styles.requiredNote}>
+                        Fields marked with <span style={{ color: 'red' }}>*</span> are required.
+                </p>
                     <form onSubmit={handleRegisterSubmit} style={styles.form}>
                         <div style={styles.formGroup}>
-                            <label htmlFor="name" style={styles.label}>Name:</label>
-                            <input
+                        <label htmlFor="name" style={styles.label}>
+                                Name <span style={{ color: 'red' }}>*</span>
+                        </label>                            
+                        <input
                                 id="name"
                                 name="name"
                                 type="text"
@@ -77,7 +82,9 @@ const RegisterPage = () => {
                             />
                         </div>
                         <div style={styles.formGroup}>
-                            <label htmlFor="email" style={styles.label}>Email:</label>
+                        <label htmlFor="email" style={styles.label}>
+                                Email <span style={{ color: 'red' }}>*</span>
+                        </label>                            
                             <input
                                 id="email"
                                 name="email"
@@ -89,8 +96,10 @@ const RegisterPage = () => {
                             />
                         </div>
                         <div style={styles.formGroup}>
-                            <label htmlFor="password" style={styles.label}>Password:</label>
-                            <input
+                        <label htmlFor="password" style={styles.label}>
+                                Password <span style={{ color: 'red' }}>*</span>
+                        </label>
+                        <input
                                 id="password"
                                 name="password"
                                 type="password"
@@ -99,6 +108,9 @@ const RegisterPage = () => {
                                 style={styles.input}
                                 required
                             />
+                        <small style={styles.passwordInfo}>
+                            Password must be at least 8 characters long, include an uppercase letter, and a special character.
+                        </small>
                         </div>
                         <button type="submit" style={styles.button}>Register</button>
                     </form>
@@ -173,6 +185,17 @@ const styles = {
         color: '#0B2853',
         fontWeight: 'bold',
     },
+    requiredNote: {
+        marginBottom: '10px',
+        fontSize: '0.9em',
+        color: '#555',
+    },
+    passwordInfo: {
+        display: 'block',
+        marginTop: '5px',
+        fontSize: '0.9em',
+        color: '#555',
+    },    
 };
 
 export default RegisterPage;
