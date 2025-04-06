@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import Header from "../components/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -58,11 +58,13 @@ const SingleInvitationModal = ({ eventId, eventGroups, onClose, onSend }) => {
           onChange={(e) => setSelectedGroup(e.target.value)}
         >
           <option value="">Select Event Group</option>
-          {eventGroups.map((group) => (
-            <option key={group.id} value={group.id}>
-              {group.name}
+          {console.log(eventGroups[0])}
+          {eventGroups[0].map((group) => (
+            <option key={group.EventGroupID} value={group.EventGroupID}>
+              {group.Name}
             </option>
-          ))}
+          )
+          )}
         </select>
         {error && <p className={styles.errorText}>{error}</p>}
         <div className={styles.modalActions}>
@@ -93,6 +95,9 @@ const BulkInvitationModal = ({ onClose }) => (
 
 const ManageAttendees = () => {
   const { eventId } = useParams();
+  const location = useLocation();
+  const event = location.state.event;
+
   const { addNotification } = useNotifications();
 
   // State for attendees and pending invitations
@@ -107,7 +112,7 @@ const ManageAttendees = () => {
   const [showBulkModal, setShowBulkModal] = useState(false);
   const [showSingleModal, setShowSingleModal] = useState(false);
   // State for event groups (for single invitation)
-  const [eventGroups, setEventGroups] = useState([]);
+  const [eventGroups, setEventGroups] = useState([event.EventGroups]);
 
   useEffect(() => {
     fetchAttendeesData();
@@ -135,27 +140,7 @@ const ManageAttendees = () => {
     }
   };
 
-  // Fetch event groups for invitation dropdown
-  useEffect(() => {
-    const fetchEventGroups = async () => {
-      try {
-        const response = await getData("GET", `/event-groups/${eventId}`);
-        if (!response.ok) throw new Error("Failed to fetch event groups");
-        const res = await response.json();
-        setEventGroups(res.data);
-      } catch (error) {
-        // test data for now
-        setEventGroups([{'id':1, name: 'VIP'}, {'id':2, name: 'Basic'}] );
-        // addNotification({
-        //   title: "Error",
-        //   message: error.message,
-        //   type: "error",
-        // });
-      }
-    };
 
-    fetchEventGroups();
-  }, [eventId]);
 
   const handleSendInvitation = async (email, eventGroupId) => {
     try {
