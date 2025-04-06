@@ -193,6 +193,55 @@ const ManageAttendees = () => {
     }
   };
 
+  const removeAttendee = async (item) => {    
+    const attendeeId = item.AttendeeID;
+    const eventId = item.EventID;
+
+    const response = await getData("DELETE", '/attendees/remove', {eventId, userIds: [attendeeId]});
+    
+    if (!response.ok){
+      addNotification({
+        title: "Error",
+        message: await response.json().message,
+        type: "error",
+      });
+    } else {
+      const res = await response.json();
+      addNotification({
+        title: "Success",
+        message: res.message,
+        type: "success",
+      });
+      fetchAttendeesData();
+    }
+  }
+ 
+  const revokeInvitation = async (item) => {    
+    console.log(item);
+    console.log(event);
+    
+    const invitationId = item.InvitationID;
+    const eventId = event.id;
+
+    const response = await getData("DELETE", '/attendees/invite/revoke', {eventId, invitationIds: [invitationId]});
+    
+    if (!response.ok){
+      addNotification({
+        title: "Error",
+        message: await response.json().message,
+        type: "error",
+      });
+    } else {
+      const res = await response.json();
+      addNotification({
+        title: "Success",
+        message: res.message,
+        type: "success",
+      });
+      fetchAttendeesData();
+    }
+  }
+
   return (
     <div className={styles.container}>
       <Header title="AirBlue System" />
@@ -280,7 +329,9 @@ const ManageAttendees = () => {
                       : item.invitedEmail}
                   </td>
                   <td>
-                    <button className={styles.actionButton}>Remove</button>
+                    <button className={styles.actionButton} onClick={selectedTab === "attendees"
+                      ? (() => {removeAttendee(item)})
+                      : (() => {revokeInvitation(item)})}>Remove</button>
                   </td>
                 </tr>
               ))}
