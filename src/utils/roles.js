@@ -7,8 +7,6 @@ export const Roles = Object.freeze({
 
 /**
  * Get default role based on priority (A > E > F > attendee)
- * @param {string} rolesStr - e.g. "AFE", "", "F"
- * @returns {string} - one of "admin", "eventPlanner", "financePlanner", "attendee"
  */
 export const getDefaultRole = (rolesStr = "") => {
     if (rolesStr.includes(Roles.ADMIN)) return "admin";

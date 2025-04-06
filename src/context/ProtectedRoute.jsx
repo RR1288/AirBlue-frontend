@@ -17,6 +17,7 @@ const ProtectedRoute = ({ allowedRoles }) => {
   }
 
   // If allowedRoles are defined and the user's role is not allowed, redirect to home.
+  // eslint-disable-next-line react/prop-types
   if (allowedRoles && !allowedRoles.includes(selectedRole)) {
     return <Navigate to="/home" replace />;
   }

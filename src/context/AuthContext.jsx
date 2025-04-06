@@ -22,6 +22,8 @@ export const AuthProvider = ({ children }) => {
 
   const login = ({ token, roles, userId, username }) => {
     const defaultRole = getDefaultRole(roles);
+    console.log(defaultRole);
+    
     setUser({ token, roles, userId, username, twoFAVerified: false });
     setSelectedRole(defaultRole);
   };

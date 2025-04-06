@@ -115,9 +115,8 @@ const PinModal = ({ isOpen, onClose, userId }) => {
 
 PinModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
-  onSubmit: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
-  userId: PropTypes.string.isRequired,
+  userId: PropTypes.string,
 };
 
 export default PinModal;
