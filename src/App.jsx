@@ -23,38 +23,67 @@ import EventsFinanceUser from './pages/FinanceEventsPage';
 import { NotificationProvider } from './components/NotificationProvider';
 import Enable2FAPage from './pages/Enable2FAPage';
 import AcceptEventInvitePage from './pages/AcceptEventInvite';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './context/ProtectedRoute';
+
 
 
 function App() {
     return (
+        <AuthProvider>
+
         <NotificationProvider>
             <Router>
                 <Routes>
-                    <Route path="/home" element={<HomePage />} />
-                    <Route path="/manage-events" element={<ManageEventsPage />} />
-                    <Route path="/manage-attendees/:eventId" element={<ManageAttendeesPage />} />
-                    <Route path="/event-details" element={<FinanceEventDetailsModal/>} />
+                    {/* Public routes */}
                     <Route path="/" element={<LoginPage/>} />
                     <Route path="/login" element={<LoginPage/>} />
-                    <Route path="/event-edit" element={<EventEditPage/>} />
                     <Route path="/under-construction" element={<UnderConstruction/>} />
-                    <Route path="/event-creation" element={<EventCreationPage/>} />
-                    <Route path="//flight-search/:eventId" element={<FlightSearchPage/>} />
-                    <Route path="/approval" element={<ApprovalPage/>} />
-                    <Route path="/admin" element={<AdminPage/>} />
-                    <Route path="/setuser-info" element={<SetUserInfoPage/>} />
                     <Route path="/register" element={<RegisterPage/>} />
-                    <Route path="/attendee-register" element={<AttendeeRegister/>} />
                     <Route path="/password-reset" element={<PasswordResetPage/>} />
-                    <Route path="/user-info" element={<UserInfoPage/>} />
-                    <Route path="/forgot-password" element={<ForgotPasswordPage/>} />
-                    <Route path="/my-events" element={<MyEventsPage/>} />
-                    <Route path="/finance-events" element={<EventsFinanceUser/>} />
-                    <Route path="/enable-2fa" element={<Enable2FAPage/>} />
-                    <Route path="/accept-invite" element={<AcceptEventInvitePage/>} />
+                    <Route path="/attendee-register" element={<AttendeeRegister/>} />
+                    
+
+                    {/* Protected routes, need to be authenticated */}
+                    <Route element={<ProtectedRoute />}>
+                        <Route path="/home" element={<HomePage />} />
+                        <Route path="/enable-2fa" element={<Enable2FAPage/>} />
+                        <Route path="/user-info" element={<UserInfoPage/>} />
+                    </Route>
+
+                    {/* Event Planner */}
+                    <Route element={<ProtectedRoute allowedRoles={['eventPlanner']} />}>
+                        <Route path="/manage-events" element={<ManageEventsPage />} />
+                        <Route path="/manage-attendees/:eventId" element={<ManageAttendeesPage />} />
+                        <Route path="/event-edit" element={<EventEditPage/>} />
+                        <Route path="/event-creation" element={<EventCreationPage/>} />
+                        <Route path="/approval" element={<ApprovalPage/>} />
+                    </Route>
+
+                    {/* Finance Planner */}
+                    <Route element={<ProtectedRoute allowedRoles={['financePlanner']} />}>
+                        <Route path="/finance-events" element={<EventsFinanceUser/>} />
+                    
+                    </Route>
+
+                    {/* Attendee */}
+                    <Route element={<ProtectedRoute allowedRoles={['attendee']} />}>
+                        <Route path="/flight-search/:eventId" element={<FlightSearchPage/>} />
+                        <Route path="/accept-invite" element={<AcceptEventInvitePage/>} />
+                        <Route path="/setuser-info" element={<SetUserInfoPage/>} />
+                        <Route path="/my-events" element={<MyEventsPage/>} />
+                    </Route>
+                    
+                    {/* Admin */}
+                    <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+                        <Route path="/admin" element={<AdminPage/>} />
+                    </Route>
+
+
                 </Routes>
             </Router>
         </NotificationProvider>
+        </AuthProvider>
     );
 }
 
