@@ -26,7 +26,7 @@ const LoginPage = () => {
         event.preventDefault();
         let { username, password } = credentials;
 
-        // trim s and sanitize
+        // trim and sanitize
         username = validator.trim(username);
         password = validator.trim(password);
 
