@@ -6,16 +6,18 @@ import PinModal from '../components/PinModal';
 import styles from './Enable2FAPage.module.css';
 import FooterNoLink from "../components/FooterNoLink";
 import Header from "../components/Header";
+import { useAuth } from '../context/AuthContext';
 
 const Enable2FAPage = () => {
   const { addNotification } = useNotifications();
   const navigate = useNavigate();
   const [qrCodeUrl, setQrCodeUrl] = useState('');
   const [showPinModal, setShowPinModal] = useState(false);
+  const {token} = useAuth();
   const headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Authorization': `Bearer ${token}`,
   }
 
   // Handle 2FA Setup: fetch the QR code from the server.
