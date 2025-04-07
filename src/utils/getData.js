@@ -1,7 +1,7 @@
 async function getData(method, endpoint, token, body={}) {
     let res;
     // If method POST
-    if (method === "POST" || method === "UPDATE"){
+    if (method === "POST" || method === "UPDATE" || method === "DELETE"){
         // TODO: Use ENUM
         res = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, {
             method,
@@ -14,7 +14,7 @@ async function getData(method, endpoint, token, body={}) {
         });
 
     }  else {
-        // GET, DELETE -> No body 
+        // GET -> No body 
         res = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, {
             method,
             headers: {
