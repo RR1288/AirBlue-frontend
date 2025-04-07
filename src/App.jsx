@@ -23,7 +23,6 @@ import AcceptEventInvitePage from './pages/AcceptEventInvite';
 import { NotificationProvider } from './components/NotificationProvider';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './context/ProtectedRoute';
-import { Roles } from './utils/roles';
 
 
 function App() {
