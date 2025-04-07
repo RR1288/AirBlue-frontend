@@ -59,12 +59,12 @@ const SingleInvitationModal = ({ eventId, eventGroups, onClose, onSend }) => {
         >
           <option value="">Select Event Group</option>
           {console.log(eventGroups[0])}
-          {eventGroups[0].map((group) => (
+          {(eventGroups[0] || []).map((group) => (
             <option key={group.EventGroupID} value={group.EventGroupID}>
-              {group.Name}
+              {`${group.Name} - $${group.budget ?? group.FlightBudget ?? 0}`}
             </option>
-          )
-          )}
+          ))}
+
         </select>
         {error && <p className={styles.errorText}>{error}</p>}
         <div className={styles.modalActions}>
@@ -170,7 +170,7 @@ const ManageAttendees = () => {
     let filtered = list.filter((item) =>
       selectedTab === "attendees"
         ? item.User.FName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.User.Email?.toLowerCase().includes(searchQuery.toLowerCase())
+        item.User.Email?.toLowerCase().includes(searchQuery.toLowerCase())
         : item.invitedEmail?.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
@@ -223,17 +223,15 @@ const ManageAttendees = () => {
 
         <div className={styles.tabs}>
           <button
-            className={`${styles.tabButton} ${
-              selectedTab === "attendees" && styles.activeTab
-            }`}
+            className={`${styles.tabButton} ${selectedTab === "attendees" && styles.activeTab
+              }`}
             onClick={() => setSelectedTab("attendees")}
           >
             Attendees
           </button>
           <button
-            className={`${styles.tabButton} ${
-              selectedTab === "pending" && styles.activeTab
-            }`}
+            className={`${styles.tabButton} ${selectedTab === "pending" && styles.activeTab
+              }`}
             onClick={() => setSelectedTab("pending")}
           >
             Pending Invitations
