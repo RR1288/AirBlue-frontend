@@ -122,9 +122,7 @@ function Header({title, hideSidebar = false }) {
 
 Header.propTypes = {
     title: PropTypes.string.isRequired,
-    userRole: PropTypes.string.isRequired,
     hideSidebar: PropTypes.bool, // Added prop validation
-    onRoleChange: PropTypes.func.isRequired,
 };
 
 export default Header;

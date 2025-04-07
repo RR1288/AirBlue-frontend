@@ -1,4 +1,5 @@
-import React, { useContext, useEffect } from "react";
+// eslint-disable-next-line no-unused-vars
+import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

@@ -10,7 +10,7 @@ import {
   faTimes,
   faUsers,
   faPlane,
-  faLayerGroup, // Icon for groups (or choose any suitable)
+  faLayerGroup,
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./ManageEventsPage.module.css";
 import getData from "../utils/getData";
@@ -18,10 +18,10 @@ import { useNotifications } from "../components/NotificationProvider";
 import { formatDate } from "../utils/formatUtils";
 import { useNavigate } from "react-router-dom";
 import EventGroupModal from "../components/EventGroupModal.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const ManageEventsPage = () => {
   const navigate = useNavigate();
-  // const userId = Number(localStorage.getItem("userId")) || null;
   const { addNotification } = useNotifications();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -30,6 +30,7 @@ const ManageEventsPage = () => {
   const [groupModalEvent, setGroupModalEvent] = useState(null);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
+  const {token} = useAuth();
 
   useEffect(() => {
     fetchEvents();
@@ -38,7 +39,7 @@ const ManageEventsPage = () => {
   const fetchEvents = async () => {
     setLoading(true);
     try {
-      const res = await getData("GET", "/events/getAllEventsPlannerView");
+      const res = await getData("GET", "/events/getAllEventsPlannerView", token);
       if (!res.ok) throw new Error("Failed to fetch events");
       const data = await res.json();
 

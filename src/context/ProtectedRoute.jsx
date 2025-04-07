@@ -1,6 +1,8 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useContext } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import PropTypes from 'prop-types';
 
 const ProtectedRoute = ({ allowedRoles }) => {
   const { user, selectedRole } = useContext(AuthContext);
@@ -23,6 +25,10 @@ const ProtectedRoute = ({ allowedRoles }) => {
   }
 
   return <Outlet />;
+};
+
+ProtectedRoute.propTypes = {
+    allowedRoles: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default ProtectedRoute;

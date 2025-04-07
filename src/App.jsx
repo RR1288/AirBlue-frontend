@@ -49,7 +49,7 @@ function App() {
             </Route>
 
             {/* Event Planner Routes */}
-            <Route element={<ProtectedRoute allowedRoles={[Roles.EVENT_PLANNER]} />}>
+            <Route element={<ProtectedRoute allowedRoles={["eventPlanner"]} />}>
               <Route path="/manage-events" element={<ManageEventsPage />} />
               <Route path="/manage-attendees/:eventId" element={<ManageAttendeesPage />} />
               <Route path="/event-edit" element={<EventEditPage />} />
@@ -58,12 +58,12 @@ function App() {
             </Route>
 
             {/* Finance Planner Routes */}
-            <Route element={<ProtectedRoute allowedRoles={[Roles.FINANCE_PLANNER]} />}>
+            <Route element={<ProtectedRoute allowedRoles={["financePlanner"]} />}>
               <Route path="/finance-events" element={<EventsFinanceUser />} />
             </Route>
 
             {/* Attendee Routes */}
-            <Route element={<ProtectedRoute allowedRoles={[Roles.ATTENDEE]} />}>
+            <Route element={<ProtectedRoute allowedRoles={["attendee"]} />}>
               <Route path="/flight-search/:eventId" element={<FlightSearchPage />} />
               <Route path="/accept-invite" element={<AcceptEventInvitePage />} />
               <Route path="/setuser-info" element={<SetUserInfoPage />} />
@@ -71,7 +71,7 @@ function App() {
             </Route>
 
             {/* Admin Routes */}
-            <Route element={<ProtectedRoute allowedRoles={[Roles.ADMIN]} />}>
+            <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
               <Route path="/admin" element={<AdminPage />} />
             </Route>
 
