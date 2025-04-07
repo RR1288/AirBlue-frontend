@@ -2,6 +2,8 @@
 import React, {useState} from "react";
 import styles from "./BulkInvitationModal.module.css";
 import {sendFile} from "../utils/getData";
+import {useAuth} from "../context/AuthContext";
+import { useNotifications } from "./NotificationProvider";
 
 const BulkInvitationModal = ({eventId, eventGroups, onClose}) => {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -9,6 +11,9 @@ const BulkInvitationModal = ({eventId, eventGroups, onClose}) => {
     const [error, setError] = useState("");
     const [responseData, setResponseData] = useState(null);
     const [dragActive, setDragActive] = useState(false);
+    const {addNotification} = useNotifications();
+
+    const {token} = useAuth();
 
     const allowedExtensions = ["csv", "txt"];
 
@@ -70,15 +75,36 @@ const BulkInvitationModal = ({eventId, eventGroups, onClose}) => {
                 `/attendees/invite-csv?eventId=${encodeURIComponent(
                     eventId
                 )}&eventGroupId=${encodeURIComponent(selectedGroup)}`,
+                token,
                 formData
             );
             console.log(response);
 
             const data = await response.json();
             setResponseData(data);
+            if (!response.ok) {
+                addNotification({
+                    title: "Error",
+                    message: error.message,
+                    type: "error",
+                });
+                return;
+            }
+            addNotification({
+                title: "Success",
+                message: data.message,
+                type: "success",
+            });
+
             // Do further processing with data.successful and data.unsuccessful as needed.
+            onClose();
         } catch (err) {
             setError("An error occurred while sending invitations.");
+            addNotification({
+                title: "Error",
+                message: err.message,
+                type: "error",
+            });
         }
     };
 
