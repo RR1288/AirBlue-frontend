@@ -20,11 +20,12 @@ const SingleInvitationModal = ({ eventId, eventGroups, onClose, onSend }) => {
   const [email, setEmail] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const validateEmail = (email) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!email.trim()) {
       setError("Email is required.");
       return;
@@ -37,14 +38,22 @@ const SingleInvitationModal = ({ eventId, eventGroups, onClose, onSend }) => {
       setError("Please select an event group.");
       return;
     }
+
     setError("");
-    onSend(email, selectedGroup);
+    setLoading(true);
+
+    try {
+      await onSend(email, selectedGroup);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
         <h2>Send Single Invitation</h2>
+
         <input
           type="email"
           placeholder="Enter email..."
@@ -52,26 +61,36 @@ const SingleInvitationModal = ({ eventId, eventGroups, onClose, onSend }) => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+
         <select
           className={styles.inputField}
           value={selectedGroup}
           onChange={(e) => setSelectedGroup(e.target.value)}
         >
           <option value="">Select Event Group</option>
-          {console.log(eventGroups[0])}
           {(eventGroups[0] || []).map((group) => (
             <option key={group.EventGroupID} value={group.EventGroupID}>
               {`${group.Name} - $${group.budget ?? group.FlightBudget ?? 0}`}
             </option>
           ))}
-
         </select>
+
         {error && <p className={styles.errorText}>{error}</p>}
+        {loading && <p className={styles.loading}>Sending invitation...</p>}
+
         <div className={styles.modalActions}>
-          <button onClick={handleSend} className={styles.sendButton}>
+          <button
+            onClick={handleSend}
+            className={styles.sendButton}
+            disabled={loading}
+          >
             <FontAwesomeIcon icon={faPaperPlane} /> Send Invitation
           </button>
-          <button onClick={onClose} className={styles.closeModalButton}>
+          <button
+            onClick={onClose}
+            className={styles.closeModalButton}
+            disabled={loading}
+          >
             <FontAwesomeIcon icon={faTimes} /> Close
           </button>
         </div>
@@ -100,25 +119,20 @@ const ManageAttendees = () => {
 
   const { addNotification } = useNotifications();
 
-  // State for attendees and pending invitations
   const [data, setData] = useState({ attendees: [], pending: [] });
   const [loading, setLoading] = useState(false);
-  const [selectedTab, setSelectedTab] = useState("attendees"); // "attendees" or "pending"
+  const [selectedTab, setSelectedTab] = useState("attendees");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortColumn, setSortColumn] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
-
-  // State for modals
   const [showBulkModal, setShowBulkModal] = useState(false);
   const [showSingleModal, setShowSingleModal] = useState(false);
-  // State for event groups (for single invitation)
   const [eventGroups, setEventGroups] = useState([event.EventGroups]);
 
   useEffect(() => {
     fetchAttendeesData();
   }, [eventId]);
 
-  // Fetch attendees and pending invitations
   const fetchAttendeesData = async () => {
     setLoading(true);
     try {
@@ -140,29 +154,22 @@ const ManageAttendees = () => {
     }
   };
 
-
-
   const handleSendInvitation = async (email, eventGroupId) => {
-    try {
-      const response = await getData("POST", `/attendees/invite/${eventId}`, {
-        email: email,
-        eventGroupId: eventGroupId,
-      });
-      if (!response.ok) throw new Error("Failed to send invitation");
-      addNotification({
-        title: "Success",
-        message: "Invitation sent successfully!",
-        type: "success",
-      });
-      setShowSingleModal(false);
-      fetchAttendeesData();
-    } catch (error) {
-      addNotification({
-        title: "Error",
-        message: error.message,
-        type: "error",
-      });
-    }
+    const response = await getData("POST", `/attendees/invite/${eventId}`, {
+      email,
+      eventGroupId,
+    });
+
+    if (!response.ok) throw new Error("Failed to send invitation");
+
+    addNotification({
+      title: "Success",
+      message: "Invitation sent successfully!",
+      type: "success",
+    });
+
+    setShowSingleModal(false);
+    fetchAttendeesData();
   };
 
   const getFilteredAndSortedData = () => {
@@ -170,7 +177,7 @@ const ManageAttendees = () => {
     let filtered = list.filter((item) =>
       selectedTab === "attendees"
         ? item.User.FName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.User.Email?.toLowerCase().includes(searchQuery.toLowerCase())
+          item.User.Email?.toLowerCase().includes(searchQuery.toLowerCase())
         : item.invitedEmail?.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
@@ -209,29 +216,29 @@ const ManageAttendees = () => {
             className={styles.bulkButton}
             onClick={() => setShowSingleModal(true)}
           >
-            <FontAwesomeIcon icon={faUserPlus} className={styles.bulkIcon} />{" "}
-            Send Single Invitation
+            <FontAwesomeIcon icon={faUserPlus} /> Send Single Invitation
           </button>
           <button
             className={styles.bulkButton}
             onClick={() => setShowBulkModal(true)}
           >
-            <FontAwesomeIcon icon={faUpload} className={styles.bulkIcon} /> Send
-            Bulk Invitations
+            <FontAwesomeIcon icon={faUpload} /> Send Bulk Invitations
           </button>
         </div>
 
         <div className={styles.tabs}>
           <button
-            className={`${styles.tabButton} ${selectedTab === "attendees" && styles.activeTab
-              }`}
+            className={`${styles.tabButton} ${
+              selectedTab === "attendees" ? styles.activeTab : ""
+            }`}
             onClick={() => setSelectedTab("attendees")}
           >
             Attendees
           </button>
           <button
-            className={`${styles.tabButton} ${selectedTab === "pending" && styles.activeTab
-              }`}
+            className={`${styles.tabButton} ${
+              selectedTab === "pending" ? styles.activeTab : ""
+            }`}
             onClick={() => setSelectedTab("pending")}
           >
             Pending Invitations
@@ -286,6 +293,7 @@ const ManageAttendees = () => {
           </table>
         )}
       </main>
+
       {showBulkModal && (
         <BulkInvitationModal onClose={() => setShowBulkModal(false)} />
       )}
