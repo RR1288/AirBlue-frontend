@@ -58,7 +58,6 @@ const AdminPage = () => {
             });
           }
     }
-    }
 
     return (
         <div style={styles.page}>
@@ -127,7 +126,7 @@ const AdminPage = () => {
             </div>
         </div>
     );
-};
+}
 
 
 const styles = {
