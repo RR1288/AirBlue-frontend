@@ -13,11 +13,12 @@ const Enable2FAPage = () => {
   const navigate = useNavigate();
   const [qrCodeUrl, setQrCodeUrl] = useState('');
   const [showPinModal, setShowPinModal] = useState(false);
-  const {token} = useAuth();
+  const {token, userId} = useAuth();
   const headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
     'Authorization': `Bearer ${token}`,
+    credentials: 'include',
   }
 
   // Handle 2FA Setup: fetch the QR code from the server.
@@ -123,6 +124,7 @@ const Enable2FAPage = () => {
         isOpen={showPinModal}
         onSubmit={handleVerificationSuccess}
         onClose={handleModalClose}
+        userId={userId}
       />
       <FooterNoLink/>
     </div>

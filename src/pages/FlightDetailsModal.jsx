@@ -9,6 +9,7 @@ import {
     faHourglassHalf,
 } from "@fortawesome/free-solid-svg-icons";
 import {getData} from "../utils/getData";
+import { useAuth } from "../context/AuthContext";
 
 const FlightDetailsModal = ({
     flight,
@@ -17,6 +18,7 @@ const FlightDetailsModal = ({
     onReject, // callback from parent to reject the flight
 }) => {
     const [itinerary, setItinerary] = useState({});
+    const {token} = useAuth();
 
     // Fetch itinerary info on mount (or when flight changes)
     useEffect(() => {
@@ -36,7 +38,7 @@ const FlightDetailsModal = ({
         try {
             const response = await getData(
                 "GET",
-                `/flights/view/getFlightInfo?attendeeId=${attendeeId}`
+                `/flights/view/getFlightInfo?attendeeId=${attendeeId}`, token
             );
             if (!response.ok) throw new Error("Failed to fetch itineraries");
             const data = await response.json();

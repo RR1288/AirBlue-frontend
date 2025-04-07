@@ -39,6 +39,7 @@ const PinModal = ({ isOpen, onClose, userId }) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, twoFactorCode: fullPin }),
+        credentials: 'include',
       });
 
       const data = await response.json();

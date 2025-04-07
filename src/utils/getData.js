@@ -10,7 +10,8 @@ export async function getData(method, endpoint, token, body={}) {
                 Accept: "application/json",
                 Authorization: `Bearer ${token}`, // Attach token to request
             },
-            body: JSON.stringify(body)
+            body: JSON.stringify(body),
+            credentials: "include",
         });
 
     }  else {

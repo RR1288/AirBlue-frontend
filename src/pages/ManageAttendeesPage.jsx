@@ -93,6 +93,7 @@ const ManageAttendees = () => {
     const {eventId} = useParams();
     const location = useLocation();
     const event = location.state.event;
+    
 
     const {addNotification} = useNotifications();
 

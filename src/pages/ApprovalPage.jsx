@@ -16,6 +16,7 @@ import { Link, useLocation } from "react-router-dom";
 import FlightDetailsModal from "./FlightDetailsModal";
 import {getData} from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
+import { useAuth } from "../context/AuthContext";
 
 const checkPending = () => {
   if (attendee?.Booking[0]?.status !== "pending") {
@@ -39,7 +40,7 @@ const ApprovalPage = () => {
   // Flat list of attendees for the event
   const [attendees, setAttendees] = useState([]);
   const { addNotification } = useNotifications();
-
+  const { token } = useAuth();
   // Track which attendee is currently processing an action
   // eslint-disable-next-line no-unused-vars
   const [processingAttendee, setProcessingAttendee] = useState(null);
@@ -54,7 +55,7 @@ const ApprovalPage = () => {
     try {
       const response = await getData(
         "GET",
-        `/events/getAllAttendees?eventId=${event.id}`
+        `/events/getAllAttendees?eventId=${event.id}`, token
       );
       if (!response.ok) throw new Error("Failed to fetch attendees data");
       const res = await response.json();
@@ -91,7 +92,7 @@ const ApprovalPage = () => {
       // Adjust the endpoint URL according to your API
       const response = await getData(
         "GET",
-        `/flights/view/getFlightInfo?attendeeId=${attendeeId}`
+        `/flights/view/getFlightInfo?attendeeId=${attendeeId}`, token
       );
       if (!response.ok) {
         throw new Error("Failed to fetch itineraries");
@@ -117,7 +118,7 @@ const ApprovalPage = () => {
       }
       const response = await getData(
         "POST",
-        `/flights/${itinerary.DuffleOrderID}/book`
+        `/flights/${itinerary.DuffleOrderID}/book`, token
       );
       if (!response.ok) {
         throw new Error("Flight booking failed");
@@ -155,7 +156,7 @@ const ApprovalPage = () => {
       }  
       const response = await getData(
         "POST",
-        `/flights/${itinerary.ItineraryID}/declinePendingFlight`
+        `/flights/${itinerary.ItineraryID}/declinePendingFlight`, token
       );
       if (!response.ok) {
         throw new Error("Flight declining failed");

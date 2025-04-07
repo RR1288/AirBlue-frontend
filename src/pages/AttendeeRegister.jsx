@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import {getData} from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
+import { useAuth } from '../context/AuthContext';
 
 // const Notification = ({ message, onClose }) => {
 //     useEffect(() => {
@@ -45,6 +46,7 @@ const RegisterAttendeePage = () => {
     });
     const { addNotification } = useNotifications();
     const navigate = useNavigate();
+    const {token} = useAuth();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -108,7 +110,7 @@ const RegisterAttendeePage = () => {
         };
 
         try {
-            const response = await getData("POST", "/users/create-end-user", body);
+            const response = await getData("POST", "/users/create-end-user", token, body);
         
             // Check if the response was successful
             if (response.ok) {
