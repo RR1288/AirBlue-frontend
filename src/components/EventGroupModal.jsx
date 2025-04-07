@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import styles from "./EventGroupModal.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import getData from "../utils/getData";
+import {getData} from "../utils/getData";
 import { useNotifications } from "./NotificationProvider";
 
 const EventGroupModal = ({ event, onClose, onUpdateGroups }) => {

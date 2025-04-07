@@ -13,10 +13,10 @@ import {
     faLayerGroup,
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./ManageEventsPage.module.css";
-import getData from "../utils/getData";
-import {useNotifications} from "../components/NotificationProvider";
-import {formatDate} from "../utils/formatUtils";
-import {useNavigate} from "react-router-dom";
+import {getData} from "../utils/getData";
+import { useNotifications } from "../components/NotificationProvider";
+import { formatDate } from "../utils/formatUtils";
+import { useNavigate } from "react-router-dom";
 import EventGroupModal from "../components/EventGroupModal.jsx";
 import {useAuth} from "../context/AuthContext.jsx";
 

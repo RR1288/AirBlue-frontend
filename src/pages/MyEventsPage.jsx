@@ -12,7 +12,7 @@ import {
   faClock,
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./MyEventsPage.module.css";
-import getData from "../utils/getData";
+import {getData} from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
 import { formatDate } from "../utils/formatUtils";
 

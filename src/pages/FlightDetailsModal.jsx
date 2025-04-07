@@ -8,7 +8,7 @@ import {
     faTimesCircle,
     faHourglassHalf,
 } from "@fortawesome/free-solid-svg-icons";
-import getData from "../utils/getData";
+import {getData} from "../utils/getData";
 
 const FlightDetailsModal = ({
     flight,

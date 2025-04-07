@@ -1,4 +1,4 @@
-async function getData(method, endpoint, token, body={}) {
+export async function getData(method, endpoint, token, body={}) {
     let res;
     // If method POST
     if (method === "POST" || method === "UPDATE" || method === "DELETE"){
@@ -30,4 +30,19 @@ async function getData(method, endpoint, token, body={}) {
     return res;
 }
 
-export default getData;
+export async function sendFile(endpoint, token, formData) {
+    let res;
+ 
+        res = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, {
+            method: 'POST',
+            headers: {
+                Accept: "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: formData
+        });
+
+    
+    return res;
+}
+
