@@ -28,7 +28,7 @@ const isValidEmail = (email) => {
 
 const isValidPassword = (password) => {
     // 8 chars, 1 upper, 1 lower, and special char
-    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z@$!%*?&]{8,}$/;
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z@$!%*?&0-9]{8,}$/;
     return passwordPattern.test(password);
 };
 

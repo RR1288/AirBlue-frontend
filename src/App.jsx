@@ -42,7 +42,6 @@ function App() {
                     <Route path="/approval" element={<ApprovalPage/>} />
                     <Route path="/admin" element={<AdminPage/>} />
                     <Route path="/setuser-info" element={<SetUserInfoPage/>} />
-                    <Route path="/register" element={<RegisterPage/>} />
                     <Route path="/attendee-register" element={<AttendeeRegister/>} />
                     <Route path="/password-reset" element={<PasswordResetPage/>} />
                     <Route path="/user-info" element={<UserInfoPage/>} />
