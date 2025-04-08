@@ -138,6 +138,7 @@
   
   .dataTable th {
     background-color: #0b2853;
+    color: #ffffff;
     cursor: pointer;
   }
   .dataTable td {

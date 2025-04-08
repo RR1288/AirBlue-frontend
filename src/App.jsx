@@ -13,7 +13,6 @@ import FlightSearchPage from './pages/FlightSearchPage';
 import ApprovalPage from './pages/ApprovalPage';
 import AdminPage from './pages/AdminPage';
 import SetUserInfoPage from './pages/SetUserInfoPage';
-import RegisterPage from './pages/RegisterPage';
 import AttendeeRegister from './pages/AttendeeRegister';
 import PasswordResetPage from './pages/PasswordResetPage';
 import UserInfoPage from './pages/UserInfoPage';
@@ -43,7 +42,6 @@ function App() {
                     <Route path="/approval" element={<ApprovalPage/>} />
                     <Route path="/admin" element={<AdminPage/>} />
                     <Route path="/setuser-info" element={<SetUserInfoPage/>} />
-                    <Route path="/register" element={<RegisterPage/>} />
                     <Route path="/attendee-register" element={<AttendeeRegister/>} />
                     <Route path="/password-reset" element={<PasswordResetPage/>} />
                     <Route path="/user-info" element={<UserInfoPage/>} />
