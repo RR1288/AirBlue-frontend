@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         const data = await response.json();
-        const { token, roles, userId, username } = data;
+        const { token, roles, userId, username } = data.data;
 
         console.log("Rehydration success:", data);
 

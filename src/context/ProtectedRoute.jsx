@@ -5,7 +5,7 @@ import { AuthContext } from '../context/AuthContext';
 import PropTypes from 'prop-types';
 
 const ProtectedRoute = ({ allowedRoles }) => {
-  const { user, selectedRole, loading } = useContext(AuthContext);
+  const { user, selectedRole, loading, roles, setSelectedRole} = useContext(AuthContext);
   console.log("USER", user);
   console.log("SELECTED ROLE", selectedRole);
   
@@ -26,13 +26,34 @@ const ProtectedRoute = ({ allowedRoles }) => {
     return <Navigate to="/enable-2fa" replace />;
   }
 
-  // If allowedRoles are defined and the user's role is not allowed, redirect to home.
-  // eslint-disable-next-line react/prop-types
-  if (allowedRoles && !allowedRoles.includes(selectedRole)) {
-    return <Navigate to="/home" replace />;
+  // Universal access: If no specific allowedRoles are defined, grant access to all authenticated users.
+  if (!allowedRoles || allowedRoles.length === 0) {
+    console.log("Universal access granted to all roles.");
+    return <Outlet />;
   }
 
-  return <Outlet />;
+  // Check if the user has any of the required roles for this route
+    const userRoles = roles.split("").map((roleCode) => {
+      const roleMap = { A: "admin", E: "eventPlanner", F: "financePlanner", attendee: "attendee" };
+      return roleMap[roleCode];
+    });
+  
+    const hasAccess = allowedRoles.some((role) => userRoles.includes(role));
+  
+    if (hasAccess) {
+      // If the `selectedRole` doesn't match the required role, switch it automatically
+      const matchingRole = allowedRoles.find((role) => userRoles.includes(role));
+      if (selectedRole !== matchingRole) {
+        setSelectedRole(matchingRole);
+        console.log(`Switching role to: ${matchingRole}`);
+      }
+  
+      return <Outlet />;
+    }
+  
+    // If the user's roles do not include any allowedRoles, redirect to home.
+    console.log("Access denied. Redirecting to home.");
+    return <Navigate to="/home" replace />;
 };
 
 ProtectedRoute.propTypes = {

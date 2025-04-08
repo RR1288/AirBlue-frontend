@@ -41,7 +41,7 @@ function App() {
             <Route path="/attendee-register" element={<AttendeeRegister />} />
 
             {/* Protected Routes (any authenticated user) */}
-            <Route element={<ProtectedRoute />}>
+            <Route element={<ProtectedRoute allowedRoles={[]}/>}>
               <Route path="/home" element={<HomePage />} />
               <Route path="/enable-2fa" element={<Enable2FAPage />} />
               <Route path="/user-info" element={<UserInfoPage />} />
@@ -73,6 +73,10 @@ function App() {
             <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
               <Route path="/admin" element={<AdminPage />} />
             </Route>
+
+            {/* Catch-All NotFound Route */}
+            <Route path="*" element={<UnderConstruction />} />
+
 
           </Routes>
         </Router>
