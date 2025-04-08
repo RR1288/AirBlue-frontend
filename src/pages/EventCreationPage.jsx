@@ -1,5 +1,4 @@
-// VALIDATION + SANITIZATION ADDED – FUNCTIONALITY UNCHANGED
-
+// eslint-disable-next-line no-unused-vars
 import React, {useState} from "react";
 import {useNavigate, Link} from "react-router-dom";
 import Header from "../components/Header";
@@ -8,8 +7,10 @@ import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import styles from "./EventCreationPage.module.css";
 import {getData} from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
+import { useAuth } from "../context/AuthContext";
 
 const EventCreationPage = () => {
+    const {token} = useAuth();
     const { addNotification } = useNotifications();
     const [formData, setFormData] = useState({
         title: "",
@@ -42,12 +43,20 @@ const EventCreationPage = () => {
 
         // basic validations
         if (!formData.title || !formData.location || !formData.description) {
-            alert("Please fill out all required fields.");
+            addNotification({
+                type: 'warning',
+                title: 'Event Creation Failed',
+                message: "Please fill out all required fields.",
+            });
             return;
         }
 
         if (start < today) {
-            alert("Start date must be in the future.");
+            addNotification({
+                type: 'warning',
+                title: 'Event Creation Failed',
+                message: "Start date must be in the future.",
+            });
             return;
         }
 
@@ -62,7 +71,11 @@ const EventCreationPage = () => {
 
         const attendeeLimit = parseInt(formData.attendeeLimit);
         if (isNaN(attendeeLimit) || attendeeLimit <= 0) {
-            alert("Attendee limit must be a positive number.");
+            addNotification({
+                type: 'error',
+                title: 'Event Creation Failed',
+                message: "Attendee limit must be a positive number.",
+            });
             return;
         }
 
@@ -85,7 +98,7 @@ const EventCreationPage = () => {
         };
 
         try {
-            const response = await getData("POST", "/events/create-event", body);
+            const response = await getData("POST", "/events/create-event", token, body);
             if (response.ok) {
                 const data = await response.json();
                 addNotification({

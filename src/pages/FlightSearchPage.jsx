@@ -7,10 +7,12 @@ import {faArrowLeft, faArrowRight} from "@fortawesome/free-solid-svg-icons";
 import {getData} from "../utils/getData";
 import {useNotifications} from "../components/NotificationProvider";
 import styles from "./FlightSearchPage.module.css";
+import { useAuth } from "../context/AuthContext";
 
 const FlightSearchPage = () => {
     const location = useLocation();
     const {addNotification} = useNotifications();
+    const {token, username} = useAuth();
 
     // Retrieve the event from location state
     const event = location.state?.event;
@@ -57,7 +59,7 @@ const FlightSearchPage = () => {
         try {
             setLoading(true);
             // First, create the flight request
-            const searchResponse = await getData("GET", searchEndpoint);
+            const searchResponse = await getData("GET", searchEndpoint, token);
             if (!searchResponse.ok) {
                 alert("Flight request creation failed. Please try again.");
                 return;
@@ -76,7 +78,7 @@ const FlightSearchPage = () => {
             const offersEndpoint = `/flights/offers?offer_request_id=${encodeURIComponent(
                 requestId
             )}&limit=${limit}`;
-            const offersResponse = await getData("GET", offersEndpoint);
+            const offersResponse = await getData("GET", offersEndpoint, token);
             if (!offersResponse.ok) {
                 alert("Failed to fetch flight offers. Please try again.");
                 return;
@@ -125,7 +127,7 @@ const FlightSearchPage = () => {
     }
       */
             let passenger = {
-                email: localStorage.getItem("username"),
+                email: username,
 
                 // get name from local storage
                 family_name: "Stark",
@@ -148,7 +150,7 @@ const FlightSearchPage = () => {
                 event_id: event.eventId,
                 passengers: [passenger],
             };
-            const response = await getData("POST", holdEndpoint, body);
+            const response = await getData("POST", holdEndpoint, token, body);
 
             if (!response.ok) {
                 throw new Error("Failed to hold the flight. Please try again.");

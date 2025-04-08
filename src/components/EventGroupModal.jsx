@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import {getData} from "../utils/getData";
 import { useNotifications } from "./NotificationProvider";
+import { useAuth } from "../context/AuthContext";
 
 const EventGroupModal = ({ event, onClose, onUpdateGroups }) => {
   const { addNotification } = useNotifications();
@@ -13,6 +14,7 @@ const EventGroupModal = ({ event, onClose, onUpdateGroups }) => {
   const [name, setName] = useState("");
   const [budget, setBudget] = useState("");
   const [loading, setLoading] = useState(false);
+  const {token} = useAuth();
 
   // Update local groups state whenever event.EventGroups changes
   useEffect(() => {
@@ -28,7 +30,7 @@ const EventGroupModal = ({ event, onClose, onUpdateGroups }) => {
         name,
         budget: parseFloat(budget),
       };
-      const response = await getData("POST", "/events/create-event-group", body);
+      const response = await getData("POST", "/events/create-event-group", token, body);
       if (!response.ok) throw new Error("Failed to create event group");
       const data = await response.json();
       console.log(data);

@@ -1,47 +1,59 @@
 // eslint-disable-next-line no-unused-vars
-import React, {useState, useMemo} from "react";
+import React, {useState, useContext, useMemo} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSignOutAlt, faBars} from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 import styles from "./Header.module.css";
 import Sidebar from "./Sidebar";
-import {Link, useLocation} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
+import { roleOptions } from "../config/roleOptions";
 
-function Header({title, userRole, hideSidebar = false, onRoleChange}) {
+
+function Header({title, hideSidebar = false }) {
     const location = useLocation();
+    const { logout } = useContext(AuthContext);
+    const navigate = useNavigate();
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
-    // Retrieve and map roles from localStorage.
-    // If no roles are found, assume the user is an attendee.
+
+    // Access roles and functions from AuthContext
+    const { selectedRole, roles, setSelectedRole } = useContext(AuthContext);
+    
     const availableRoles = useMemo(() => {
-        const stored = localStorage.getItem("roles") || "";
-        if (stored === "") {
-            return ["attendee"];
-        }
+        // `roles` string from AuthContext (e.g., "AEF")
         const roleMap = {
             A: "admin",
             E: "eventPlanner",
             F: "financePlanner",
+            attendee: "attendee",
         };
-        return stored
-            .split("")
-            .map((letter) => roleMap[letter])
-            .filter(Boolean);
-    }, []);
+    
+        // Map codes from the roles string to readable role names
+        return roles.split("").map((code) => roleMap[code]).filter(Boolean);
+    }, [roles]);
+    
 
-    // Handle role switcher changes.
+
     const handleRoleChange = (e) => {
         const newRole = e.target.value;
-        if (onRoleChange) {
-            onRoleChange(newRole);
+        setSelectedRole(newRole); // Update the selected role in AuthContext
+    
+        // Determine allowed pages for the selected role using roleOptions
+        const allowedPages = roleOptions[newRole]?.map((option) => option.link) || [];
+        if (!allowedPages.includes(location.pathname)) {
+            navigate("/home"); // Redirect to home if the current page is not allowed
         }
     };
+    
+
+
     // Render the appropriate sidebar based on the current userRole.
     const renderSidebar = () => {
         if (hideSidebar) return null;
         return (
             <Sidebar
-                userRole={userRole}
+                userRole={selectedRole}
                 isOpen={sidebarOpen}
                 setIsOpen={setSidebarOpen}
             />
@@ -50,12 +62,8 @@ function Header({title, userRole, hideSidebar = false, onRoleChange}) {
 
     // Handle the sign-out process
     const handleSignOut = () => {
-        // Clear localStorage or session data
-        localStorage.removeItem("user");
-        localStorage.removeItem("roles");
-
-        // Redirect to the login page
-        window.location.href = "/login";
+        logout();
+        navigate("/login"); // Redirect to the login page
     };
 
     return (
@@ -80,7 +88,7 @@ function Header({title, userRole, hideSidebar = false, onRoleChange}) {
                     location.pathname !== "/enable-2fa" &&
                     location.pathname !== "/attendee-register" && (
                         <select
-                            value={userRole}
+                            value={selectedRole}
                             onChange={handleRoleChange}
                             className={styles.roleSwitcher}
                         >
@@ -113,9 +121,7 @@ function Header({title, userRole, hideSidebar = false, onRoleChange}) {
 
 Header.propTypes = {
     title: PropTypes.string.isRequired,
-    userRole: PropTypes.string.isRequired,
     hideSidebar: PropTypes.bool, // Added prop validation
-    onRoleChange: PropTypes.func.isRequired,
 };
 
 export default Header;

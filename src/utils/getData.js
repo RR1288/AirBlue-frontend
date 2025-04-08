@@ -1,8 +1,7 @@
-export async function getData(method, endpoint, body={}) {
-    const token = localStorage.getItem("token");
+export async function getData(method, endpoint, token, body={}) {
     let res;
     // If method POST
-    if (method === "POST" || method === "UPDATE"){
+    if (method === "POST" || method === "UPDATE" || method === "DELETE"){
         // TODO: Use ENUM
         res = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, {
             method,
@@ -11,18 +10,20 @@ export async function getData(method, endpoint, body={}) {
                 Accept: "application/json",
                 Authorization: `Bearer ${token}`, // Attach token to request
             },
-            body: JSON.stringify(body)
+            body: JSON.stringify(body),
+            credentials: "include",
         });
 
     }  else {
-        // GET, DELETE -> No body 
+        // GET -> No body 
         res = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, {
             method,
             headers: {
                 "Content-Type": "application/json",
                 Accept: "application/json",
                 Authorization: `Bearer ${token}`, // Attach token to request
-            }
+            },
+            credentials: "include",
         });
 
     }
@@ -31,8 +32,7 @@ export async function getData(method, endpoint, body={}) {
     return res;
 }
 
-export async function sendFile(endpoint, formData) {
-    const token = localStorage.getItem("token");
+export async function sendFile(endpoint, token, formData) {
     let res;
  
         res = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, {
@@ -41,7 +41,8 @@ export async function sendFile(endpoint, formData) {
                 Accept: "application/json",
                 Authorization: `Bearer ${token}`,
             },
-            body: formData
+            body: formData,
+            credentials: "include",
         });
 
     
