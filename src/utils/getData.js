@@ -22,7 +22,8 @@ export async function getData(method, endpoint, token, body={}) {
                 "Content-Type": "application/json",
                 Accept: "application/json",
                 Authorization: `Bearer ${token}`, // Attach token to request
-            }
+            },
+            credentials: "include",
         });
 
     }
@@ -40,7 +41,8 @@ export async function sendFile(endpoint, token, formData) {
                 Accept: "application/json",
                 Authorization: `Bearer ${token}`,
             },
-            body: formData
+            body: formData,
+            credentials: "include",
         });
 
     

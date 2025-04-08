@@ -7,10 +7,12 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import styles from "./HomePage.module.css";
 import { roleOptions } from "../config/roleOptions";
-import { AuthContext } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 const HomePage = () => {
-    const { selectedRole } = useContext(AuthContext); // Get selectedRole directly from AuthContext
+    console.log("HomePage rendered");
+    
+    const { selectedRole } = useAuth(); // Get selectedRole directly from AuthContext
 
     // Friendly display for the current role
     const displayRoleName =

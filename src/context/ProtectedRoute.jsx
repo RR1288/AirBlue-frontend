@@ -5,8 +5,16 @@ import { AuthContext } from '../context/AuthContext';
 import PropTypes from 'prop-types';
 
 const ProtectedRoute = ({ allowedRoles }) => {
-  const { user, selectedRole } = useContext(AuthContext);
+  const { user, selectedRole, loading } = useContext(AuthContext);
+  console.log("USER", user);
+  console.log("SELECTED ROLE", selectedRole);
+  
   const location = useLocation();
+
+  if (loading) {
+    console.log("ProtectedRoute: Loading authentication state...");
+    return <div>Loading...</div>;
+  }
 
   // If the user is not logged in, redirect to login.
   if (!user) {

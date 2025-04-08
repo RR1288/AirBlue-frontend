@@ -25,6 +25,7 @@ const AcceptEventInvitePage = () => {
                     Accept: "application/json",
                     Authorization: `Bearer ${tokenFromLocalStorage}`, // Attach token to request
                 },
+                credentials: "include",// Include cookies in the request
             });
 
             if (!response.ok) {

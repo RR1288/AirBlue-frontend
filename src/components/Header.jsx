@@ -92,7 +92,6 @@ function Header({title, hideSidebar = false }) {
                             onChange={handleRoleChange}
                             className={styles.roleSwitcher}
                         >
-                            {console.log(availableRoles)}
                             {availableRoles.map((role) => (
                                 <option
                                     key={role}

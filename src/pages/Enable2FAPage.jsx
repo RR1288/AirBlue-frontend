@@ -18,7 +18,6 @@ const Enable2FAPage = () => {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
     'Authorization': `Bearer ${token}`,
-    credentials: 'include',
   }
 
   // Handle 2FA Setup: fetch the QR code from the server.
@@ -27,6 +26,7 @@ const Enable2FAPage = () => {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/2fa/setup`, {
         method: 'POST',
         headers: headers,
+        credentials: 'include',
       });
 
       if (!response.ok) {
@@ -62,6 +62,7 @@ const Enable2FAPage = () => {
       await fetch(`${import.meta.env.VITE_API_URL}/auth/2fa/disable`, {
         method: 'POST',
         headers: headers,
+        credentials: 'include',
       });
 
       addNotification({
