@@ -1,4 +1,4 @@
-async function getData(method, endpoint, body=null) {
+async function getData(method, endpoint, body={}) {
     const token = localStorage.getItem("token");
     let res;
     // If method POST

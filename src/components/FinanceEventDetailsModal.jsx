@@ -10,19 +10,23 @@ const FinanceEventDetailsModal = ({ event, onClose, onUpdateBudget }) => {
   const [flightBudget, setFlightBudget] = useState(
     parseFloat(event.flightBudget) || 0
   );
+  const [flightThreshold, setFlightThreshold] = useState(
+    parseFloat(event.threshold) || 0
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // If event is orphan, assign it to the current finance user (hardcoded here)
-    const assignedFinanceUser = event.financeUser;
+    //const assignedFinanceUser = event.financeUser;
     const updatedEvent = {
       ...event,
       eventBudget,
       flightBudget: flightBudget,
-      financeUser: assignedFinanceUser,
+      //financeUser: assignedFinanceUser,
       totalAmountSpent: event.totalAmountSpent || 0,
       maxAttendees: event.maxAttendees || 0,
       bookedAttendees: event.bookedAttendees || 0,
+      flightThreshold: flightThreshold || 0
     };
     onUpdateBudget(updatedEvent);
   };
@@ -60,8 +64,19 @@ const FinanceEventDetailsModal = ({ event, onClose, onUpdateBudget }) => {
             required
             min="0"
           />
+          <label htmlFor="flightThreshold">Flight Threshold</label>
+          <input
+            id="flightThreshold"
+            type="number"
+            value={flightThreshold}
+            onChange={(e) => setFlightThreshold(Number(e.target.value))}
+            // required
+            min="0.00"
+            max="1.00"
+            step="0.01"
+          />
           <button type="submit">
-            {event.financeUser === null ? "Assign & Save" : "Save Budget"}
+            {event.orphan ? "Assign & Save" : "Save Budget"}
           </button>
         </form>
       </div>
@@ -82,7 +97,8 @@ FinanceEventDetailsModal.propTypes = {
     totalAmountSpent: PropTypes.number,
     maxAttendees: PropTypes.number,
     bookedAttendees: PropTypes.number,
-    financeUser: PropTypes.string,
+    orphan: PropTypes.string,
+    threshold: PropTypes.number
   }).isRequired,
   onClose: PropTypes.func.isRequired,
   onUpdateBudget: PropTypes.func.isRequired,

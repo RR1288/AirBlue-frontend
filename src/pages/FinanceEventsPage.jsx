@@ -52,16 +52,17 @@ const FinanceEventsPage = () => {
         }
     };
 
-    const sanitizeBudget = (value) => {
-        return value.replace(/[^0-9.]/g, "");
-    };
+    // const sanitizeBudget = (value) => {
+    //     return value.replace(/[^0-9.]/g, "");
+    // };
 
-    const updateBudget = async (eventId, totalBudget, flightBudget) => {
+    const updateBudget = async (eventId, totalBudget, flightBudget, flightThreshold) => {
         const total = parseFloat(totalBudget);
         const flight = parseFloat(flightBudget);
+        const threshold = parseFloat(flightThreshold);
 
         //validation
-        if (isNaN(total) || isNaN(flight) || total <= 0 || flight <= 0) {
+        if (isNaN(total) || isNaN(flight) || total <= 0 || flight <= 0 || threshold < 0 || threshold > 1) {
             addNotification({
                 title: "Warning",
                 message: "Budgets must be valid numbers greater than 0!",
@@ -76,8 +77,11 @@ const FinanceEventsPage = () => {
             const res = await getData("POST", "/events/set-budget", {
                 userId,
                 eventID: eventId,
-                totalBudget: sanitizeBudget(total),
-                flightBudget: sanitizeBudget(flight),
+                // totalBudget: sanitizeBudget(total),
+                // flightBudget: sanitizeBudget(flight),
+                totalBudget: (total),
+                flightBudget: (flight),
+                thresholdVal: threshold
             });
             if (!res.ok) throw new Error("Failed to update budget");
             addNotification({
@@ -86,6 +90,7 @@ const FinanceEventsPage = () => {
                 type: "success",
             });
             fetchEvents();
+            // onClose();
         } catch (error) {
             addNotification({
                 title: "Error",
@@ -137,7 +142,7 @@ const FinanceEventsPage = () => {
     };
 
     const openBudgetModal = async (event) => {
-        if (!event.EventStaffs || event.EventStaffs[0]?.financeUser === null) {
+        if (event.orphan) {
             try {
                 await assignEventToMe(event.id);
             } catch (error) {
@@ -145,6 +150,7 @@ const FinanceEventsPage = () => {
                 return; // Prevent opening the modal if assignment fails
             }
         }
+        
         setSelectedEvent(event);
     };
 
@@ -160,7 +166,8 @@ const FinanceEventsPage = () => {
         await updateBudget(
             updatedEvent.id,
             updatedEvent.eventBudget,
-            updatedEvent.flightBudget
+            updatedEvent.flightBudget,
+            updatedEvent.flightThreshold
         );
     };
 
@@ -185,7 +192,8 @@ const FinanceEventsPage = () => {
                     {filteredEvents.length > 0 ? (
                         filteredEvents.map((event) => (
                             <div key={event.id} className={styles.eventCard}>
-                                {(!event.EventStaffs?.length || event.EventStaffs[0]?.financeUser === null) && (
+                                {/* {(!event.EventStaffs?.length || event.EventStaffs[0]?.financeUser === null) && ( */}
+                                {(event.orphan) && (
                                     <span className={styles.orphanLabel}>Orphan Event</span>
                                 )}
                                 <h3 className={styles.eventTitle}>{event.title}</h3>
@@ -203,7 +211,7 @@ const FinanceEventsPage = () => {
                                         onClick={() => openBudgetModal(event)}
                                         disabled={loadingAssign}
                                     >
-                                        <FontAwesomeIcon icon={faDollarSign} className={styles.optionIcon} /> {(!event.EventStaffs?.length || event.EventStaffs[0]?.financeUser === null)
+                                        <FontAwesomeIcon icon={faDollarSign} className={styles.optionIcon} /> {((event.orphan))
                                             ? loadingAssign
                                                 ? "Assigning..."
                                                 : "Assign to me & Update Budget"
