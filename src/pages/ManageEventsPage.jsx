@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,21 +9,25 @@ import {
   faEdit,
   faTimes,
   faUsers,
+  faPlane,
+  faLayerGroup, // Icon for groups (or choose any suitable)
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./ManageEventsPage.module.css";
 import getData from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
 import { formatDate } from "../utils/formatUtils";
 import { useNavigate } from "react-router-dom";
+import EventGroupModal from "../components/EventGroupModal.jsx";
 
 const ManageEventsPage = () => {
   const navigate = useNavigate();
-  const userId = Number(localStorage.getItem("userId")) || null;
+  // const userId = Number(localStorage.getItem("userId")) || null;
   const { addNotification } = useNotifications();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredEvents, setFilteredEvents] = useState([]);
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  // const [selectedEvent, setSelectedEvent] = useState(null);
+  const [groupModalEvent, setGroupModalEvent] = useState(null);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -33,7 +38,7 @@ const ManageEventsPage = () => {
   const fetchEvents = async () => {
     setLoading(true);
     try {
-      const res = await getData("GET", "/events/getAllEventsFinanceView");
+      const res = await getData("GET", "/events/getAllEventsPlannerView");
       if (!res.ok) throw new Error("Failed to fetch events");
       const data = await res.json();
 
@@ -54,6 +59,16 @@ const ManageEventsPage = () => {
     }
   };
 
+  // Whenever events are refreshed, update the groupModalEvent if it's open.
+  useEffect(() => {
+    if (groupModalEvent) {
+      const updatedEvent = events.find(e => e.id === groupModalEvent.id);
+      if (updatedEvent) {
+        setGroupModalEvent(updatedEvent);
+      }
+    }
+  }, [events, groupModalEvent]);
+
   useEffect(() => {
     setFilteredEvents(
       events.filter((event) =>
@@ -69,20 +84,29 @@ const ManageEventsPage = () => {
   // Navigate to the Manage Attendees page, sending both event ID and groupEventID
   const handleManageAttendees = (event) => {
     navigate(`/manage-attendees/${event.id}`, {
-      state: { groupEventID: event.groupEventID },
+      state: { groupEventID: event.groupEventID, event },
     });
   };
 
-  const openEventDetailsModal = (event) => {
-    setSelectedEvent(event);
+  // Navigate to the Manage Flights page, sending event ID 
+  const handleManageFlights = (event) => {
+    navigate(`/approval`, {
+      state: { event: event },
+    });
   };
 
-  const closeEventDetailsModal = () => {
-    setSelectedEvent(null);
+  const openGroupModal = (event) => {
+    setGroupModalEvent(event);
+  };
+
+  const closeGroupModal = () => {
+    setGroupModalEvent(null);
   };
 
   const handleUpdateEvent = async (updatedEvent) => {
     // Replace with API call to update event details if needed.
+    console.log(updatedEvent);
+    
     addNotification({
       title: "Success",
       message: "Event updated successfully!",
@@ -92,6 +116,8 @@ const ManageEventsPage = () => {
   };
 
   const handleDeleteEvent = async (eventId) => {
+    console.log(eventId);
+    
     // Replace with API call to delete the event if needed.
     addNotification({
       title: "Success",
@@ -129,9 +155,7 @@ const ManageEventsPage = () => {
                 <p className={styles.eventLocation}>
                   <FontAwesomeIcon icon={faMapMarkerAlt} /> {event.location}
                 </p>
-                <p className={styles.eventDescription}>
-                  {event.description}
-                </p>
+                <p className={styles.eventDescription}>{event.description}</p>
                 <p className={styles.eventAttendees}>
                   Expected Attendees: {event.expectedAttendees} | Max Attendees:{" "}
                   {event.maxAttendees}
@@ -143,6 +167,13 @@ const ManageEventsPage = () => {
                   >
                     <FontAwesomeIcon icon={faUsers} className={styles.optionIcon} />{" "}
                     Manage Attendees
+                  </button>
+                  <button
+                    className={styles.optionButton}
+                    onClick={() => handleManageFlights(event)}
+                  >
+                    <FontAwesomeIcon icon={faPlane} className={styles.optionIcon} />{" "}
+                    Manage Flights
                   </button>
                   <button
                     className={styles.optionButton}
@@ -158,6 +189,13 @@ const ManageEventsPage = () => {
                     <FontAwesomeIcon icon={faTimes} className={styles.optionIcon} />{" "}
                     Delete Event
                   </button>
+                  <button
+                    className={styles.optionButton}
+                    onClick={() => openGroupModal(event)}
+                  >
+                    <FontAwesomeIcon icon={faLayerGroup} className={styles.optionIcon} />{" "}
+                    Manage Groups
+                  </button>
                 </div>
               </div>
             ))
@@ -166,14 +204,15 @@ const ManageEventsPage = () => {
           )}
         </section>
       </main>
-      {/* Uncomment and implement the modal as needed */}
-      {/* {selectedEvent && (
-        <ManageEventDetailsModal
-          event={selectedEvent}
-          onClose={closeEventDetailsModal}
-          onUpdateEvent={handleUpdateEvent}
+      {groupModalEvent && (
+        <EventGroupModal
+          event={groupModalEvent}
+          onClose={closeGroupModal}
+          onUpdateGroups={
+            fetchEvents
+          }
         />
-      )} */}
+      )}
     </div>
   );
 };

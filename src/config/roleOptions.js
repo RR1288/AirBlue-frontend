@@ -5,7 +5,6 @@ import {
     faMoneyBill,
     faChartBar,
     faCalendarPlus,
-    faUsers,
     faClipboardList,
     faHome,
     faCog,
@@ -17,9 +16,9 @@ import {
     ],
     eventPlanner: [
       { link: "/event-creation", icon: faCalendarPlus, label: "Create Event" },
-      { link: "/manage-events", icon: faClipboardList, label: "Manage Events" },
-      { link: "/manage-attendees", icon: faUsers, label: "Manage Attendees" },
-      { link: "/approval", icon: faPlane, label: "Approve Flights" },
+      { link: "/manage-events", icon: faClipboardList, label: "My Events" },
+      // { link: "/manage-attendees", icon: faUsers, label: "Manage Attendees" },
+      // { link: "/approval", icon: faPlane, label: "Approve Flights" },
     ],
     financePlanner: [
       { link: "/finance-details", icon: faMoneyBill, label: "Assign Budget" },
