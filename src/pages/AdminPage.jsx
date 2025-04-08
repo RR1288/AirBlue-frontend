@@ -1,16 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserShield, faTrash, faArrowLeft, faAlignJustify } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
 const AdminPage = () => {
+
+    
+
     // sample user data
     const [users, setUsers] = useState([
-        { id: 1, name: "Alice Johnson", role: "User" },
-        { id: 2, name: "Bob Smith", role: "User" },
-        { id: 3, name: "Charlie Brown", role: "Admin" },
+        //{ id: 1, name: "Alice Johnson", role: "User" },
+        //{ id: 2, name: "Bob Smith", role: "User" },
+        //{ id: 3, name: "Charlie Brown", role: "Admin" },
     ]);
+
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+
+    const fetchUsers = async () => {
+        try {
+            const res = await getData("GET", "/organizations/getOrganizationUsers");
+            if (!res.ok) throw new Error("Failed to fetch users");
+            const data = await res.json();
+
+            setUsers(data.data);
+        } catch (error) {
+            addNotification({
+                titel: "Error",
+                message: error.message,
+                type: "error",
+            });
+        }
+    }
 
     const availableRoles = ["User", "Event Planner", "Finance", "Admin"];
 
