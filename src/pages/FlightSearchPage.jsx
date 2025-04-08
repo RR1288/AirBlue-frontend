@@ -265,7 +265,10 @@ const FlightSearchPage = () => {
                     </button>
                 </form>
                 {loading && (
-                    <p className={styles.loading}>Loading flights...</p>
+                    <div>
+                        <p className={styles.loading}>Loading flights...</p>
+                        <span className={styles.loader} ></span>
+                    </div>
                 )}
                 {error && (
                     <p
