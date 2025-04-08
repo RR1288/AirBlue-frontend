@@ -17,6 +17,18 @@ import FlightDetailsModal from "./FlightDetailsModal";
 import {getData} from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
 
+const checkPending = (attendee) => {
+  if (attendee?.Booking[0]?.status !== "pending") {
+    addNotification({
+      title: "Invalid Action",
+      message: "You can only approve and reject pending flights.",
+      type: "error",
+    });
+    return false;
+  }
+  return true;
+}
+
 const ApprovalPage = () => {
   // Get event from location state (includes groupEventBudget, threshold, etc.)
   const location = useLocation();
@@ -96,9 +108,16 @@ const ApprovalPage = () => {
   };
 
   const approveFlight = async (attendee) => {
+    if (!checkPending(attendee)){
+        return;
+    }
+
     setProcessingAttendee(attendee.email);
     try {
       const itinerary = await fetchUserItinerary(attendee.ID);
+      if (!itinerary || !itinerary.DuffleOrderID) {
+        throw new Error("Invalid itinerary data");
+      }
       const response = await getData(
         "POST",
         `/flights/${itinerary.DuffleOrderID}/book`
@@ -129,9 +148,16 @@ const ApprovalPage = () => {
   };
 
   const rejectFlight = async (attendee) => {
+    if (!checkPending(attendee)){
+        return;
+    }
+
     setProcessingAttendee(attendee.email);
     try {
       const itinerary = await fetchUserItinerary(attendee.ID);
+      if (!itinerary || !itinerary.ItineraryID) {
+        throw new Error("Invalid itinerary data");
+      }  
       const response = await getData(
         "POST",
         `/flights/${itinerary.ItineraryID}/declinePendingFlight`
@@ -194,6 +220,10 @@ const ApprovalPage = () => {
 
   // Render a chip for the "over budget" column.
   const renderOverBudgetChip = (cost, budget) => {
+    if (isNaN(cost) || isNaN(budget) || cost === 0 || budget === 0) {
+      return <span className={`${styles.chip} ${styles.chipNoStatus}`}>No data</span>;
+    }
+
     const overBudget = computeOverBudgetPercentage(cost, budget);
     
     const threshold = (parseFloat(event.threshold) || 0)*100;
