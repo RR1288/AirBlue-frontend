@@ -33,16 +33,26 @@ const ProtectedRoute = ({ allowedRoles }) => {
   }
 
   // Check if the user has any of the required roles for this route
-    const userRoles = roles.split("").map((roleCode) => {
+    let userRoles = roles.split("").map((roleCode) => {
       const roleMap = { A: "admin", E: "eventPlanner", F: "financePlanner", attendee: "attendee" };
       return roleMap[roleCode];
     });
-  
+    
+    if (userRoles.length === 0) {
+      setSelectedRole("attendee");
+      userRoles = ["attendee"];
+      console.log("User roles set to default: attendee");
+    }
     const hasAccess = allowedRoles.some((role) => userRoles.includes(role));
-  
+    console.log("User roles:", userRoles);
+    console.log("Allowed roles:", allowedRoles);
+
+
     if (hasAccess) {
       // If the `selectedRole` doesn't match the required role, switch it automatically
       const matchingRole = allowedRoles.find((role) => userRoles.includes(role));
+      console.log("Matching role found:", matchingRole);
+      
       if (selectedRole !== matchingRole) {
         setSelectedRole(matchingRole);
         console.log(`Switching role to: ${matchingRole}`);

@@ -22,6 +22,7 @@ import AcceptEventInvitePage from './pages/AcceptEventInvite';
 import { NotificationProvider } from './components/NotificationProvider';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './context/ProtectedRoute';
+import RegisterAttendeePage from './pages/AttendeeRegister';
 
 
 function App() {
@@ -34,7 +35,7 @@ function App() {
             {/* Public Routes */}
             <Route path="/" element={<LoginPage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/register" element={<RegisterAttendeePage />} />
             <Route path="/password-reset" element={<PasswordResetPage />} />
             <Route path="/under-construction" element={<UnderConstruction />} />
             <Route path="/attendee-register" element={<AttendeeRegister />} />
