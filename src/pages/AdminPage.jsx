@@ -3,17 +3,12 @@ import Header from '../components/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserShield, faTrash, faArrowLeft, faAlignJustify } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
+import getData from '../utils/getData';
+import { useNotifications } from '../components/NotificationProvider';
 
 const AdminPage = () => {
-
-    
-
-    // sample user data
-    const [users, setUsers] = useState([
-        //{ id: 1, name: "Alice Johnson", role: "User" },
-        //{ id: 2, name: "Bob Smith", role: "User" },
-        //{ id: 3, name: "Charlie Brown", role: "Admin" },
-    ]);
+    const {addNotification } = useNotifications();
+    const [users, setUsers] = useState([]);
 
     useEffect(() => {
         fetchUsers();
@@ -24,8 +19,11 @@ const AdminPage = () => {
             const res = await getData("GET", "/organizations/getOrganizationUsers");
             if (!res.ok) throw new Error("Failed to fetch users");
             const data = await res.json();
-
-            setUsers(data.data);
+            console.log(data.data);
+            const users = data.data
+            console.log(users);
+            setUsers(users);
+            console.log(users);
         } catch (error) {
             addNotification({
                 titel: "Error",
@@ -114,9 +112,9 @@ const AdminPage = () => {
                             {users.length > 0 ? (
                                 users.map((user) => (
                                     <tr key={user.id} style={styles.row}>
-                                        <td style={styles.td}>{user.name}</td>
+                                        <td style={styles.td}>{user.Name}</td>
                                         <td style={{ ...styles.td, fontWeight: 'bold', color: user.role === "Admin" ? "blue" : user.role === "Finance" ? "green" : "#555" }}>
-                                            {user.role}
+                                            {user.roles}
                                         </td>
                                         <td style={styles.td}>
                                             {user.role !== "Admin" && (
