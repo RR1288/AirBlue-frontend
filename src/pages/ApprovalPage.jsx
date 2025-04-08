@@ -18,15 +18,16 @@ import {getData} from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
 import { useAuth } from "../context/AuthContext";
 
-const checkPending = () => {
+const checkPending = (attendee) => {
   if (attendee?.Booking[0]?.status !== "pending") {
     addNotification({
       title: "Invalid Action",
       message: "You can only approve and reject pending flights.",
       type: "error",
     });
-    return;
+    return false;
   }
+  return true;
 }
 
 const ApprovalPage = () => {
@@ -108,7 +109,9 @@ const ApprovalPage = () => {
   };
 
   const approveFlight = async (attendee) => {
-    checkPending();
+    if (!checkPending(attendee)){
+        return;
+    }
 
     setProcessingAttendee(attendee.email);
     try {
@@ -146,7 +149,9 @@ const ApprovalPage = () => {
   };
 
   const rejectFlight = async (attendee) => {
-    checkPending();
+    if (!checkPending(attendee)){
+        return;
+    }
 
     setProcessingAttendee(attendee.email);
     try {

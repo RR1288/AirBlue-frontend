@@ -12,7 +12,6 @@ import FlightSearchPage from './pages/FlightSearchPage';
 import ApprovalPage from './pages/ApprovalPage';
 import AdminPage from './pages/AdminPage';
 import SetUserInfoPage from './pages/SetUserInfoPage';
-import RegisterPage from './pages/RegisterPage';
 import AttendeeRegister from './pages/AttendeeRegister';
 import PasswordResetPage from './pages/PasswordResetPage';
 import UserInfoPage from './pages/UserInfoPage';
