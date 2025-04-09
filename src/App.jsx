@@ -64,7 +64,7 @@ function App() {
 
             {/* Attendee Routes */}
             <Route element={<ProtectedRoute allowedRoles={["attendee"]} />}>
-              <Route path="/flight-search/:eventId" element={<FlightSearchPage />} />
+              <Route path="/flight-search" element={<FlightSearchPage />} />
               <Route path="/accept-invite" element={<AcceptEventInvitePage />} />
               <Route path="/setuser-info" element={<SetUserInfoPage />} />
               <Route path="/my-events" element={<MyEventsPage />} />

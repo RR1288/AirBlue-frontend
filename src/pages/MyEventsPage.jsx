@@ -202,7 +202,7 @@ const MyEventsPage = () => {
                       <button
                         className={styles.detailsButton}
                         onClick={() =>
-                          navigate(`/flight-search/${event.eventId}`, { state: { event } })
+                          navigate(`/flight-search`, { state: { event } })
                         }
                       >
                         <FontAwesomeIcon icon={faPlane} /> Book Flight
@@ -216,12 +216,13 @@ const MyEventsPage = () => {
                         >
                           <FontAwesomeIcon icon={faInfoCircle} /> Flight Details
                         </button>
+                        {/* // Can't change flight once it's selected
                         <button
                           className={styles.detailsButton}
                           onClick={() => navigate(`/edit-flight/${event.eventId}`)}
                         >
                           <FontAwesomeIcon icon={faPencil} /> Change Flight
-                        </button>
+                        </button> */}
                       </>
                     )}
                   </div>

@@ -86,7 +86,7 @@ const MyInvitationsPage = () => {
   const handleAccept = async (invitation) => {
     try {
       console.log(`Accepting invitation with token: ${invitation.token}`);
-      const response = await getData("POST", `/events/invitations/accept?invitation=${invitation.token}`, token);
+      const response = await getData("POST", `/events/invitations/accept?invitation=${encodeURIComponent(invitation.token)}`, token);
       if (!response.ok) {
         throw new Error("Failed to accept invitation");
       }
@@ -111,7 +111,7 @@ const MyInvitationsPage = () => {
   const handleDecline = async (invitation) => {
     try {
       console.log(`Declining invitation with ID: ${invitation.InvitationID}`);
-      //const response = await getData("POST", `/events/invitations/decline?invitation=${invitation.token}`, token);
+      //const response = await getData("POST", `/events/invitations/decline?invitation=${encodeURIComponent(invitation.token)}`, token);
       // if (!response.ok) { throw new Error("Failed to decline invitation"); }
       addNotification({
         title: "Success",
@@ -130,15 +130,15 @@ const MyInvitationsPage = () => {
   };
 
   // Filter invitations based on search query and filter status
-  // const filteredInvitations = invitations.filter((invitation) => {
-  //   const matchesQuery =
-  //     invitation.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //     (invitation.description && invitation.description?.toLowerCase().includes(searchQuery.toLowerCase()));
-  //   const matchesStatus = filterStatus ? invitation.status === filterStatus : true;
-  //   return matchesQuery && matchesStatus;
-  // });
-  const filteredInvitations = invitations;
-  
+  const filteredInvitations = invitations.filter((invitation) => {
+    // const matchesQuery =
+    //   invitation.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    //   (invitation.description && invitation.description?.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesStatus = filterStatus ? invitation.status === filterStatus : true;
+    // return matchesQuery && matchesStatus;
+    return matchesStatus;
+  });
+
   return (
     <div className={styles.page}>
       <Header title="AirBlue System" />
@@ -161,7 +161,7 @@ const MyInvitationsPage = () => {
           >
             <option value="">All Status</option>
             <option value="pending">Pending</option>
-            <option value="approved">Approved</option>
+            <option value="accepted">Accepted</option>
             <option value="denied">Declined</option>
           </select>
         </div>
