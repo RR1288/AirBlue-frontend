@@ -6,11 +6,13 @@ import { Link } from 'react-router-dom';
 import {getData} from '../utils/getData';
 import { useNotifications } from '../components/NotificationProvider';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const AdminPage = () => {
     const {addNotification } = useNotifications();
     const [users, setUsers] = useState([]);
     const navigate = useNavigate();
+    const { token, username } = useAuth();
 
     useEffect(() => {
         fetchUsers();
@@ -18,7 +20,8 @@ const AdminPage = () => {
 
     const fetchUsers = async () => {
         try {
-            const res = await getData("GET", "/organizations/getOrganizationUsers");
+            console.log(token);
+            const res = await getData("GET", "/organizations/getOrganizationUsers", token);
             if (!res.ok) throw new Error("Failed to fetch users");
             const data = await res.json();
             console.log(data.data);
