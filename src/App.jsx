@@ -75,6 +75,7 @@ function App() {
             {/* Admin Routes */}
             <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
               <Route path="/admin" element={<AdminPage />} />
+              <Route path="/org-user" element={<RegisterOrgUserPage/>}/>
             </Route>
 
             {/* Catch-All NotFound Route */}

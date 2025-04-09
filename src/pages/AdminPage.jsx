@@ -3,7 +3,7 @@ import Header from '../components/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserShield, faTrash, faArrowLeft, faAlignJustify } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
-import getData from '../utils/getData';
+import {getData} from '../utils/getData';
 import { useNotifications } from '../components/NotificationProvider';
 import { useNavigate } from 'react-router-dom';
 
