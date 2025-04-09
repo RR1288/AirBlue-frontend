@@ -10,7 +10,7 @@ import UnderConstruction from './pages/UnderConstruction';
 import EventEditPage from './pages/EventEditPage';
 import EventCreationPage from './pages/EventCreationPage';
 import FlightSearchPage from './pages/FlightSearchPage';
-import ApprovalPage from './pages/ApprovalPage';
+import ManageFlights from './pages/ManageFlights';
 import AdminPage from './pages/AdminPage';
 import SetUserInfoPage from './pages/SetUserInfoPage';
 import RegisterPage from './pages/RegisterPage';
@@ -40,7 +40,7 @@ function App() {
                     <Route path="/under-construction" element={<UnderConstruction/>} />
                     <Route path="/event-creation" element={<EventCreationPage/>} />
                     <Route path="/flight-search/:eventId" element={<FlightSearchPage/>} />
-                    <Route path="/approval" element={<ApprovalPage/>} />
+                    <Route path="/manage-flights" element={<ManageFlights/>} />
                     <Route path="/admin" element={<AdminPage/>} />
                     <Route path="/setuser-info" element={<SetUserInfoPage/>} />
                     <Route path="/register" element={<RegisterPage/>} />

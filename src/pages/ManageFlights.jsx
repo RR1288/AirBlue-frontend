@@ -17,7 +17,7 @@ import FlightDetailsModal from "./FlightDetailsModal";
 import getData from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
 
-const ApprovalPage = () => {
+const ManageFlights = () => {
   // Get event from location state (includes groupEventBudget, threshold, etc.)
   const location = useLocation();
   const event = location.state.event;
