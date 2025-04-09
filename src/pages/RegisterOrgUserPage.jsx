@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import {getData} from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
+import { useAuth } from '../context/AuthContext';
 //import jwtDecode from 'jwt-decode';
 
 // const Notification = ({ message, onClose }) => {
@@ -43,16 +44,29 @@ const RegisterOrgUserPage = () => {
         state: '',
         password: '',
         confirmPassword: '',
-        eventRole: '',
-        financeRole: '',
-        adminRole: ''
+        eventRole: false,
+        financeRole: false,
+        adminRole: false,
     });
     const { addNotification } = useNotifications();
     const navigate = useNavigate();
+    const { token, username } = useAuth();
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({ ...prevData, [name]: value }));
+        const { name, value, type, checked } = e.target;
+    
+        // If the input type is checkbox, update the boolean value using 'checked'
+        if (type === 'checkbox') {
+            setFormData((prevData) => ({
+                ...prevData,
+                [name]: checked, // set the boolean value to checked (true or false)
+            }));
+        } else {
+            setFormData((prevData) => ({
+                ...prevData,
+                [name]: value, // for other types (text, email, etc.), set the value
+            }));
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -99,55 +113,24 @@ const RegisterOrgUserPage = () => {
             });
             return;
         }
-
-        console.log(localStorage.getItem("token"));
-        const token = localStorage.getItem("token");
-        let orgID = null;
-        if (token) {
-                //try{
-                    //const decodedToken = jwtDecode(token);
-            orgID = token.OrganizationID; // Get the organizationID
-                
-                
-                //} catch (error) {
-                //console.error("Error decoding token:", error);
-                //addNotification({
-                    //type: 'failure',
-                    //title: 'Error retrieving organization ID',
-                    //message: 'Token could not be decoded or organizationID is missing.',
-                //});
-                //return;
-                //}
-            }
-        //console.log(token.organizationID);
-        //console.log(token.userID);
-        console.log(orgID);
-        // If token or orgID is missing, handle the error
-        if (!orgID) {
-            addNotification({
-                type: 'failure',
-                title: 'Organization ID not found.',
-                message: 'Please log in and try again.'
-            });
-            return;
-        }
-
-        const roleList = "";
-        if(!adminRole && !eventRole && !financeRole){
+    
+        let roleList = "";
+        if(!formData.adminRole && !formData.eventRole && !formData.financeRole){
             addNotification({
                 type: 'failure',
                 title: 'Must select at least one permission group'
             });
         }
-        if(adminRole){
-            roleList.append("A");
+        if(formData.adminRole){
+            roleList += "A";
         }
-        if (eventRole){
-            roleList.append("E");
+        if (formData.eventRole){
+            roleList += "E";
         }
-        if (financeRole){
-            roleList.append("F");
+        if (formData.financeRole){
+            roleList += "F";
         }
+        console.log(roleList);
 
         //This is what the endpoint will accept
         const body = {
@@ -158,12 +141,11 @@ const RegisterOrgUserPage = () => {
             city: sanitizedCity,
             state: sanitizedState,
             password: sanitizedPassword,
-            organizationID: orgID,
             roles: roleList
         };
 
         try {
-            const response = await getData("POST", "/users/create-organization-user", body);
+            const response = await getData("POST", "/users/create-organization-user", token, body);
         
             // Check if the response was successful
             if (response.ok) {
@@ -200,10 +182,15 @@ const RegisterOrgUserPage = () => {
             <div style={styles.mainContent}>
                 <h1 style={styles.h1}>Register as Attendee</h1>
                 <div style={styles.formContainer}>
+                    <p style={styles.requiredNote}>
+                    Fields marked with <span style={{ color: 'red' }}>*</span> are required.
+                    </p>
                     <form onSubmit={handleSubmit} style={styles.form}>
                         <div style={styles.formGroup}>
-                            <label htmlFor="firstName" style={styles.label}>First Name:</label>
-                            <input
+                        <label htmlFor="firstName" style={styles.label}>
+                            First Name <span style={{ color: 'red' }}>*</span>
+                        </label>                            
+                        <input
                                 id="firstName"
                                 name="firstName"
                                 type="text"
@@ -214,7 +201,9 @@ const RegisterOrgUserPage = () => {
                             />
                         </div>
                         <div style={styles.formGroup}>
-                            <label htmlFor="lastName" style={styles.label}>Last Name:</label>
+                        <label htmlFor="lastName" style={styles.label}>
+                        Last Name: <span style={{ color: 'red' }}>*</span>
+                        </label>                            
                             <input
                                 id="lastName"
                                 name="lastName"
@@ -226,7 +215,9 @@ const RegisterOrgUserPage = () => {
                             />
                         </div>
                         <div style={styles.formGroup}>
-                            <label htmlFor="email" style={styles.label}>Email:</label>
+                        <label htmlFor="email" style={styles.label}>
+                        Email:<span style={{ color: 'red' }}>*</span>
+                        </label>                            
                             <input
                                 id="email"
                                 name="email"
@@ -238,7 +229,9 @@ const RegisterOrgUserPage = () => {
                             />
                         </div>
                         <div style={styles.formGroup}>
-                            <label htmlFor="country" style={styles.label}>Country:</label>
+                        <label htmlFor="country" style={styles.label}>
+                        Country:<span style={{ color: 'red' }}>*</span>
+                        </label>                            
                             <input
                                 id="country"
                                 name="country"
@@ -274,7 +267,9 @@ const RegisterOrgUserPage = () => {
                             />
                         </div>
                         <div style={styles.formGroup}>
-                            <label htmlFor="password" style={styles.label}>Password:</label>
+                        <label htmlFor="password" style={styles.label}>
+                        Password:<span style={{ color: 'red' }}>*</span>
+                        </label>                            
                             <input
                                 id="password"
                                 name="password"
@@ -284,9 +279,14 @@ const RegisterOrgUserPage = () => {
                                 style={styles.input}
                                 required
                             />
+                                <small style={styles.passwordInfo}>
+                                    Password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, and a special character.
+                                </small>
                         </div>
                         <div style={styles.formGroup}>
-                            <label htmlFor="confirmPassword" style={styles.label}>Confirm Password:</label>
+                        <label htmlFor="confirmPassword" style={styles.label}>
+                        Confirm Password:<span style={{ color: 'red' }}>*</span>
+                        </label>                            
                             <input
                                 id="confirmPassword"
                                 name="confirmPassword"
@@ -298,27 +298,30 @@ const RegisterOrgUserPage = () => {
                             />
                         </div>
                         <div>
-                            <p>Permissions Groups</p>
+                            <p>Permissions Groups:<span style={{ color: 'red' }}>*</span></p>
                             <label>Event Planner</label>
                             <input 
-                                id="eventPlanner"
-                                name="eventPlanner"
+                                id="eventRole"
+                                name="eventRole"
                                 type="checkbox"
-                                value={formData.eventRole}
+                                checked={formData.eventRole}
+                                onChange={handleChange}
                             />
                             <label>Finance</label>
                             <input 
-                                id="finance"
-                                name="finance"
+                                id="financeRole"
+                                name="financeRole"
                                 type="checkbox"
-                                value={formData.financeRole}
+                                checked={formData.financeRole}
+                                onChange={handleChange}
                             />
                             <label>Admin</label>
                             <input 
-                                id="admin"
-                                name="admin"
+                                id="adminRol"
+                                name="adminRole"
                                 type="checkbox"
-                                value={formData.adminRole}
+                                checked={formData.adminRole}
+                                onChange={handleChange}
                             />
                         </div>
                         <button type="submit" style={styles.button}>Register</button>
