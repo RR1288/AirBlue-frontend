@@ -2,8 +2,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
-import getData from "../utils/getData";
+import {getData} from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
+import { useAuth } from '../context/AuthContext';
 
 // const Notification = ({ message, onClose }) => {
 //     useEffect(() => {
@@ -28,7 +29,7 @@ const isValidEmail = (email) => {
 
 const isValidPassword = (password) => {
     // 8 chars, 1 upper, 1 lower, and special char
-    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z@$!%*?&]{8,}$/;
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z@$!%*?&0-9]{8,}$/;
     return passwordPattern.test(password);
 };
 
@@ -45,6 +46,7 @@ const RegisterAttendeePage = () => {
     });
     const { addNotification } = useNotifications();
     const navigate = useNavigate();
+    const {token} = useAuth();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -108,7 +110,7 @@ const RegisterAttendeePage = () => {
         };
 
         try {
-            const response = await getData("POST", "/users/create-end-user", body);
+            const response = await getData("POST", "/users/create-end-user", token, body);
         
             // Check if the response was successful
             if (response.ok) {
@@ -145,10 +147,15 @@ const RegisterAttendeePage = () => {
             <div style={styles.mainContent}>
                 <h1 style={styles.h1}>Register as Attendee</h1>
                 <div style={styles.formContainer}>
+                    <p style={styles.requiredNote}>
+                    Fields marked with <span style={{ color: 'red' }}>*</span> are required.
+                    </p>
                     <form onSubmit={handleSubmit} style={styles.form}>
                         <div style={styles.formGroup}>
-                            <label htmlFor="firstName" style={styles.label}>First Name:</label>
-                            <input
+                        <label htmlFor="firstName" style={styles.label}>
+                            First Name <span style={{ color: 'red' }}>*</span>
+                        </label>                            
+                        <input
                                 id="firstName"
                                 name="firstName"
                                 type="text"
@@ -159,7 +166,9 @@ const RegisterAttendeePage = () => {
                             />
                         </div>
                         <div style={styles.formGroup}>
-                            <label htmlFor="lastName" style={styles.label}>Last Name:</label>
+                        <label htmlFor="lastName" style={styles.label}>
+                        Last Name: <span style={{ color: 'red' }}>*</span>
+                        </label>                            
                             <input
                                 id="lastName"
                                 name="lastName"
@@ -171,7 +180,9 @@ const RegisterAttendeePage = () => {
                             />
                         </div>
                         <div style={styles.formGroup}>
-                            <label htmlFor="email" style={styles.label}>Email:</label>
+                        <label htmlFor="email" style={styles.label}>
+                        Email:<span style={{ color: 'red' }}>*</span>
+                        </label>                            
                             <input
                                 id="email"
                                 name="email"
@@ -183,7 +194,9 @@ const RegisterAttendeePage = () => {
                             />
                         </div>
                         <div style={styles.formGroup}>
-                            <label htmlFor="country" style={styles.label}>Country:</label>
+                        <label htmlFor="country" style={styles.label}>
+                        Country:<span style={{ color: 'red' }}>*</span>
+                        </label>                            
                             <input
                                 id="country"
                                 name="country"
@@ -219,7 +232,9 @@ const RegisterAttendeePage = () => {
                             />
                         </div>
                         <div style={styles.formGroup}>
-                            <label htmlFor="password" style={styles.label}>Password:</label>
+                        <label htmlFor="password" style={styles.label}>
+                        Password:<span style={{ color: 'red' }}>*</span>
+                        </label>                            
                             <input
                                 id="password"
                                 name="password"
@@ -229,9 +244,14 @@ const RegisterAttendeePage = () => {
                                 style={styles.input}
                                 required
                             />
+                                <small style={styles.passwordInfo}>
+                                    Password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, and a special character.
+                                </small>
                         </div>
                         <div style={styles.formGroup}>
-                            <label htmlFor="confirmPassword" style={styles.label}>Confirm Password:</label>
+                        <label htmlFor="confirmPassword" style={styles.label}>
+                        Confirm Password:<span style={{ color: 'red' }}>*</span>
+                        </label>                            
                             <input
                                 id="confirmPassword"
                                 name="confirmPassword"
@@ -323,6 +343,17 @@ const styles = {
         padding: '10px 20px',
         borderRadius: '4px',
         boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+    },
+    requiredNote: {
+        marginBottom: '10px',
+        fontSize: '0.9em',
+        color: '#555',
+    },
+    passwordInfo: {
+        display: 'block',
+        marginTop: '5px',
+        fontSize: '0.9em',
+        color: '#555',
     },
 };
 

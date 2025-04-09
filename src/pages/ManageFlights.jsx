@@ -14,8 +14,21 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, useLocation } from "react-router-dom";
 import FlightDetailsModal from "./FlightDetailsModal";
-import getData from "../utils/getData";
+import {getData} from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
+import { useAuth } from "../context/AuthContext";
+
+const checkPending = (attendee) => {
+  if (attendee?.Booking[0]?.status !== "pending") {
+    addNotification({
+      title: "Invalid Action",
+      message: "You can only approve and reject pending flights.",
+      type: "error",
+    });
+    return false;
+  }
+  return true;
+}
 
 const ManageFlights = () => {
   // Get event from location state (includes groupEventBudget, threshold, etc.)
@@ -28,7 +41,7 @@ const ManageFlights = () => {
   // Flat list of attendees for the event
   const [attendees, setAttendees] = useState([]);
   const { addNotification } = useNotifications();
-
+  const { token } = useAuth();
   // Track which attendee is currently processing an action
   // eslint-disable-next-line no-unused-vars
   const [processingAttendee, setProcessingAttendee] = useState(null);
@@ -43,7 +56,7 @@ const ManageFlights = () => {
     try {
       const response = await getData(
         "GET",
-        `/events/getAllAttendees?eventId=${event.id}`
+        `/events/getAllAttendees?eventId=${event.id}`, token
       );
       if (!response.ok) throw new Error("Failed to fetch attendees data");
       const res = await response.json();
@@ -80,7 +93,7 @@ const ManageFlights = () => {
       // Adjust the endpoint URL according to your API
       const response = await getData(
         "GET",
-        `/flights/view/getFlightInfo?attendeeId=${attendeeId}`
+        `/flights/view/getFlightInfo?attendeeId=${attendeeId}`, token
       );
       if (!response.ok) {
         throw new Error("Failed to fetch itineraries");
@@ -96,12 +109,19 @@ const ManageFlights = () => {
   };
 
   const approveFlight = async (attendee) => {
+    if (!checkPending(attendee)){
+        return;
+    }
+
     setProcessingAttendee(attendee.email);
     try {
       const itinerary = await fetchUserItinerary(attendee.ID);
+      if (!itinerary || !itinerary.DuffleOrderID) {
+        throw new Error("Invalid itinerary data");
+      }
       const response = await getData(
         "POST",
-        `/flights/${itinerary.DuffleOrderID}/book`
+        `/flights/${itinerary.DuffleOrderID}/book`, token
       );
       if (!response.ok) {
         throw new Error("Flight booking failed");
@@ -129,12 +149,19 @@ const ManageFlights = () => {
   };
 
   const rejectFlight = async (attendee) => {
+    if (!checkPending(attendee)){
+        return;
+    }
+
     setProcessingAttendee(attendee.email);
     try {
       const itinerary = await fetchUserItinerary(attendee.ID);
+      if (!itinerary || !itinerary.ItineraryID) {
+        throw new Error("Invalid itinerary data");
+      }  
       const response = await getData(
         "POST",
-        `/flights/${itinerary.ItineraryID}/declinePendingFlight`
+        `/flights/${itinerary.ItineraryID}/declinePendingFlight`, token
       );
       if (!response.ok) {
         throw new Error("Flight declining failed");
@@ -194,6 +221,10 @@ const ManageFlights = () => {
 
   // Render a chip for the "over budget" column.
   const renderOverBudgetChip = (cost, budget) => {
+    if (isNaN(cost) || isNaN(budget) || cost === 0 || budget === 0) {
+      return <span className={`${styles.chip} ${styles.chipNoStatus}`}>No data</span>;
+    }
+
     const overBudget = computeOverBudgetPercentage(cost, budget);
     
     const threshold = (parseFloat(event.threshold) || 0)*100;

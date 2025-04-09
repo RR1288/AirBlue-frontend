@@ -1,13 +1,13 @@
 import {
     faGlobe,
     faUser,
-    faPlane,
     faMoneyBill,
     faChartBar,
     faCalendarPlus,
     faClipboardList,
     faHome,
     faCog,
+    faFileInvoice,
   } from "@fortawesome/free-solid-svg-icons";
   
   const roleOptions = {
@@ -26,7 +26,7 @@ import {
     ],
     attendee: [
       { link: "/my-events", icon: faGlobe, label: "My Events" },
-      { link: "/select-flight", icon: faPlane, label: "Select Flight" },
+      { link: "/my-invitations", icon: faFileInvoice, label: "My invitations" },
     ],
   };
   
