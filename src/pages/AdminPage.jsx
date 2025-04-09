@@ -5,7 +5,6 @@ import { faUserShield, faTrash, faArrowLeft, faAlignJustify } from '@fortawesome
 import { Link } from 'react-router-dom';
 
 const AdminPage = () => {
-    // sample user data
     const [users, setUsers] = useState([
         { id: 1, name: "Alice Johnson", role: "User" },
         { id: 2, name: "Bob Smith", role: "User" },
@@ -14,35 +13,27 @@ const AdminPage = () => {
 
     const availableRoles = ["User", "Event Planner", "Finance", "Admin"];
 
-    // function to update user role
     const updateUserRole = (id, newRole) => {
         setUsers(users.map(user => user.id === id ? { ...user, role: newRole } : user));
     };
 
-    // function to remove a user
     const removeUser = (id) => {
         setUsers(users.filter(user => user.id !== id));
     };
 
     return (
         <div style={styles.page}>
-            {/* header */}
             <Header title="AirBlue System" />
-
             <div style={styles.mainContent}>
-                {/* back Button & Title */}
                 <div style={styles.headerRow}>
                     <Link to="/home" style={styles.backButton}>
                         <FontAwesomeIcon icon={faArrowLeft} style={styles.icon} />
                     </Link>
                     <h1 style={styles.title}>Admin Panel</h1>
                 </div>
-
                 <p style={styles.description}>
                     Manage users, assign roles, and remove inactive accounts.
                 </p>
-
-                {/* users Table */}
                 <div style={styles.tableContainer}>
                     <table style={styles.table}>
                         <thead>
@@ -57,24 +48,30 @@ const AdminPage = () => {
                                 users.map((user) => (
                                     <tr key={user.id} style={styles.row}>
                                         <td style={styles.td}>{user.name}</td>
-                                        <td style={{ ...styles.td, fontWeight: 'bold', color: user.role === "Admin" ? "blue" : user.role === "Finance" ? "green" : "#555" }}>
-                                            {user.role}
+                                        <td style={styles.td}>
+                                            <div style={styles.columnWrapper}>
+                                                <span style={{ fontWeight: 'bold', color: user.role === "Admin" ? "blue" : user.role === "Finance" ? "green" : "#555" }}>
+                                                    {user.role}
+                                                </span>
+                                            </div>
                                         </td>
                                         <td style={styles.td}>
-                                            {user.role !== "Admin" && (
-                                                <select
-                                                    style={styles.roleDropdown}
-                                                    value={user.role}
-                                                    onChange={(e) => updateUserRole(user.id, e.target.value)}
-                                                >
-                                                    {availableRoles.map((role) => (
-                                                        <option key={role} value={role}>{role}</option>
-                                                    ))}
-                                                </select>
-                                            )}
-                                            <button style={styles.removeButton} onClick={() => removeUser(user.id)}>
-                                                <FontAwesomeIcon icon={faTrash} /> Remove
-                                            </button>
+                                            <div style={styles.columnWrapper}>
+                                                {user.role !== "Admin" && (
+                                                    <select
+                                                        style={styles.roleDropdown}
+                                                        value={user.role}
+                                                        onChange={(e) => updateUserRole(user.id, e.target.value)}
+                                                    >
+                                                        {availableRoles.map((role) => (
+                                                            <option key={role} value={role}>{role}</option>
+                                                        ))}
+                                                    </select>
+                                                )}
+                                                <button style={styles.removeButton} onClick={() => removeUser(user.id)}>
+                                                    <FontAwesomeIcon icon={faTrash} /> Remove
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))
@@ -92,7 +89,6 @@ const AdminPage = () => {
         </div>
     );
 };
-
 
 const styles = {
     page: {
@@ -168,29 +164,34 @@ const styles = {
         padding: '12px',
         borderBottom: '1px solid #ddd',
         fontSize: '15px',
+        verticalAlign: 'top',
     },
     row: {
         backgroundColor: 'white',
         transition: '0.3s',
     },
+    columnWrapper: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        gap: '8px',
+    },
     roleDropdown: {
-        padding: '8px',
+        padding: '6px 8px',
         borderRadius: '5px',
         border: '1px solid #0A306E',
-        cursor: 'pointer',
         backgroundColor: '#FFFFFF',
         color: '#0A306E',
-        fontSize: '15px',
+        fontSize: '14px',
         fontWeight: 'bold',
         outline: 'none',
         transition: '0.3s',
-        width: '120px',
-        textAlign: 'center',
+        margin: 0,
     },
     removeButton: {
         backgroundColor: '#dc3545',
         color: 'white',
-        padding: '8px 15px',
+        padding: '6px 12px',
         borderRadius: '5px',
         border: 'none',
         cursor: 'pointer',
@@ -198,7 +199,7 @@ const styles = {
         alignItems: 'center',
         gap: '5px',
         fontSize: '14px',
-        transition: '0.2s ease-in-out',
+        margin: 0,
     },
     removeButtonHover: {
         backgroundColor: '#b52b3a',
@@ -210,6 +211,5 @@ const styles = {
         color: '#888',
     }
 };
-
 
 export default AdminPage;

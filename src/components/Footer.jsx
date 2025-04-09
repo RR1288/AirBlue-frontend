@@ -20,7 +20,7 @@ function Footer() {
                         <h2 className={styles.footerTitle}>Pages</h2>
                         <ul className={styles.list}>
                             <li>
-                                <Link to="/my-events" className={styles.pageLinks}>My Events</Link>
+                                <Link to="/manage-events" className={styles.pageLinks}>My Events</Link>
                             </li>
                             <li>
                                 <Link to="/user-info" className={styles.pageLinks}>My Info</Link>

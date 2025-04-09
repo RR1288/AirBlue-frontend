@@ -97,7 +97,7 @@ const ManageEventsPage = () => {
 
     // Navigate to the Manage Flights page, sending event ID
     const handleManageFlights = (event) => {
-        navigate(`/approval`, {
+        navigate(`/manage-flights`, {
             state: {event: event},
         });
     };

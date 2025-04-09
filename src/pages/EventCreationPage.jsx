@@ -1,16 +1,16 @@
 // eslint-disable-next-line no-unused-vars
-import React, {useState} from "react";
-import {useNavigate, Link} from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import Header from "../components/Header";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import styles from "./EventCreationPage.module.css";
-import {getData} from "../utils/getData";
+import { getData } from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
 import { useAuth } from "../context/AuthContext";
 
 const EventCreationPage = () => {
-    const {token} = useAuth();
+    const { token } = useAuth();
     const { addNotification } = useNotifications();
     const [formData, setFormData] = useState({
         title: "",
@@ -29,15 +29,16 @@ const EventCreationPage = () => {
     };
 
     const handleChange = (e) => {
-        const {name, value} = e.target;
-        setFormData({...formData, [name]: value});
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const start = new Date(formData.startDate);
-        const end = new Date(formData.endDate);
+        const start = new Date(formData.startDate).toISOString();
+        const end = new Date(formData.endDate).toISOString();
+
         const today = new Date();
         today.setHours(0, 0, 0, 0); // Remove time
 
@@ -112,7 +113,7 @@ const EventCreationPage = () => {
                     type: 'error',
                     title: 'Event Creation Failed',
                     message: "Event creation failed. Please try again.",
-                  });                  
+                });
             }
         } catch (error) {
             console.error("Error creating event:", error);
@@ -143,9 +144,9 @@ const EventCreationPage = () => {
                         />
                     </div>
                     <div className={styles.row}>
-                        <label className={styles.label}>Start Date:</label>
+                        <label className={styles.label}>Start Date and Time:</label>
                         <input
-                            type="date"
+                            type="datetime-local"
                             name="startDate"
                             className={styles.input}
                             value={formData.startDate}
@@ -154,9 +155,9 @@ const EventCreationPage = () => {
                         />
                     </div>
                     <div className={styles.row}>
-                        <label className={styles.label}>End Date:</label>
+                        <label className={styles.label}>End Date and Time:</label>
                         <input
-                            type="date"
+                            type="datetime-local"
                             name="endDate"
                             className={styles.input}
                             value={formData.endDate}
@@ -164,6 +165,7 @@ const EventCreationPage = () => {
                             required
                         />
                     </div>
+
                     <div className={styles.row}>
                         <label className={styles.label}>Event Type:</label>
                         <select
@@ -195,7 +197,7 @@ const EventCreationPage = () => {
                         <label className={styles.label}>Max Attendees:</label>
                         <input
                             type="number"
-                            min= "1"
+                            min="1"
                             name="attendeeLimit"
                             placeholder="Enter attendee limit"
                             className={styles.input}

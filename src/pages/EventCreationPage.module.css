@@ -1,100 +1,98 @@
+/* EventCreationPage.module.css */
+
 .page {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: #ffffff;
-  }
-  
-  .mainContent {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    text-align: left;
-  }
-  
-  .headerRow {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .backButton {
-    text-decoration: none;
-    color: #0b2853;
-    margin-right: 20px;
-  }
-  
-  .icon {
-    font-size: 20px;
-  }
-  
-  .eventTitle {
-    font-size: 24px;
-    font-weight: bold;
-    color: #0b2853;
-  }
-  
-  .form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
-    max-width: 500px;
-  }
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #ffffff;
+}
 
-  .form>div {
-    flex: 1 0 50%
-  }
+.mainContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+}
 
-  .form>div:first-child {
-    flex: 0 1 100%
-  }
-  
-  .row {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .label {
-    margin-bottom: 5px;
-    color: #0b2853;
-    font-weight: bold;
-  }
-  
-  .input {
-    padding: 10px;
-    border-radius: 4px;
-    color:gray;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-    font-size: 16px;
-    color: #010101;
-  }
-  
-  .textarea {
-    padding: 10px;
-    min-height: 100px;
-    color:gray;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-    font-size: 16px;
-  }
-  
-  .buttonRow {
-    display: flex;
-    justify-content: center;
-  }
-  
-  .createButton {
-    background-color: #0b2853;
-    color: #ffffff;
-    border: none;
-    border-radius: 4px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
+.headerRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.backButton {
+  text-decoration: none;
+  color: #0a306e;
+  background-color: #ffffff;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  margin-right: 12px;
+}
+
+.icon {
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+.eventTitle {
+  font-size: 24px;
+  font-weight: bold;
+  color: #0b2853;
+}
+
+.form {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  margin-bottom: 4px;
+  font-weight: bold;
+  color: #0a306e;
+}
+
+.input,
+.textarea,
+select {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #0a306e;
+  font-size: 14px;
+  background-color: #ffffff; /* ✅ this makes inputs white */
+  color: #000000; /* optional: ensures text inside is black */
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.buttonRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.createButton {
+  background-color: #0a306e;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}

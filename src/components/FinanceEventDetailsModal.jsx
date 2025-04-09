@@ -29,6 +29,7 @@ const FinanceEventDetailsModal = ({ event, onClose, onUpdateBudget }) => {
       flightThreshold: flightThreshold || 0
     };
     onUpdateBudget(updatedEvent);
+    onClose();
   };
 
 
