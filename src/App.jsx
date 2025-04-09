@@ -23,6 +23,7 @@ import { NotificationProvider } from './components/NotificationProvider';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './context/ProtectedRoute';
 import RegisterAttendeePage from './pages/AttendeeRegister';
+import MyInvitationsPage from './pages/MyInvitationsPage';
 
 
 function App() {
@@ -67,6 +68,7 @@ function App() {
               <Route path="/accept-invite" element={<AcceptEventInvitePage />} />
               <Route path="/setuser-info" element={<SetUserInfoPage />} />
               <Route path="/my-events" element={<MyEventsPage />} />
+              <Route path="/my-invitations" element={<MyInvitationsPage />} />
             </Route>
 
             {/* Admin Routes */}
