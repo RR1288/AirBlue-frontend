@@ -61,21 +61,24 @@ const AdminPage = () => {
                                             {user.role}
                                         </td>
                                         <td style={styles.td}>
-                                            {user.role !== "Admin" && (
-                                                <select
-                                                    style={styles.roleDropdown}
-                                                    value={user.role}
-                                                    onChange={(e) => updateUserRole(user.id, e.target.value)}
-                                                >
-                                                    {availableRoles.map((role) => (
-                                                        <option key={role} value={role}>{role}</option>
-                                                    ))}
-                                                </select>
-                                            )}
-                                            <button style={styles.removeButton} onClick={() => removeUser(user.id)}>
-                                                <FontAwesomeIcon icon={faTrash} /> Remove
-                                            </button>
-                                        </td>
+  <div style={styles.actionsWrapper}>
+    {user.role !== "Admin" && (
+      <select
+        style={styles.roleDropdown}
+        value={user.role}
+        onChange={(e) => updateUserRole(user.id, e.target.value)}
+      >
+        {availableRoles.map((role) => (
+          <option key={role} value={role}>{role}</option>
+        ))}
+      </select>
+    )}
+    <button style={styles.removeButton} onClick={() => removeUser(user.id)}>
+      <FontAwesomeIcon icon={faTrash} /> Remove
+    </button>
+  </div>
+</td>
+
                                     </tr>
                                 ))
                             ) : (
@@ -102,6 +105,15 @@ const styles = {
         width: '100vw',
         backgroundColor: '#FFFFFF',
     },
+    actionsWrapper: {
+        display: 'flex',
+        justifyContent: 'flex-end', 
+        alignItems: 'center',
+        gap: '8px',
+        width: '100%', 
+      },
+      
+      
     mainContent: {
         flex: 1,
         display: 'flex',
@@ -174,23 +186,22 @@ const styles = {
         transition: '0.3s',
     },
     roleDropdown: {
-        padding: '8px',
+        padding: '6px 8px',
         borderRadius: '5px',
         border: '1px solid #0A306E',
-        cursor: 'pointer',
         backgroundColor: '#FFFFFF',
         color: '#0A306E',
-        fontSize: '15px',
+        fontSize: '14px',
         fontWeight: 'bold',
         outline: 'none',
         transition: '0.3s',
-        width: '120px',
-        textAlign: 'center',
-    },
-    removeButton: {
+        margin: 0,
+      },
+      
+      removeButton: {
         backgroundColor: '#dc3545',
         color: 'white',
-        padding: '8px 15px',
+        padding: '6px 12px',
         borderRadius: '5px',
         border: 'none',
         cursor: 'pointer',
@@ -198,8 +209,9 @@ const styles = {
         alignItems: 'center',
         gap: '5px',
         fontSize: '14px',
-        transition: '0.2s ease-in-out',
-    },
+        margin: 0,
+      },
+      
     removeButtonHover: {
         backgroundColor: '#b52b3a',
     },
