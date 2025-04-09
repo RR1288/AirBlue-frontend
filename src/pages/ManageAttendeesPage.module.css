@@ -53,6 +53,13 @@
     font-size: 24px;
     font-weight: 600;
   }
+
+  .pageEventTitle {
+    color: #0b2853;
+    font-size: 24px;
+    font-weight: 600;
+    text-decoration: underline double;
+  }
   
   .tabs {
     display: flex;

@@ -1,13 +1,12 @@
 import {
     faGlobe,
     faUser,
-    faMoneyBill,
-    faChartBar,
     faCalendarPlus,
     faClipboardList,
     faHome,
     faCog,
     faFileInvoice,
+    faLineChart,
   } from "@fortawesome/free-solid-svg-icons";
   
   const roleOptions = {
@@ -21,8 +20,7 @@ import {
       // { link: "/approval", icon: faPlane, label: "Approve Flights" },
     ],
     financePlanner: [
-      { link: "/finance-details", icon: faMoneyBill, label: "Assign Budget" },
-      { link: "/finance-events", icon: faChartBar, label: "Event List" },
+      { link: "/finance-events", icon: faClipboardList, label: "My Events" },
     ],
     attendee: [
       { link: "/my-events", icon: faGlobe, label: "My Events" },

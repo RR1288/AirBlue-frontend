@@ -24,6 +24,7 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './context/ProtectedRoute';
 import RegisterAttendeePage from './pages/AttendeeRegister';
 import MyInvitationsPage from './pages/MyInvitationsPage';
+import FinanceEventStatsPage from './pages/FinanceEventStatsPage';
 
 
 function App() {
@@ -60,6 +61,7 @@ function App() {
             {/* Finance Planner Routes */}
             <Route element={<ProtectedRoute allowedRoles={["financePlanner"]} />}>
               <Route path="/finance-events" element={<EventsFinanceUser />} />
+              <Route path="/finance-stats" element={<FinanceEventStatsPage />} />
             </Route>
 
             {/* Attendee Routes */}
