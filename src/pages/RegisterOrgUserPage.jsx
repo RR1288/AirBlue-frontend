@@ -180,7 +180,7 @@ const RegisterOrgUserPage = () => {
             {/* Ensures Sidebar is hidden only when hideSidebar is explicitly passed */}
             <Header title="AirBlue System" hideSidebar={true} />
             <div style={styles.mainContent}>
-                <h1 style={styles.h1}>Register as Attendee</h1>
+                <h1 style={styles.h1}>Register a new user</h1>
                 <div style={styles.formContainer}>
                     <p style={styles.requiredNote}>
                     Fields marked with <span style={{ color: 'red' }}>*</span> are required.
