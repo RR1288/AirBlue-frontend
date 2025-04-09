@@ -129,7 +129,7 @@ const ManageEventsPage = () => {
 
   return (
     <div className={styles.container}>
-      <Header title="Manage Events" />
+      <Header title="AirBlue System" />
       <main className={styles.main}>
         <section className={styles.searchSection}>
           <input

@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from "react";
-import styles from "./ApprovalPage.module.css";
+import styles from "./ManageFlights.module.css";
 import Header from "../components/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -434,4 +434,4 @@ const ManageFlights = () => {
   );
 };
 
-export default ApprovalPage;
+export default ManageFlights;
