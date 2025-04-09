@@ -14,7 +14,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, useLocation } from "react-router-dom";
 import FlightDetailsModal from "./FlightDetailsModal";
-import {getData} from "../utils/getData";
+import { getData } from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
 import { useAuth } from "../context/AuthContext";
 
@@ -109,8 +109,8 @@ const ManageFlights = () => {
   };
 
   const approveFlight = async (attendee) => {
-    if (!checkPending(attendee)){
-        return;
+    if (!checkPending(attendee)) {
+      return;
     }
 
     setProcessingAttendee(attendee.email);
@@ -131,9 +131,9 @@ const ManageFlights = () => {
         prev.map((a) =>
           a.email === attendee.email
             ? {
-                ...a,
-                Booking: [{ ...a.Booking[0], status: "approved" }],
-              }
+              ...a,
+              Booking: [{ ...a.Booking[0], status: "approved" }],
+            }
             : a
         )
       );
@@ -149,8 +149,8 @@ const ManageFlights = () => {
   };
 
   const rejectFlight = async (attendee) => {
-    if (!checkPending(attendee)){
-        return;
+    if (!checkPending(attendee)) {
+      return;
     }
 
     setProcessingAttendee(attendee.email);
@@ -158,7 +158,7 @@ const ManageFlights = () => {
       const itinerary = await fetchUserItinerary(attendee.ID);
       if (!itinerary || !itinerary.ItineraryID) {
         throw new Error("Invalid itinerary data");
-      }  
+      }
       const response = await getData(
         "POST",
         `/flights/${itinerary.ItineraryID}/declinePendingFlight`, token
@@ -171,9 +171,9 @@ const ManageFlights = () => {
         prev.map((a) =>
           a.email === attendee.email
             ? {
-                ...a,
-                Booking: [{ ...a.Booking[0], status: "denied" }],
-              }
+              ...a,
+              Booking: [{ ...a.Booking[0], status: "denied" }],
+            }
             : a
         )
       );
@@ -226,8 +226,8 @@ const ManageFlights = () => {
     }
 
     const overBudget = computeOverBudgetPercentage(cost, budget);
-    
-    const threshold = (parseFloat(event.threshold) || 0)*100;
+
+    const threshold = (parseFloat(event.threshold) || 0) * 100;
     let chipColor = "";
     if (overBudget === 0) {
       chipColor = styles.chipApproved;
@@ -379,9 +379,20 @@ const ManageFlights = () => {
           />
           <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} />
         </section>
+
         <p className={styles.description}>
           Review and manage your assigned events and flight approvals.
         </p>
+
+        {event && (
+          <div className={styles.eventDetails}>
+            <p><strong>Event Title:</strong> {event.title}</p>
+            <p><strong>Threshold:</strong> {event.threshold}</p>
+            <p><strong>Date:</strong> {event.date}</p>
+            <p><strong>Budget:</strong> ${event.budget}</p>
+          </div>
+        )}
+
         <div className={styles.tableContainer}>
           <table className={styles.table}>
             <thead>
