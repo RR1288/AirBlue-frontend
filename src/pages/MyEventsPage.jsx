@@ -12,9 +12,10 @@ import {
   faClock,
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./MyEventsPage.module.css";
-import getData from "../utils/getData";
+import {getData} from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
 import { formatDate } from "../utils/formatUtils";
+import { useAuth } from "../context/AuthContext";
 
 const MyEventsPage = () => {
   const [upcomingEventsList, setUpcomingEventsList] = useState([]);
@@ -25,13 +26,14 @@ const MyEventsPage = () => {
   const [selectedTab, setSelectedTab] = useState("upcoming"); // "upcoming" or "past"
   const navigate = useNavigate();
   const { addNotification } = useNotifications();
+  const { token } = useAuth();
 
   // Fetch upcoming events from API
   useEffect(() => {
     const fetchUpcomingEvents = async () => {
       setLoading(true);
       try {
-        const response = await getData('GET', '/attendees/view/getAllEventsAttendeeView');
+        const response = await getData('GET', '/attendees/view/getAllEventsAttendeeView', token);
         const data = await response.json();
         if (data.success) {
           setUpcomingEventsList(data.data);
@@ -200,7 +202,7 @@ const MyEventsPage = () => {
                       <button
                         className={styles.detailsButton}
                         onClick={() =>
-                          navigate(`/flight-search/${event.eventId}`, { state: { event } })
+                          navigate(`/flight-search`, { state: { event } })
                         }
                       >
                         <FontAwesomeIcon icon={faPlane} /> Book Flight
@@ -214,12 +216,13 @@ const MyEventsPage = () => {
                         >
                           <FontAwesomeIcon icon={faInfoCircle} /> Flight Details
                         </button>
+                        {/* // Can't change flight once it's selected
                         <button
                           className={styles.detailsButton}
                           onClick={() => navigate(`/edit-flight/${event.eventId}`)}
                         >
                           <FontAwesomeIcon icon={faPencil} /> Change Flight
-                        </button>
+                        </button> */}
                       </>
                     )}
                   </div>
