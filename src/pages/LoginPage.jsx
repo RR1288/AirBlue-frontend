@@ -1,21 +1,23 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PinModal from "../components/PinModal";
 import Header from "../components/Header";
 import styles from "./LoginPage.module.css";
-import {useNotifications} from "../components/NotificationProvider";
+import { useNotifications } from "../components/NotificationProvider";
 import FooterNoLink from "../components/FooterNoLink";
 import validator from "validator";
+import { AuthContext } from "../context/AuthContext";
 
 const LoginPage = () => {
     const { addNotification } = useNotifications();
-
+    const { login } = useContext(AuthContext);
     const [credentials, setCredentials] = useState({
         username: "",
         password: "",
     });
     const [showPinModal, setShowPinModal] = useState(false);
+    const [userId, setUserId] = useState(null);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -26,7 +28,6 @@ const LoginPage = () => {
         event.preventDefault();
         let { username, password } = credentials;
 
-        // trim s and sanitize
         username = validator.trim(username);
         password = validator.trim(password);
 
@@ -50,6 +51,7 @@ const LoginPage = () => {
                         Accept: "application/json",
                     },
                     body: JSON.stringify({ username, password }),
+                    credentials: "include",
                 }
             );
 
@@ -60,24 +62,20 @@ const LoginPage = () => {
                     data?.message || "Login failed. Please try again."
                 );
             }
-            console.log(data);
-            
-            if (data.data?.token) {
-                localStorage.setItem("token", data.data.token);
-                localStorage.setItem("username", data.data.username);
-                localStorage.setItem("roles", data.data.roles);
-                localStorage.setItem("userId", data.data.userId);
 
+            console.log(data.data.two_fa_required);
+            login({
+                token: data.data?.token,
+                roles: data.data?.roles,
+                userId: data.data.userId,
+                username: data.data.username,
+            });
+
+            if (!data.data.two_fa_required) {
                 navigate("/enable-2fa");
-            } else if (data?.data?.two_fa_required) {
-                localStorage.setItem("username", data.data.username);
-                localStorage.setItem("roles", data.data.roles);
-                localStorage.setItem("userId", data.data.userId);
-                addNotification({
-                    type: "info",
-                    title: "Two-Factor Authentication",
-                    message: "Please enter the PIN from your authentication app",
-                });
+            } else {
+                // Set userId and open the PinModal for 2FA
+                setUserId(data.data.userId);
                 setShowPinModal(true);
             }
         } catch (error) {
@@ -89,54 +87,9 @@ const LoginPage = () => {
         }
     };
 
-    const handlePinSubmit = async (pin) => {
-        const userId = localStorage.getItem("userId");
-        try {
-            const response = await fetch(
-                `${import.meta.env.VITE_API_URL}/auth/2fa/verify`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Accept: "application/json",
-                    },
-                    body: JSON.stringify({
-                        userId,
-                        twoFactorCode: pin,
-                    }),
-                }
-            );
-
-            const data = await response.json();
-
-            if (!response.ok || !data?.success) {
-                throw new Error(data?.message || "PIN verification failed.");
-            }
-
-            localStorage.setItem("token", data.data.token);
-            addNotification({
-                type: "success",
-                title: "Success!",
-                message: "Verification Successful! Redirecting...",
-            });
-
-            setTimeout(() => navigate("/home"), 1000);
-            setShowPinModal(false);
-        } catch (error) {
-            addNotification({
-                type: "error",
-                title: "PIN Verification Failed",
-                message: error.message,
-            });
-        }
-    };
-
     return (
         <div className={styles.page}>
-            <Header
-                title="AirBlue System"
-                hideSidebar={true}
-            />
+            <Header title="AirBlue System" hideSidebar={true} />
             <div className={styles.mainContent}>
                 <h1 className={styles.h1}>Login Page</h1>
                 <div className={styles.loginContainer}>
@@ -158,8 +111,6 @@ const LoginPage = () => {
                                 value={credentials.username}
                                 onChange={handleChange}
                                 className={styles.input}
-                                pattern="[A-Za-z0-9@.]+" 
-                                title="Username must only contain letters, numbers, or '@' and '.'"
                             />
                         </div>
                         <div className={styles.formGroup}>
@@ -178,10 +129,7 @@ const LoginPage = () => {
                                 className={styles.input}
                             />
                         </div>
-                        <button
-                            type="submit"
-                            className={styles.button}
-                        >
+                        <button type="submit" className={styles.button}>
                             Log In
                         </button>
                     </form>
@@ -197,29 +145,20 @@ const LoginPage = () => {
 
                     <div className={styles.registerPrompt}>
                         Don&apos;t have an account?{" "}
-                        <Link
-                            to="/register"
-                            className={styles.registerLink}
-                        >
+                        <Link to="/register" className={styles.registerLink}>
                             Register
                         </Link>
                     </div>
-
-                    <button
-                        onClick={() => navigate("/attendee-register")}
-                        className={styles.buttonSecondary}
-                    >
-                        Register as Attendee
-                    </button>
                 </div>
             </div>
 
             <PinModal
                 isOpen={showPinModal}
-                onSubmit={handlePinSubmit}
+                userId={userId} // Pass the userId to PinModal
+                onSubmit={() => setShowPinModal(false)} // Handle successful 2FA
                 onClose={() => setShowPinModal(false)}
             />
-            <FooterNoLink/>
+            <FooterNoLink />
         </div>
     );
 };

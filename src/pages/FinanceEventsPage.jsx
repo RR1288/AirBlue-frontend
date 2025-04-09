@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import Header from "../components/Header";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
     faSearch,
     faCalendarAlt,
@@ -13,13 +13,14 @@ import FinanceEventDetailsModal from "../components/FinanceEventDetailsModal";
 import FinanceEventStatsModal from "../components/FinanceEventStatsModal";
 import styles from "./FinanceEventsPage.module.css";
 
-import getData from "../utils/getData";
-import { useNotifications } from "../components/NotificationProvider";
-import { formatDate } from "../utils/formatUtils";
+import {getData} from "../utils/getData";
+import {useNotifications} from "../components/NotificationProvider";
+import {formatDate} from "../utils/formatUtils";
+import {useAuth} from "../context/AuthContext";
 
 const FinanceEventsPage = () => {
-    const userId = Number(localStorage.getItem("userId")) || null;
-    const { addNotification } = useNotifications();
+    const {addNotification} = useNotifications();
+    const {token, userId} = useAuth();
 
     const [searchTerm, setSearchTerm] = useState("");
     const [filteredEvents, setFilteredEvents] = useState([]);
@@ -34,7 +35,11 @@ const FinanceEventsPage = () => {
 
     const fetchEvents = async () => {
         try {
-            const res = await getData("GET", "/events/getAllEventsFinanceView");
+            const res = await getData(
+                "GET",
+                "/events/getAllEventsFinanceView",
+                token
+            );
             if (!res.ok) throw new Error("Failed to fetch events");
             const data = await res.json();
 
@@ -56,13 +61,25 @@ const FinanceEventsPage = () => {
     //     return value.replace(/[^0-9.]/g, "");
     // };
 
-    const updateBudget = async (eventId, totalBudget, flightBudget, flightThreshold) => {
+    const updateBudget = async (
+        eventId,
+        totalBudget,
+        flightBudget,
+        flightThreshold
+    ) => {
         const total = parseFloat(totalBudget);
         const flight = parseFloat(flightBudget);
         const threshold = parseFloat(flightThreshold);
 
         //validation
-        if (isNaN(total) || isNaN(flight) || total <= 0 || flight <= 0 || threshold < 0 || threshold > 1) {
+        if (
+            isNaN(total) ||
+            isNaN(flight) ||
+            total <= 0 ||
+            flight <= 0 ||
+            threshold < 0 ||
+            threshold > 1
+        ) {
             addNotification({
                 title: "Warning",
                 message: "Budgets must be valid numbers greater than 0!",
@@ -71,17 +88,15 @@ const FinanceEventsPage = () => {
             return;
         }
 
-
-
         try {
-            const res = await getData("POST", "/events/set-budget", {
+            const res = await getData("POST", "/events/set-budget", token, {
                 userId,
                 eventID: eventId,
                 // totalBudget: sanitizeBudget(total),
                 // flightBudget: sanitizeBudget(flight),
-                totalBudget: (total),
-                flightBudget: (flight),
-                thresholdVal: threshold
+                totalBudget: total,
+                flightBudget: flight,
+                thresholdVal: threshold,
             });
             if (!res.ok) throw new Error("Failed to update budget");
             addNotification({
@@ -103,10 +118,15 @@ const FinanceEventsPage = () => {
     const assignEventToMe = async (eventId) => {
         setLoadingAssign(true);
         try {
-            const res = await getData("POST", "/events/join-eventstaff-finance", {
-                userID: userId,
-                eventID: eventId,
-            });
+            const res = await getData(
+                "POST",
+                "/events/join-eventstaff-finance",
+                token,
+                {
+                    userID: userId,
+                    eventID: eventId,
+                }
+            );
             if (!res.ok) throw new Error("Failed to assign event");
 
             addNotification({
@@ -132,7 +152,9 @@ const FinanceEventsPage = () => {
     useEffect(() => {
         setFilteredEvents(
             events.filter((event) =>
-                event.title.toLowerCase().includes(sanitizeSearch(searchTerm).toLowerCase())
+                event.title
+                    .toLowerCase()
+                    .includes(sanitizeSearch(searchTerm).toLowerCase())
             )
         );
     }, [searchTerm, events]);
@@ -150,7 +172,7 @@ const FinanceEventsPage = () => {
                 return; // Prevent opening the modal if assignment fails
             }
         }
-        
+
         setSelectedEvent(event);
     };
 
@@ -191,19 +213,31 @@ const FinanceEventsPage = () => {
                 <section className={styles.eventsSection}>
                     {filteredEvents.length > 0 ? (
                         filteredEvents.map((event) => (
-                            <div key={event.id} className={styles.eventCard}>
+                            <div
+                                key={event.id}
+                                className={styles.eventCard}
+                            >
                                 {/* {(!event.EventStaffs?.length || event.EventStaffs[0]?.financeUser === null) && ( */}
-                                {(event.orphan) && (
-                                    <span className={styles.orphanLabel}>Orphan Event</span>
+                                {event.orphan && (
+                                    <span className={styles.orphanLabel}>
+                                        Orphan Event
+                                    </span>
                                 )}
-                                <h3 className={styles.eventTitle}>{event.title}</h3>
+                                <h3 className={styles.eventTitle}>
+                                    {event.title}
+                                </h3>
                                 <p className={styles.eventDate}>
-                                    <FontAwesomeIcon icon={faCalendarAlt} /> {formatDate(event.startDate)} - {formatDate(event.endDate)}
+                                    <FontAwesomeIcon icon={faCalendarAlt} />{" "}
+                                    {formatDate(event.startDate)} -{" "}
+                                    {formatDate(event.endDate)}
                                 </p>
                                 <p className={styles.eventLocation}>
-                                    <FontAwesomeIcon icon={faMapMarkerAlt} /> {event.location}
+                                    <FontAwesomeIcon icon={faMapMarkerAlt} />{" "}
+                                    {event.location}
                                 </p>
-                                <p className={styles.eventDescription}>{event.description}</p>
+                                <p className={styles.eventDescription}>
+                                    {event.description}
+                                </p>
 
                                 <div className={styles.options}>
                                     <button
@@ -211,7 +245,11 @@ const FinanceEventsPage = () => {
                                         onClick={() => openBudgetModal(event)}
                                         disabled={loadingAssign}
                                     >
-                                        <FontAwesomeIcon icon={faDollarSign} className={styles.optionIcon} /> {((event.orphan))
+                                        <FontAwesomeIcon
+                                            icon={faDollarSign}
+                                            className={styles.optionIcon}
+                                        />{" "}
+                                        {event.orphan
                                             ? loadingAssign
                                                 ? "Assigning..."
                                                 : "Assign to me & Update Budget"

@@ -4,7 +4,7 @@ import Header from "../components/Header";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import styles from "./AcceptEventInvite.module.css";
-import getData from "../utils/getData";
+import {getData} from "../utils/getData";
 import FooterNoLink from "../components/FooterNoLink";
 
 const AcceptEventInvitePage = () => {
@@ -25,6 +25,7 @@ const AcceptEventInvitePage = () => {
                     Accept: "application/json",
                     Authorization: `Bearer ${tokenFromLocalStorage}`, // Attach token to request
                 },
+                credentials: "include",// Include cookies in the request
             });
 
             if (!response.ok) {

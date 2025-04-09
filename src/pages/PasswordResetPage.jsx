@@ -28,6 +28,7 @@ const PasswordResetPage = () => {
                     currentPassword,
                     newPassword,
                 }),
+                credentials: 'include',
             });
 
             const data = await response.json();

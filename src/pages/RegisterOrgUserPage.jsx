@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import getData from "../utils/getData";
 import { useNotifications } from "../components/NotificationProvider";
+//import jwtDecode from 'jwt-decode';
 
 // const Notification = ({ message, onClose }) => {
 //     useEffect(() => {
@@ -99,24 +100,28 @@ const RegisterOrgUserPage = () => {
             return;
         }
 
-
+        console.log(localStorage.getItem("token"));
         const token = localStorage.getItem("token");
         let orgID = null;
         if (token) {
-            try {
-                const parsedToken = JSON.parse(token); // Parse the token if it's a JSON string
-                orgID = token.organizationID; // Get the organizationID
-            } catch (error) {
-                console.error("Error parsing token:", error);
-                addNotification({
-                    type: 'failure',
-                    title: 'Token parsing failed.',
-                    message: 'An error occurred while reading your session. Please log in again.'
-                });
-                return;
+                //try{
+                    //const decodedToken = jwtDecode(token);
+            orgID = token.OrganizationID; // Get the organizationID
+                
+                
+                //} catch (error) {
+                //console.error("Error decoding token:", error);
+                //addNotification({
+                    //type: 'failure',
+                    //title: 'Error retrieving organization ID',
+                    //message: 'Token could not be decoded or organizationID is missing.',
+                //});
+                //return;
+                //}
             }
-        }
-    
+        //console.log(token.organizationID);
+        //console.log(token.userID);
+        console.log(orgID);
         // If token or orgID is missing, handle the error
         if (!orgID) {
             addNotification({
