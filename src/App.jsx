@@ -54,7 +54,7 @@ function App() {
               <Route path="/manage-attendees/:eventId" element={<ManageAttendeesPage />} />
               <Route path="/event-edit" element={<EventEditPage />} />
               <Route path="/event-creation" element={<EventCreationPage />} />
-              <Route path="/approval" element={<ApprovalPage />} />
+              <Route path="/manage-flights" element={<ManageFlights />} />
             </Route>
 
             {/* Finance Planner Routes */}
