@@ -5,10 +5,12 @@ import { faUserShield, faTrash, faArrowLeft, faAlignJustify } from '@fortawesome
 import { Link } from 'react-router-dom';
 import getData from '../utils/getData';
 import { useNotifications } from '../components/NotificationProvider';
+import { useNavigate } from 'react-router-dom';
 
 const AdminPage = () => {
     const {addNotification } = useNotifications();
     const [users, setUsers] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchUsers();
@@ -93,7 +95,7 @@ const AdminPage = () => {
                     </Link>
                     <h1 style={styles.title}>Admin Panel</h1>
                 </div>
-
+                <button onClick={() => navigate("/org-register")}>New user</button>
                 <p style={styles.description}>
                     Manage users, assign roles, and remove inactive accounts.
                 </p>

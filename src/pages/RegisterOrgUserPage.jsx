@@ -42,6 +42,9 @@ const RegisterOrgUserPage = () => {
         state: '',
         password: '',
         confirmPassword: '',
+        eventRole: '',
+        financeRole: '',
+        adminRole: ''
     });
     const { addNotification } = useNotifications();
     const navigate = useNavigate();
@@ -96,6 +99,51 @@ const RegisterOrgUserPage = () => {
             return;
         }
 
+
+        const token = localStorage.getItem("token");
+        let orgID = null;
+        if (token) {
+            try {
+                const parsedToken = JSON.parse(token); // Parse the token if it's a JSON string
+                orgID = token.organizationID; // Get the organizationID
+            } catch (error) {
+                console.error("Error parsing token:", error);
+                addNotification({
+                    type: 'failure',
+                    title: 'Token parsing failed.',
+                    message: 'An error occurred while reading your session. Please log in again.'
+                });
+                return;
+            }
+        }
+    
+        // If token or orgID is missing, handle the error
+        if (!orgID) {
+            addNotification({
+                type: 'failure',
+                title: 'Organization ID not found.',
+                message: 'Please log in and try again.'
+            });
+            return;
+        }
+
+        const roleList = "";
+        if(!adminRole && !eventRole && !financeRole){
+            addNotification({
+                type: 'failure',
+                title: 'Must select at least one permission group'
+            });
+        }
+        if(adminRole){
+            roleList.append("A");
+        }
+        if (eventRole){
+            roleList.append("E");
+        }
+        if (financeRole){
+            roleList.append("F");
+        }
+
         //This is what the endpoint will accept
         const body = {
             fname: sanitizedFirstName,
@@ -122,7 +170,7 @@ const RegisterOrgUserPage = () => {
                 title: 'Registration Successful! Redirecting to login page...',
                 message: data.message, // Assume `message` is part of the response body
               });
-              navigate("/"); // Redirect to login page
+              navigate("/admin"); // Redirect to admin page
             } else {
                 addNotification({
                     type: 'error',
@@ -251,21 +299,21 @@ const RegisterOrgUserPage = () => {
                                 id="eventPlanner"
                                 name="eventPlanner"
                                 type="checkbox"
-                                value={formData.roleList}
+                                value={formData.eventRole}
                             />
                             <label>Finance</label>
                             <input 
                                 id="finance"
                                 name="finance"
                                 type="checkbox"
-                                value={formData.roleList}
+                                value={formData.financeRole}
                             />
                             <label>Admin</label>
                             <input 
                                 id="admin"
                                 name="admin"
                                 type="checkbox"
-                                value={formData.roleList}
+                                value={formData.adminRole}
                             />
                         </div>
                         <button type="submit" style={styles.button}>Register</button>
