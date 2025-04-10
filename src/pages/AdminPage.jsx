@@ -133,9 +133,6 @@ const AdminPage = () => {
                                                     ))}
                                                 </select>
                                             )}
-                                            <button style={styles.removeButton} onClick={() => removeUser(user.id)}>
-                                                <FontAwesomeIcon icon={faTrash} /> Remove
-                                            </button>
                                         </td>
                                     </tr>
                                 ))
@@ -205,7 +202,7 @@ const styles = {
         maxWidth: '600px',
     },
     tableContainer: {
-        width: '100%',
+        width: '90%',
         maxWidth: '900px',
         overflowX: 'auto',
         borderRadius: '8px',
@@ -222,7 +219,7 @@ const styles = {
         backgroundColor: '#0A306E',
         color: 'white',
         padding: '12px',
-        textAlign: 'left',
+        textAlign: 'center',
         fontSize: '16px',
     },
     td: {
@@ -270,7 +267,7 @@ const styles = {
         padding: '15px',
         fontStyle: 'italic',
         color: '#888',
-    }
+    },
 };
 
 
