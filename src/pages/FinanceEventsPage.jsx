@@ -7,12 +7,12 @@ import {
     faCalendarAlt,
     faMapMarkerAlt,
     faDollarSign,
+    faChartLine,
     // faChartPie,
 } from "@fortawesome/free-solid-svg-icons";
 import FinanceEventDetailsModal from "../components/FinanceEventDetailsModal";
-import FinanceEventStatsModal from "../components/FinanceEventStatsModal";
 import styles from "./FinanceEventsPage.module.css";
-
+import {useNavigate} from "react-router-dom";
 import {getData} from "../utils/getData";
 import {useNotifications} from "../components/NotificationProvider";
 import {formatDate} from "../utils/formatUtils";
@@ -21,7 +21,7 @@ import {useAuth} from "../context/AuthContext";
 const FinanceEventsPage = () => {
     const {addNotification} = useNotifications();
     const {token, userId} = useAuth();
-
+    const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState("");
     const [filteredEvents, setFilteredEvents] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState(null);
@@ -180,10 +180,6 @@ const FinanceEventsPage = () => {
         setSelectedEvent(null);
     };
 
-    const closeStatsModal = () => {
-        setSelectedStatsEvent(null);
-    };
-
     const handleUpdateBudget = async (updatedEvent) => {
         await updateBudget(
             updatedEvent.id,
@@ -191,6 +187,13 @@ const FinanceEventsPage = () => {
             updatedEvent.flightBudget,
             updatedEvent.flightThreshold
         );
+    };
+
+    const viewStats = (event) => {
+        console.log("View stats for event:", event);
+        setSelectedStatsEvent(event);
+        // Navigate to the statistics page
+        navigate(`/finance-stats`, { state: { event } });
     };
 
     return (
@@ -217,7 +220,6 @@ const FinanceEventsPage = () => {
                                 key={event.id}
                                 className={styles.eventCard}
                             >
-                                {/* {(!event.EventStaffs?.length || event.EventStaffs[0]?.financeUser === null) && ( */}
                                 {event.orphan && (
                                     <span className={styles.orphanLabel}>
                                         Orphan Event
@@ -255,6 +257,13 @@ const FinanceEventsPage = () => {
                                                 : "Assign to me & Update Budget"
                                             : "Update Budget"}
                                     </button>
+                                    <button className={styles.optionButton} onClick={() => viewStats(event)} disabled={loadingAssign}> 
+                                        <FontAwesomeIcon
+                                            icon={faChartLine}
+                                            className={styles.optionIcon}
+                                        />{" "}
+                                        View Statistics
+                                    </button>
                                 </div>
                             </div>
                         ))
@@ -270,12 +279,6 @@ const FinanceEventsPage = () => {
                     event={selectedEvent}
                     onClose={closeBudgetModal}
                     onUpdateBudget={handleUpdateBudget}
-                />
-            )}
-            {selectedStatsEvent && (
-                <FinanceEventStatsModal
-                    event={selectedStatsEvent}
-                    onClose={closeStatsModal}
                 />
             )}
         </div>

@@ -368,7 +368,7 @@ const ApprovalPage = () => {
           </Link>
           <h1 className={styles.title}>Approval Requests</h1>
         </div>
-
+        <h3 className={styles.pageEventTitle}>{event.title}</h3>
         <section className={styles.searchSection}>
           <input
             type="text"
