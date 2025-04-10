@@ -1,16 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserShield, faTrash, faArrowLeft, faAlignJustify } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
+import {getData} from '../utils/getData';
+import { useNotifications } from '../components/NotificationProvider';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const AdminPage = () => {
-    // sample user data
-    const [users, setUsers] = useState([
-        { id: 1, name: "Alice Johnson", role: "User" },
-        { id: 2, name: "Bob Smith", role: "User" },
-        { id: 3, name: "Charlie Brown", role: "Admin" },
-    ]);
+    const {addNotification } = useNotifications();
+    const [users, setUsers] = useState([]);
+    const navigate = useNavigate();
+    const { token, username } = useAuth();
+
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+
+    const fetchUsers = async () => {
+        try {
+            console.log(token);
+            const res = await getData("GET", "/organizations/getOrganizationUsers", token);
+            if (!res.ok) throw new Error("Failed to fetch users");
+            const data = await res.json();
+            console.log(data.data);
+            const users = data.data
+            console.log(users);
+            setUsers(users);
+            console.log(users);
+        } catch (error) {
+            addNotification({
+                titel: "Error",
+                message: error.message,
+                type: "error",
+            });
+        }
+    }
 
     const availableRoles = ["User", "Event Planner", "Finance", "Admin"];
 
@@ -23,6 +49,41 @@ const AdminPage = () => {
     const removeUser = (id) => {
         setUsers(users.filter(user => user.id !== id));
     };
+
+    const HandleResetPassword = async () => {
+        try {
+            const response = await getData("GET", `/users/reset-password-admin`);
+            if (!response.ok) throw new Error("Failed to reset password");
+            const res = await response.json();
+            setPassword({
+                user: res.data.userID,
+                password: res.data.password,
+            });
+          } catch (error) {
+            addNotification({
+              title: "Error",
+              message: error.message,
+              type: "error",
+            });
+          }
+    }
+
+    const changeOrgPermissions = async () => {
+        try {
+            const response = await getData("GET", `/organizations/`/**changePermission?*/);
+            if (!response.ok) throw new Error("Failed to change organization user permissions");
+            const res = await response.json();
+           /*
+            
+           * */
+          } catch (error) {
+            addNotification({
+              title: "Error",
+              message: error.message,
+              type: "error",
+            });
+          }
+    }
 
     return (
         <div style={styles.page}>
@@ -37,7 +98,7 @@ const AdminPage = () => {
                     </Link>
                     <h1 style={styles.title}>Admin Panel</h1>
                 </div>
-
+                <button onClick={() => navigate("/org-register")}>New user</button>
                 <p style={styles.description}>
                     Manage users, assign roles, and remove inactive accounts.
                 </p>
@@ -56,9 +117,9 @@ const AdminPage = () => {
                             {users.length > 0 ? (
                                 users.map((user) => (
                                     <tr key={user.id} style={styles.row}>
-                                        <td style={styles.td}>{user.name}</td>
+                                        <td style={styles.td}>{user.Name}</td>
                                         <td style={{ ...styles.td, fontWeight: 'bold', color: user.role === "Admin" ? "blue" : user.role === "Finance" ? "green" : "#555" }}>
-                                            {user.role}
+                                            {user.roles}
                                         </td>
                                         <td style={styles.td}>
                                             {user.role !== "Admin" && (
@@ -91,7 +152,7 @@ const AdminPage = () => {
             </div>
         </div>
     );
-};
+}
 
 
 const styles = {
