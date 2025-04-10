@@ -24,6 +24,7 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './context/ProtectedRoute';
 import RegisterAttendeePage from './pages/AttendeeRegister';
 import MyInvitationsPage from './pages/MyInvitationsPage';
+import RegisterOrgUserPage from './pages/RegisterOrgUserPage';
 import FinanceEventStatsPage from './pages/FinanceEventStatsPage';
 
 
@@ -76,6 +77,7 @@ function App() {
             {/* Admin Routes */}
             <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
               <Route path="/admin" element={<AdminPage />} />
+              <Route path="/org-register" element={<RegisterOrgUserPage/>}/>
             </Route>
 
             {/* Catch-All NotFound Route */}
