@@ -229,6 +229,7 @@ const styles = {
         padding: '12px',
         borderBottom: '1px solid #ddd',
         fontSize: '15px',
+        color: 'black',
     },
     row: {
         backgroundColor: 'white',

@@ -406,6 +406,17 @@ const styles = {
         borderRadius: '4px',
         boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
     },
+    requiredNote: {
+        marginBottom: '10px',
+        fontSize: '0.9em',
+        color: '#555',
+    },
+    passwordInfo: {
+        display: 'block',
+        marginTop: '5px',
+        fontSize: '0.9em',
+        color: '#555',
+    },
 };
 
 export default RegisterOrgUserPage;
