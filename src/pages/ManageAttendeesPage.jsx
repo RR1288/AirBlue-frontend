@@ -15,7 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {getData} from "../utils/getData";
 import {useNotifications} from "../components/NotificationProvider";
-import styles from "./ManageAttendees.module.css";
+import styles from "./ManageAttendeesPage.module.css";
 import {useAuth} from "../context/AuthContext";
 
 // Single Invitation Modal with Event Group dropdown
@@ -283,7 +283,7 @@ const ManageAttendees = () => {
                     </Link>
                     <h2 className={styles.pageTitle}>Manage Attendees</h2>
                 </div>
-
+                <h3 className={styles.pageEventTitle}>{event.title}</h3>
                 <div className={styles.sendButtonsContainer}>
                     <button
                         className={styles.bulkButton}
