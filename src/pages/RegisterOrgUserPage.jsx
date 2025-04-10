@@ -299,7 +299,7 @@ const RegisterOrgUserPage = () => {
                         </div>
                         <div>
                             <p>Permissions Groups:<span style={{ color: 'red' }}>*</span></p>
-                            <label>Event Planner</label>
+                            <label style={styles.label}>Event Planner</label>
                             <input 
                                 id="eventRole"
                                 name="eventRole"
@@ -307,7 +307,7 @@ const RegisterOrgUserPage = () => {
                                 checked={formData.eventRole}
                                 onChange={handleChange}
                             />
-                            <label>Finance</label>
+                            <label style={styles.label}>Finance</label>
                             <input 
                                 id="financeRole"
                                 name="financeRole"
@@ -315,9 +315,9 @@ const RegisterOrgUserPage = () => {
                                 checked={formData.financeRole}
                                 onChange={handleChange}
                             />
-                            <label>Admin</label>
+                            <label style={styles.label}>Admin</label>
                             <input 
-                                id="adminRol"
+                                id="adminRole"
                                 name="adminRole"
                                 type="checkbox"
                                 checked={formData.adminRole}
