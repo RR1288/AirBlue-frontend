@@ -183,7 +183,7 @@ const MyInvitationsPage = () => {
                       
                       {/* Invitation message */}
                       <p className={styles.invitationMessage}>
-                        {`You've been invited to ${invitation.name} in ${invitation.location}, from ${formatDate(invitation.startDate)} to ${formatDate(invitation.endDate)}`}
+                        {`You've been invited to `}<strong>{invitation.event.name}</strong> { `in ${invitation.location}, from ${formatDate(invitation.event.startDate)} to ${formatDate(invitation.event.endDate)}`}
                       </p>
                       
                       {/* Render action buttons only for pending and not expired invitations */}
